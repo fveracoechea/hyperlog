@@ -1,24 +1,17 @@
+import Database from 'better-sqlite3';
 import { sql } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import pg from 'pg';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
 
 import { env, isProd } from '../env.ts';
 import * as schema from './schema.ts';
 
-/** It create pool of postgres connections, Which improves performance */
-const pool = new pg.Pool({
-  host: env.DB_HOST,
-  port: env.DB_PORT,
-  user: env.DB_USER,
-  password: env.DB_PASSWORD,
-  database: env.DB_NAME,
-  ssl: isProd,
-  max: 20,
-  min: 5,
-  idleTimeoutMillis: 30000,
-});
+const sqlite = new Database('hyperlog.db');
 
-export const db = drizzle({ client: pool, casing: 'snake_case', schema });
+export const db = drizzle({
+  casing: 'snake_case',
+  schema,
+  client: sqlite,
+});
 
 /**
  * Checks database connection
