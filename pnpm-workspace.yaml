@@ -1,4 +1,4 @@
 packages:
-  - backend 
-  - shared
+  - backend
   - app
+  - 'packages/*'

@@ -9,8 +9,8 @@ const sqlite = new Database('hyperlog.db');
 
 export const db = drizzle({
   casing: 'snake_case',
-  schema,
   client: sqlite,
+  schema,
 });
 
 /**
@@ -20,7 +20,7 @@ export const db = drizzle({
  * */
 export async function checkDBConnection() {
   try {
-    await db.execute(sql`SELECT 1`);
+    sqlite.exec('SELECT 1');
   } catch (error) {
     console.error('Database connection failed');
     throw error;

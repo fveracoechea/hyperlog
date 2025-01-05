@@ -23,6 +23,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@hyperlog/eslint-config": "workspace:*",
     "@faker-js/faker": "^9.3.0",
     "@tsconfig/node22": "^22.0.0",
     "@types/better-sqlite3": "^7.6.12",
