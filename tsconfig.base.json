@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "customConditions": [
+      "source"
+    ],
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "nodenext",
+    "allowJs": true,
+    "strict": true,
+    "composite": true
+  }
+}
