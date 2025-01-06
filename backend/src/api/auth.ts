@@ -2,9 +2,8 @@
 import { Hono } from 'hono';
 
 import { zValidator } from '@hono/zod-validator';
-import { eq, or } from 'drizzle-orm';
-
 import { LoginSchema, SignupSchema } from '@hyperlog/shared';
+import { eq, or } from 'drizzle-orm';
 
 import { db } from '../db/db.ts';
 import { users } from '../db/schema.ts';

@@ -1,5 +1,3 @@
-import honoConfig from '@hono/eslint-config';
-
 import { config as baseConfig } from './base.js';
 
 /**
@@ -9,10 +7,15 @@ import { config as baseConfig } from './base.js';
  * */
 export const config = [
   ...baseConfig,
-  ...honoConfig,
   {
     rules: {
       'no-process-env': 'warn',
+      '@typescript-eslint/no-empty-function': [
+        'error',
+        {
+          allow: ['arrowFunctions'],
+        },
+      ],
     },
   },
 ];
