@@ -1,12 +1,9 @@
 import pluginReact from 'eslint-plugin-react';
 import pluginReactCompiler from 'eslint-plugin-react-compiler';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
+import globals from 'globals';
 
 import { config as baseConfig } from './base.js';
-
-import pluginReactHooks from "eslint-plugin-react-hooks";
-import pluginReact from "eslint-plugin-react";
-import globals from "globals";
-import { config as baseConfig } from "./base.js";
 
 /**
  * A custom ESLint configuration for React apps.
@@ -27,10 +24,10 @@ export const config = [
   },
   {
     plugins: {
-      "react-hooks": pluginReactHooks,
-      "react-compiler": pluginReactCompiler,
+      'react-hooks': pluginReactHooks,
+      'react-compiler': pluginReactCompiler,
     },
-    settings: { react: { version: "detect" } },
+    settings: { react: { version: 'detect' } },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
     },

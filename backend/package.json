@@ -7,7 +7,8 @@
     "build": "tsup",
     "dev": "tsup && tsup --watch & node --env-file=.env --watch dist/server.js",
     "db:dbml": "tsx ./drizzle.dbml.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "eslint": "eslint ."
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
@@ -20,11 +21,12 @@
     "helmet": "^8.0.0",
     "hono": "^4.6.12",
     "hono-rate-limiter": "^0.4.2",
+    "uuid": "^11.0.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@hyperlog/eslint-config": "workspace:*",
     "@faker-js/faker": "^9.3.0",
+    "@hyperlog/eslint-config": "workspace:*",
     "@tsconfig/node22": "^22.0.0",
     "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^22.10.1",
@@ -32,6 +34,7 @@
     "drizzle-dbml-generator": "^0.10.0",
     "drizzle-kit": "^0.29.1",
     "drizzle-seed": "^0.1.2",
+    "eslint": "^9.17.0",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2"
   },

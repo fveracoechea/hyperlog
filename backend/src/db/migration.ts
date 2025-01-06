@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { migrate } from 'drizzle-orm/sqlite-core';
 import path from 'path';
 
 import { db } from './db.ts';

@@ -1,8 +1,6 @@
 import Database from 'better-sqlite3';
-import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 
-import { env, isProd } from '../env.ts';
 import * as schema from './schema.ts';
 
 const sqlite = new Database('hyperlog.db');

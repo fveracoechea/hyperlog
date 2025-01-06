@@ -9,7 +9,7 @@
     "dev": "turbo run dev",
     "prettier:check": "prettier '**/*.{js,ts,jsx,tsx,json}' --check",
     "prettier:write": "prettier '**/*.{js,ts,jsx,tsx,json}' --write",
-    "eslint": "eslint ."
+    "eslint": "turbo run eslint"
   },
   "packageManager": "pnpm@9.15.2",
   "engines": {

@@ -5,8 +5,8 @@
     "typecheck": {
       "dependsOn": ["^typecheck"]
     },
-    "lint": {
-      "dependsOn": ["^typecheck"],
+    "eslint": {
+      "dependsOn": [],
       "cache": false
     },
     "dev": {
