@@ -1,5 +1,7 @@
-// import 'dotenv/config';
+import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
+
+import { env } from './src/env';
 
 export default defineConfig({
   out: './drizzle',
@@ -7,6 +9,6 @@ export default defineConfig({
   dialect: 'sqlite',
   casing: 'snake_case',
   dbCredentials: {
-    url: 'hyperlog.db',
+    url: `file:${env.DB_FILENAME}`,
   },
 });

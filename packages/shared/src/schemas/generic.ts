@@ -1,3 +1,3 @@
 import { z } from 'zod';
 
-export const zPrimaryKeyId = z.number().int().positive();
+export const zPrimaryKeyId = z.string().uuid();

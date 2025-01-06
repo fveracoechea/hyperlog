@@ -25,12 +25,7 @@ const app = new Hono<App>()
   // CSRF Protection
   .use(csrf())
   // CORS Middleware
-  .use(
-    '*',
-    cors({
-      origin: env.ALLOWED_ROUTES,
-    }),
-  )
+  .use('*', cors({ origin: env.ALLOWED_ROUTES }))
   // Apply the rate limiting middleware to all requests.
   // we can provide custom response
   .use(

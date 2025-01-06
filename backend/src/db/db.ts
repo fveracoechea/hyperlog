@@ -1,14 +1,14 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
+import { drizzle } from 'drizzle-orm/libsql/node';
 
+import { env } from '../env.ts';
 import * as schema from './schema.ts';
-
-const sqlite = new Database('hyperlog.db');
 
 export const db = drizzle({
   casing: 'snake_case',
-  client: sqlite,
   schema,
+  connection: {
+    url: `file:${env.DB_FILENAME}`,
+  },
 });
 
 /**
@@ -18,7 +18,7 @@ export const db = drizzle({
  * */
 export async function checkDBConnection() {
   try {
-    sqlite.exec('SELECT 1');
+    await db.$client.execute(`SELECT 1`);
   } catch (error) {
     console.error('Database connection failed');
     throw error;

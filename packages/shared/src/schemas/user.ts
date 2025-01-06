@@ -36,12 +36,10 @@ export type SignupSchemaType = z.infer<typeof SignupSchema>;
 export const SessionPayloadSchema = z.object({
   user: z.object({
     id: zPrimaryKeyId,
-    clientId: zPrimaryKeyId,
     firstName: z.string().optional().nullable(),
     lastName: z.string().optional().nullable(),
     email: z.string().email(),
     username: zUsername,
-    phone: z.string().optional().nullable(),
     jobTitle: z.string().optional().nullable(),
     isActive: z.boolean().nullable().default(true),
   }),

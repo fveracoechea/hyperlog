@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 /* eslint-disable no-process-env */
 import process from 'node:process';
 import { z } from 'zod';
@@ -5,11 +6,7 @@ import { z } from 'zod';
 const EnvSchema = z.object({
   BACKEND_PORT: z.coerce.number().default(3333),
   NODE_ENV: z.enum(['development', 'production']).default('development'),
-  DB_HOST: z.string(),
-  DB_USER: z.string(),
-  DB_PASSWORD: z.string(),
-  DB_NAME: z.string(),
-  DB_PORT: z.coerce.number().default(5432),
+  DB_FILENAME: z.string(),
   SALT_ROUNDS: z.coerce.number().default(12),
   ALLOWED_ROUTES: z
     .string()
