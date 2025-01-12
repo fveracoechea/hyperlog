@@ -1,8 +1,10 @@
-import { reactRouter } from "@react-router/dev/vite";
-import autoprefixer from "autoprefixer";
-import tailwindcss from "tailwindcss";
-import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+import { defineConfig } from 'vite';
+
+import { reactRouter } from '@react-router/dev/vite';
+import autoprefixer from 'autoprefixer';
+import path from 'node:path';
+import tailwindcss from 'tailwindcss';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   css: {
@@ -11,4 +13,12 @@ export default defineConfig({
     },
   },
   plugins: [reactRouter(), tsconfigPaths()],
+  server: {
+    port: 3000,
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
 });
