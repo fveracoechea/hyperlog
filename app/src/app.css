@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Fira Code';
+  font-family: 'Fira Sans';
   font-display: swap;
   font-optical-sizing: auto;
-  font-weight: 400;
+  font-weight: 300;
   font-style: normal;
-  src: url(/fonts/FiraCode-Regular.woff2) format('woff2');
+  src: url(/fonts/FiraSans-Light.woff2) format('woff2');
 }
 
 @font-face {

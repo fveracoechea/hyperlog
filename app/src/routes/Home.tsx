@@ -17,7 +17,13 @@ export default function Home() {
         repellendus aut corrupti voluptates unde obcaecati ex fugiat.
       </Typography>
 
-      <Typography as="h2">Lorem ipsum dolor sit amet consectetur adipisicing elit.</Typography>
+      <Typography as="label" variant="muted" className>
+        Lorem ipsum dolor sit amet
+      </Typography>
+
+      <Typography as="h2" variant="lead">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      </Typography>
     </div>
   );
 }

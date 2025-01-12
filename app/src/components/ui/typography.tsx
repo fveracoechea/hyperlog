@@ -1,5 +1,7 @@
-import type { ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef, ElementType } from 'react';
+import { Link, type LinkProps, NavLink, type NavLinkProps } from 'react-router';
 
+import { type VariantProps, cva } from '@/lib/cva';
 import { cn } from '@/lib/utils';
 
 type H1Props = {
@@ -30,62 +32,66 @@ type SpanProps = {
   as: 'span';
 } & ComponentPropsWithRef<'span'>;
 
-type Props = H1Props | H2Props | H3Props | H4Props | PProps | LabelProps | SpanProps;
+type RouterLinkProps = {
+  as: 'link';
+} & LinkProps;
+
+type RouterNavLinkProps = {
+  as: 'nav';
+} & NavLinkProps;
+
+const typography = cva({
+  base: 'transition-colors',
+  variants: {
+    variant: {
+      title: 'text-primary text-xl font-medium leading-none',
+      lead: 'text-2xl font-light leading-loose',
+      large: 'text-xl font-medium leading-loose',
+      base: 'text-base font-normal leading-normal',
+      small: 'text-sm font-medium leading-tight',
+      nav: 'text-cpt-subtext0 hover:text-foreground leading-none',
+    },
+    muted: {
+      true: 'text-muted-foreground',
+      false: '',
+    },
+    link: {
+      true: 'text-primary underline underline-offset-2 hover:text-primary/80',
+      false: '',
+    },
+  },
+  defaultVariants: {
+    muted: false,
+    link: false,
+    variant: 'base',
+  },
+});
+
+type Props = (
+  | H1Props
+  | H2Props
+  | H3Props
+  | H4Props
+  | PProps
+  | LabelProps
+  | SpanProps
+  | RouterLinkProps
+  | RouterNavLinkProps
+) &
+  VariantProps<typeof typography>;
 
 export function Typography(props: Partial<Props>) {
-  switch (props.as) {
-    case 'p':
-      return (
-        <p
-          {...props}
-          className={cn('leading-6 [&:not(:first-child)]:mt-6', props.className)}
-        />
-      );
-    case 'h1':
-      return (
-        <h1
-          {...props}
-          className={cn(
-            'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl',
-            props.className,
-          )}
-        />
-      );
-    case 'h2':
-      return (
-        <h2
-          {...props}
-          className={cn(
-            'mt-10 scroll-m-20  text-3xl font-semibold tracking-tight transition-colors first:mt-0',
-            props.className,
-          )}
-        />
-      );
-    case 'h3':
-      return (
-        <h3
-          {...props}
-          className={cn(
-            'mt-8 scroll-m-20 text-2xl font-semibold tracking-tight',
-            props.className,
-          )}
-        />
-      );
-    case 'h4':
-      return (
-        <h4
-          {...props}
-          className={cn('scroll-m-20 text-xl font-semibold tracking-tight', props.className)}
-        />
-      );
-    case 'label':
-      return (
-        <label
-          {...props}
-          className={cn('text-sm font-medium leading-none', props.className)}
-        />
-      );
-    default:
-      return <span {...props} />;
+  const { as: element, variant, className, ...otherProps } = props;
+
+  let link = false;
+  let Element: ElementType = element ?? 'span';
+
+  if (Element === 'link') {
+    Element = Link;
+    link = true;
   }
+
+  if (variant === 'nav') Element = NavLink;
+
+  return <Element {...otherProps} className={cn(typography({ variant, className, link }))} />;
 }
