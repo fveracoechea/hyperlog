@@ -1,6 +1,7 @@
 import catppuccin from '@catppuccin/tailwindcss';
 import type { Config } from 'tailwindcss';
 import AnimatePlugin from 'tailwindcss-animate';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 const CatppuccinPlugin = catppuccin({
   // prefix to use, e.g. `text-pink` becomes `text-ctp-pink`.
@@ -16,16 +17,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: [
-          'Inter"',
-          'ui-sans-serif',
-          'system-ui',
-          'sans-serif',
-          'Apple Color Emoji"',
-          'Segoe UI Emoji"',
-          'Segoe UI Symbol"',
-          'Noto Color Emoji"',
-        ],
+        sans: ['Fira Sans', ...defaultTheme.fontFamily.sans],
       },
       borderRadius: {
         lg: 'var(--radius)',

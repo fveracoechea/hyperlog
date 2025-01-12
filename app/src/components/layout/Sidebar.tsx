@@ -6,9 +6,9 @@ export function Sidebar() {
   return (
     <aside
       className={clsx(
-        'h-screen w-72',
+        'min-h-[calc(100vh-75px)] h-full w-72 sticky top-[75px]',
         'bg-cpt-mantle py-4 px-6 flex gap-4',
-        'border-solid border-r border-cpt-surface1',
+        'border-solid border-r border-muted',
       )}
     >
       <div className="flex flex-col gap-4">

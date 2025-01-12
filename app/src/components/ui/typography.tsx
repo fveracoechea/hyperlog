@@ -45,11 +45,14 @@ const typography = cva({
   variants: {
     variant: {
       title: 'text-primary text-xl font-medium leading-none',
-      lead: 'text-3xl font-light leading-snug',
+      lead: 'text-4xl font-light leading-snug',
       large: 'text-xl font-norma leading-loose',
       base: 'text-base font-normal leading-normal',
       small: 'text-sm font-medium leading-tight',
-      nav: ['text-cpt-subtext0 text-base font-normal hover:text-foreground leading-none'],
+      nav: [
+        'text-cpt-subtext0 text-base font-normal hover:text-foreground leading-none',
+        '[&.active]:text-foreground',
+      ],
     },
     muted: {
       true: 'text-muted-foreground',
