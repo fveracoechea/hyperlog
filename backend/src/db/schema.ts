@@ -46,10 +46,7 @@ export const links = t.sqliteTable('links', {
   views: t.integer().default(0),
   lastVisit: t.text().default(sql`(CURRENT_TIMESTAMP)`),
   isPinned: t.integer({ mode: 'boolean' }).default(false),
-  collectionId: t
-    .text()
-    .notNull()
-    .references(() => collections.id),
+  collectionId: t.text().references(() => collections.id),
   ownerId: t
     .text()
     .notNull()
@@ -72,7 +69,7 @@ export const collections = t.sqliteTable(
     color: t.text(),
     icon: t.text(),
     order: t.integer().default(1),
-    parentId: t.text().references((): t.AnySQLiteColumn => collections.ownerId),
+    parentId: t.text('parent_id').references((): t.AnySQLiteColumn => collections.id),
     ownerId: t
       .text()
       .notNull()
@@ -87,6 +84,13 @@ export const collections = t.sqliteTable(
 export const collectionsRelations = relations(collections, ({ one, many }) => ({
   owner: one(users, { fields: [collections.ownerId], references: [users.id] }),
   users: many(usersToCollections),
+  // childCollections: many(collections, {
+  //   relationName: 'parent_id',
+  // }),
+  parentCollection: one(collections, {
+    fields: [collections.parentId],
+    references: [collections.id],
+  }),
 }));
 
 export const usersToCollections = t.sqliteTable(
@@ -96,11 +100,11 @@ export const usersToCollections = t.sqliteTable(
     userId: t
       .text()
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     collectionId: t
       .text()
       .notNull()
-      .references(() => collections.id),
+      .references(() => collections.id, { onDelete: 'cascade' }),
   },
   table => ({
     uniqueUserToCollection: t.unique().on(table.userId, table.collectionId),
@@ -120,6 +124,7 @@ export const tags = t.sqliteTable(
   {
     id,
     name: t.text().notNull(),
+    order: t.integer().notNull().default(1),
     ownerId: t
       .text()
       .notNull()
@@ -136,17 +141,23 @@ export const tagsRelations = relations(tags, ({ one, many }) => ({
   links: many(linksToTags),
 }));
 
-export const linksToTags = t.sqliteTable('links_to_tags', {
-  id,
-  linkId: t
-    .text()
-    .notNull()
-    .references(() => links.id),
-  tagId: t
-    .text()
-    .notNull()
-    .references(() => tags.id),
-});
+export const linksToTags = t.sqliteTable(
+  'links_to_tags',
+  {
+    id,
+    linkId: t
+      .text()
+      .notNull()
+      .references(() => links.id, { onDelete: 'cascade' }),
+    tagId: t
+      .text()
+      .notNull()
+      .references(() => tags.id, { onDelete: 'cascade' }),
+  },
+  table => ({
+    uniqueLinkToTag: t.unique().on(table.linkId, table.tagId),
+  }),
+);
 
 export const linksToTagsRelations = relations(linksToTags, ({ one }) => ({
   link: one(links, { fields: [linksToTags.linkId], references: [links.id] }),
