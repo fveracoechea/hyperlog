@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "777d70e8-6464-4712-8181-d7e35362fddf",
+  "id": "9c6bee86-e6dc-40da-8406-a443ca576ff1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "collections": {
@@ -198,6 +198,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "owner_id": {
           "name": "owner_id",
           "type": "text",
@@ -236,6 +243,19 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
+        "links_tag_id_tags_id_fk": {
+          "name": "links_tag_id_tags_id_fk",
+          "tableFrom": "links",
+          "tableTo": "tags",
+          "columnsFrom": [
+            "tag_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "links_owner_id_users_id_fk": {
           "name": "links_owner_id_users_id_fk",
           "tableFrom": "links",
@@ -247,73 +267,6 @@
             "id"
           ],
           "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "links_to_tags": {
-      "name": "links_to_tags",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "link_id": {
-          "name": "link_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "links_to_tags_linkId_tagId_unique": {
-          "name": "links_to_tags_linkId_tagId_unique",
-          "columns": [
-            "link_id",
-            "tag_id"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "links_to_tags_link_id_links_id_fk": {
-          "name": "links_to_tags_link_id_links_id_fk",
-          "tableFrom": "links_to_tags",
-          "tableTo": "links",
-          "columnsFrom": [
-            "link_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "links_to_tags_tag_id_tags_id_fk": {
-          "name": "links_to_tags_tag_id_tags_id_fk",
-          "tableFrom": "links_to_tags",
-          "tableTo": "tags",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

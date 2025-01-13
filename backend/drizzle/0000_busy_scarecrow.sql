@@ -25,22 +25,15 @@ CREATE TABLE `links` (
 	`last_visit` text DEFAULT (CURRENT_TIMESTAMP),
 	`is_pinned` integer DEFAULT false,
 	`collection_id` text,
+	`tag_id` text,
 	`owner_id` text NOT NULL,
 	`created_at` text DEFAULT (CURRENT_TIMESTAMP),
 	`updated_at` text,
 	FOREIGN KEY (`collection_id`) REFERENCES `collections`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE TABLE `links_to_tags` (
-	`id` text PRIMARY KEY NOT NULL,
-	`link_id` text NOT NULL,
-	`tag_id` text NOT NULL,
-	FOREIGN KEY (`link_id`) REFERENCES `links`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON UPDATE no action ON DELETE cascade
-);
---> statement-breakpoint
-CREATE UNIQUE INDEX `links_to_tags_linkId_tagId_unique` ON `links_to_tags` (`link_id`,`tag_id`);--> statement-breakpoint
 CREATE TABLE `tags` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,

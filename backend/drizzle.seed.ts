@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import 'dotenv/config';
 import { reset } from 'drizzle-seed';
-import { v4 as uuidv4 } from 'uuid';
 
 import { db } from './src/db/db.ts';
 import * as schema from './src/db/schema.ts';
@@ -9,7 +8,12 @@ import { createHasher } from './src/utils/hasher.ts';
 
 type InsertUser = typeof schema.users.$inferInsert;
 type SelectUser = typeof schema.users.$inferSelect;
+
 type InsertLink = typeof schema.links.$inferInsert;
+
+type InsertTag = typeof schema.tags.$inferInsert;
+type SelectTag = typeof schema.tags.$inferSelect;
+
 type InsertCollection = typeof schema.collections.$inferInsert;
 type SelectCollection = typeof schema.collections.$inferSelect;
 type InsertUsersToCollections = typeof schema.usersToCollections.$inferInsert;
@@ -58,6 +62,16 @@ function* linkGenerator(user: SelectUser) {
   }
 }
 
+function* tagGenerator(user: SelectUser) {
+  while (true) {
+    const tag: InsertTag = {
+      name: `${faker.word.adjective()} ${faker.word.noun()}`,
+      ownerId: user.id,
+    };
+    yield tag;
+  }
+}
+
 async function seedUsers() {
   const users: InsertUser[] = [];
 
@@ -91,7 +105,23 @@ async function seedCollections(user: SelectUser) {
   return result;
 }
 
-async function seedLinks(user: SelectUser, collections: SelectCollection[]) {
+async function seedTags(user: SelectUser) {
+  const tags: InsertTag[] = [];
+  const max = faker.number.int({ min: 2, max: 12 });
+
+  for (const tag of tagGenerator(user)) {
+    if (tags.length > max) break;
+    tags.push(tag);
+  }
+
+  return await db.insert(schema.tags).values(tags).returning();
+}
+
+async function seedLinks(
+  user: SelectUser,
+  collections: SelectCollection[],
+  tags: SelectTag[],
+) {
   const links: InsertLink[] = [];
 
   const max = faker.number.int({ min: 20, max: 100 });
@@ -103,7 +133,7 @@ async function seedLinks(user: SelectUser, collections: SelectCollection[]) {
 
   for (const collection of collections) {
     let count = 0;
-    const max = faker.number.int({ min: 3, max: 20 });
+    const max = faker.number.int({ min: 2, max: 20 });
 
     for (const link of linkGenerator(user)) {
       if (count > max) break;
@@ -113,8 +143,19 @@ async function seedLinks(user: SelectUser, collections: SelectCollection[]) {
     }
   }
 
-  await db.insert(schema.links).values(links);
-  return links;
+  for (const tag of tags) {
+    let count = 0;
+    const max = faker.number.int({ min: 2, max: 12 });
+
+    for (const link of linkGenerator(user)) {
+      if (count > max) break;
+      link.tagId = tag.id;
+      links.push(link);
+      count++;
+    }
+  }
+
+  return await db.insert(schema.links).values(links).returning();
 }
 
 async function main() {
@@ -122,8 +163,10 @@ async function main() {
   await reset(db as any, schema);
 
   const users = await seedUsers();
+
   const collections = await Promise.all(users.map(seedCollections));
-  const links = await Promise.all(users.map((u, i) => seedLinks(u, collections[i])));
+  const tags = await Promise.all(users.map(seedTags));
+  await Promise.all(users.map((u, i) => seedLinks(u, collections[i], tags[i])));
 }
 
 main();
