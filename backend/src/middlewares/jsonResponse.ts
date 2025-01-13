@@ -1,9 +1,9 @@
 import { Context } from 'hono';
 import { createMiddleware } from 'hono/factory';
-import { StatusCode } from 'hono/utils/http-status';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 
 function makeSuccessResponseHandler(ctx: Context) {
-  return <D, S extends StatusCode>(data: D, status?: S) =>
+  return <D, S extends ContentfulStatusCode>(data: D, status?: S) =>
     ctx.json(
       {
         success: true,
@@ -15,7 +15,7 @@ function makeSuccessResponseHandler(ctx: Context) {
 }
 
 function makeErrorResponseHandler(ctx: Context) {
-  return <E, S extends StatusCode>(error: E, status?: S) =>
+  return <E, S extends ContentfulStatusCode>(error: E, status?: S) =>
     ctx.json(
       {
         success: false,
