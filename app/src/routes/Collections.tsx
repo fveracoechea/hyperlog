@@ -1,16 +1,11 @@
 import { Library } from 'lucide-react';
 
-import { Typography } from '@/components/ui/typography';
+import { Banner } from '@/components/Banner';
 
 export default function Collections() {
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex gap-2 items-center">
-        <Library />
-        <Typography as="h2" variant="lead">
-          Collections
-        </Typography>
-      </div>
-    </div>
+    <>
+      <Banner icon={<Library width="32" height="32" />} title="Collections" />
+    </>
   );
 }
