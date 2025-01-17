@@ -8,4 +8,5 @@ export default [
     route('tags', './routes/Tags.tsx'),
   ]),
   route('login', './routes/Login.tsx'),
+  route('sign-up', './routes/SignUp.tsx'),
 ] satisfies RouteConfig;

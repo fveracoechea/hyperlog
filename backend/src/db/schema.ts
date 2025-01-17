@@ -20,13 +20,13 @@ const id = t
 
 export const users = t.sqliteTable('users', {
   id,
-  firstName: t.text(),
+  firstName: t.text().notNull(),
   lastName: t.text(),
   password: t.text().notNull(),
   email: t.text().notNull().unique(),
   locale: t.text().default('en'),
-  username: t.text().notNull().unique(),
-  isActive: t.integer({ mode: 'boolean' }),
+  username: t.text().unique(),
+  isActive: t.integer({ mode: 'boolean' }).notNull().default(false),
   ...timestamps,
 });
 

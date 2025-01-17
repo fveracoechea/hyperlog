@@ -46,9 +46,9 @@ const typography = cva({
     variant: {
       title: 'text-primary text-xl font-medium leading-none',
       lead: 'text-4xl font-light leading-snug',
-      large: 'text-xl font-norma leading-loose',
+      large: 'text-xl font-normal leading-loose',
       base: 'text-base font-normal leading-normal',
-      small: 'text-sm font-medium leading-tight',
+      small: 'text-sm font-normal leading-tight',
       nav: [
         'text-cpt-subtext0 text-base font-normal hover:text-foreground leading-none',
         '[&.active]:text-foreground',
@@ -59,10 +59,22 @@ const typography = cva({
       false: '',
     },
     link: {
-      true: 'text-primary underline underline-offset-2 hover:text-primary/80',
+      true: 'underline underline-offset-4',
       false: '',
     },
   },
+  compoundVariants: [
+    {
+      link: true,
+      muted: true,
+      className: ['text-muted-foreground hover:text-foreground'],
+    },
+    {
+      link: true,
+      muted: false,
+      className: ['text-primary hover:text-primary/80'],
+    },
+  ],
   defaultVariants: {
     muted: false,
     link: false,
@@ -84,7 +96,7 @@ type Props = (
   VariantProps<typeof typography>;
 
 export function Typography(props: Partial<Props>) {
-  const { as: element, variant, className, ...otherProps } = props;
+  const { as: element, variant, className, muted, ...otherProps } = props;
 
   let link = false;
   let Element: ElementType = element ?? 'span';
@@ -96,5 +108,7 @@ export function Typography(props: Partial<Props>) {
 
   if (variant === 'nav') Element = NavLink;
 
-  return <Element {...otherProps} className={cn(typography({ variant, className, link }))} />;
+  return (
+    <Element {...otherProps} className={cn(typography({ variant, className, link, muted }))} />
+  );
 }

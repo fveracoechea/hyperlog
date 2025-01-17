@@ -6,7 +6,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 
 export default function Layout() {
   return (
-    <div>
+    <>
       <Header />
       <div className="flex">
         <Sidebar />
@@ -17,6 +17,6 @@ export default function Layout() {
           <Footer />
         </div>
       </div>
-    </div>
+    </>
   );
 }

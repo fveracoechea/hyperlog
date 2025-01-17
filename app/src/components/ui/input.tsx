@@ -1,7 +1,31 @@
 import * as React from 'react';
 
+import { cva } from '@/lib/cva';
 import { cn } from '@/lib/utils';
 import clsx from 'clsx';
+
+const inputWrapper = cva({
+  base: [
+    'flex w-full justify-center items-center transition-shadow',
+    'ring-offset-0 rounded-md bg-background text-foreground',
+    'ring-1 ring-input hover:ring-2 focus-within:ring-2',
+    'outline-none',
+  ],
+  variants: {
+    disabled: {
+      true: 'cursor-not-allowed opacity-50',
+      false: '',
+    },
+    error: {
+      true: ['ring-destructive/60', 'focus-within:!ring-destructive'],
+      false: ['hover:ring-ring/40', 'focus-within:!ring-ring'],
+    },
+  },
+  defaultVariants: {
+    disabled: false,
+    error: false,
+  },
+});
 
 const input = clsx([
   'flex gap-2 w-full rounded-md bg-background text-foreground',
@@ -14,20 +38,13 @@ const input = clsx([
 
 type Props = React.ComponentProps<'input'> & {
   icon?: React.ReactNode;
+  error?: boolean;
 };
 
 const Input = React.forwardRef<HTMLInputElement, Props>(
-  ({ className, type, disabled, icon, ...props }, ref) => {
-    const wrapper = clsx([
-      'flex w-full justify-center items-center',
-      'ring-offset-0 rounded-md border border-input bg-background text-foreground',
-      'hover:ring-1 hover:ring-ring/50',
-      'focus-within:outline-none focus-within:ring-1 focus-within:!ring-ring',
-      disabled && 'cursor-not-allowed opacity-50',
-    ]);
-
+  ({ className, type, disabled, icon, error = false, ...props }, ref) => {
     return (
-      <div className={wrapper}>
+      <div className={inputWrapper({ disabled, error })}>
         {icon && <span className="pl-2">{icon}</span>}
         <input type={type} className={cn(input, className)} ref={ref} {...props} />
       </div>

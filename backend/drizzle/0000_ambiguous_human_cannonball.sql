@@ -47,13 +47,13 @@ CREATE TABLE `tags` (
 CREATE UNIQUE INDEX `tags_name_ownerId_unique` ON `tags` (`name`,`owner_id`);--> statement-breakpoint
 CREATE TABLE `users` (
 	`id` text PRIMARY KEY NOT NULL,
-	`first_name` text,
+	`first_name` text NOT NULL,
 	`last_name` text,
 	`password` text NOT NULL,
 	`email` text NOT NULL,
 	`locale` text DEFAULT 'en',
-	`username` text NOT NULL,
-	`is_active` integer,
+	`username` text,
+	`is_active` integer DEFAULT false NOT NULL,
 	`created_at` text DEFAULT (CURRENT_TIMESTAMP),
 	`updated_at` text
 );

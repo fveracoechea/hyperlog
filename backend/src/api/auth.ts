@@ -21,6 +21,12 @@ async function findFirstUserByUsername(username: string) {
   });
 }
 
+async function findFirstUserByEmail(email: string) {
+  return await db.query.users.findFirst({
+    where: or(eq(users.email, email)),
+  });
+}
+
 const app = new Hono<App>()
   /*
    * Sign Up
@@ -29,11 +35,8 @@ const app = new Hono<App>()
   .post('/sign-up', zValidator('json', SignupSchema), async ctx => {
     const input = ctx.req.valid('json');
 
-    const user = await findFirstUserByUsername(input.username);
-    if (user) return ctx.var.error({ message: 'Email or Username already in use.' }, 409);
-
-    // NOTE: FrontDoor client-id for internal Users
-    const clientId = 1;
+    const user = await findFirstUserByEmail(input.email);
+    if (user) return ctx.var.error({ message: 'Email already in use.' }, 409);
 
     const {
       verifyPassword: _ignore_verifyPassword,
@@ -45,7 +48,7 @@ const app = new Hono<App>()
 
     const result = await db
       .insert(users)
-      .values({ ...userData, clientId, password: hashedPassword })
+      .values({ ...userData, password: hashedPassword })
       .returning();
 
     const { password: _do_not_send_password, ...payload } = result[0];
@@ -77,14 +80,6 @@ const app = new Hono<App>()
     setSessionCookie(session, ctx);
 
     return ctx.var.success({ session: session.payload });
-  })
-  /*
-   * Single Sing On
-   * Reserved for VMS users
-   * */
-  .post('/sso', async ctx => {
-    // TODO: Implement SSO
-    return ctx.var.success({ session: null });
   });
 
 export default app;

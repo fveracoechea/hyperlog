@@ -89,6 +89,7 @@
 
   * {
     outline: none;
+    border-color: var(--border);
   }
 
   html {
