@@ -7,4 +7,5 @@ export default [
     route('collections', './routes/Collections.tsx'),
     route('tags', './routes/Tags.tsx'),
   ]),
+  route('login', './routes/Login.tsx'),
 ] satisfies RouteConfig;
