@@ -9,13 +9,14 @@ import { secureHeaders } from 'hono/secure-headers';
 import { StatusCode } from 'hono/utils/http-status';
 
 import { serve } from '@hono/node-server';
-import process from 'node:process';
 
 import apiRoutes from './api/@routes.ts';
 import { checkDBConnection } from './db/db.ts';
 import { env } from './env.ts';
 import { jsonResponseMiddleware } from './middlewares/jsonResponse.ts';
 import { App } from './utils/types.ts';
+
+console.log('ser');
 
 const app = new Hono<App>()
   // Log requested api with status
@@ -70,7 +71,7 @@ const app = new Hono<App>()
     return ctx.var.error({ message, status }, status);
   });
 
-const server = serve(
+serve(
   {
     fetch: app.fetch,
     port: env.BACKEND_PORT,
@@ -80,28 +81,28 @@ const server = serve(
   },
 );
 
-// Add event listeners for SIGINT and SIGTERM
-process.on('SIGINT', async () => {
-  console.log('Received SIGINT signal. Shutting down server...');
-  await shutdownServer();
-});
-
-process.on('SIGTERM', async () => {
-  console.log('Received SIGTERM signal. Shutting down server...');
-  await shutdownServer();
-});
-
-async function shutdownServer() {
-  try {
-    // Close the server
-    await server.close();
-
-    console.log('Server shut down successfully.');
-    process.exit(0);
-  } catch (error) {
-    console.error('Error shutting down server:', error);
-    process.exit(1);
-  }
-}
-
+// // Add event listeners for SIGINT and SIGTERM
+// process.on('SIGINT', async () => {
+//   console.log('Received SIGINT signal. Shutting down server...');
+//   await shutdownServer();
+// });
+//
+// process.on('SIGTERM', async () => {
+//   console.log('Received SIGTERM signal. Shutting down server...');
+//   await shutdownServer();
+// });
+//
+// async function shutdownServer() {
+//   try {
+//     // Close the server
+//     await server.close();
+//
+//     console.log('Server shut down successfully.');
+//     process.exit(0);
+//   } catch (error) {
+//     console.error('Error shutting down server:', error);
+//     process.exit(1);
+//   }
+// }
+//
 export type HonoApp = typeof app;

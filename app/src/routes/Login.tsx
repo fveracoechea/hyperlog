@@ -25,7 +25,6 @@ export async function action({ request }: Route.ActionArgs) {
   const response = await api.auth.login.$post({ json: form.data }, getSession(request));
 
   const json = await response.json();
-  console.log('login', json);
   if (!json.success) return json.error.message;
 
   return redirect('/', { headers: response.headers });
@@ -82,6 +81,7 @@ export default function Login({ actionData, loaderData }: Route.ComponentProps) 
             />
             <FormField
               label="Password"
+              type="password"
               required
               {...register('password')}
               errorMessage={errors.password?.message}

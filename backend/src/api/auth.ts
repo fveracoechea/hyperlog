@@ -53,7 +53,7 @@ const app = new Hono<App>()
     const { password: _do_not_send_password, ...payload } = result[0];
 
     const session = await createNewSession(payload);
-    setSessionCookie(session, ctx);
+    await setSessionCookie(session, ctx);
 
     return ctx.var.success({ session: session.payload });
   })
@@ -76,7 +76,7 @@ const app = new Hono<App>()
     const { password: _do_not_send_to_client, ...payload } = user;
 
     const session = await createNewSession(payload);
-    setSessionCookie(session, ctx);
+    await setSessionCookie(session, ctx);
 
     return ctx.var.success({ session: session.payload });
   })

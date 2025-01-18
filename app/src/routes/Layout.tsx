@@ -13,8 +13,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   const response = await api.user.whoami.$get({}, getSession(request));
   const json = await response.json();
 
-  console.log(json);
-
   if (!response.ok || !json.success) {
     // Types not being inferred because there is no error response in this endpoint
     // However the sessionMiddleware can respond with this format

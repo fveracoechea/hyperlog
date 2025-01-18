@@ -4,11 +4,11 @@ import { api, getSession } from '@/utility/hono';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupSchema, type SignupSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';
-import { AlertCircle, Unlink, UserRoundPlus } from 'lucide-react';
+import { Unlink, UserRoundPlus } from 'lucide-react';
 import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
 
 import { FormField } from '@/components/FormField';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
