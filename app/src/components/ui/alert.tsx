@@ -10,8 +10,8 @@ const alert = cva({
   base: 'flex gap-2 px-4 py-2 border rounded items-center',
   variants: {
     variant: {
-      info: ['boorder-cpt-sky bg-cpt-sky/15'],
-      destructive: ['border-destructive bg-destructive/15'],
+      info: ['boorder-cpt-sky bg-cpt-sky/20'],
+      destructive: ['border-destructive bg-destructive/20'],
     },
   },
   defaultVariants: {
