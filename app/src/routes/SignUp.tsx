@@ -4,11 +4,11 @@ import { api, getSession } from '@/utility/hono';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupSchema, type SignupSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';
-import { Unlink, UserRoundPlus } from 'lucide-react';
+import { AlertCircle, Unlink, UserRoundPlus } from 'lucide-react';
 import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
 
 import { FormField } from '@/components/FormField';
-import { Alert } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
@@ -26,8 +26,7 @@ export async function action({ request }: Route.ActionArgs) {
   const json = await response.json();
   if (!json.success) return json.error.message;
 
-  // HACK: https://github.com/remix-run/react-router/issues/12615
-  return redirect('/', { headers: response.headers }) as Response;
+  return redirect('/', { headers: response.headers });
 }
 
 export default function SignUp({ actionData }: Route.ComponentProps) {
@@ -98,10 +97,8 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
               {...register('verifyPassword')}
               errorMessage={errors.verifyPassword?.message}
             />
-            {actionData && (
-              <Alert variant="destructive">
-                <AlertDescription>{actionData}</AlertDescription>
-              </Alert>
+            {actionData && typeof actionData === 'string' && (
+              <Alert variant="destructive">{actionData}</Alert>
             )}
             <Button className="mt-1">{isSubmitting ? 'Loading...' : 'Sign Up'}</Button>
           </Form>
