@@ -1,20 +1,43 @@
-import { Form } from 'react-router';
+import { Form, redirect } from 'react-router';
 
+import { api, getSession } from '@/utility/hono';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginSchema, type LoginSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';
 import { LogIn, Unlink } from 'lucide-react';
+import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
 
 import { FormField } from '@/components/FormField';
+import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
 
 import type { Route } from './+types/Login';
 
-export async function action({}: Route.ActionArgs) {
-  return null;
+const resolver = zodResolver(LoginSchema);
+
+export async function action({ request }: Route.ActionArgs) {
+  const form = await getValidatedFormData<LoginSchemaType>(request, resolver);
+  if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
+
+  const response = await api.auth.login.$post({ json: form.data }, getSession(request));
+
+  const json = await response.json();
+  if (!json.success) return json.error.message;
+
+  const headers = new Headers(response.headers);
+  return redirect('/', { headers });
 }
 
-export default function Login() {
+export default function Login({ actionData }: Route.ComponentProps) {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useRemixForm<LoginSchemaType>({
+    resolver,
+  });
   return (
     <main
       className={clsx(
@@ -38,10 +61,28 @@ export default function Login() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form className="flex flex-col gap-4" noValidate>
-            <FormField label="Username or Email" required />
-            <FormField label="Password" required />
-            <Button className="mt-1">Log In</Button>
+          <Form
+            method="POST"
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4"
+            noValidate
+          >
+            <FormField
+              label="Username or Email"
+              required
+              {...register('username')}
+              errorMessage={errors.username?.message}
+            />
+            <FormField
+              label="Password"
+              required
+              {...register('password')}
+              errorMessage={errors.password?.message}
+            />
+            {actionData && typeof actionData === 'string' && (
+              <Alert variant="destructive">{actionData}</Alert>
+            )}
+            <Button className="mt-1">{isSubmitting ? 'Loading...' : 'Log In'}</Button>
           </Form>
         </CardContent>
         <CardFooter>

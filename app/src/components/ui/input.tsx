@@ -4,11 +4,11 @@ import { cva } from '@/lib/cva';
 import { cn } from '@/lib/utils';
 import clsx from 'clsx';
 
-const inputWrapper = cva({
+const wrapper = cva({
   base: [
     'flex w-full justify-center items-center transition-shadow',
     'ring-offset-0 rounded-md bg-background text-foreground',
-    'ring-1 ring-input hover:ring-2 focus-within:ring-2',
+    'ring-1 hover:ring-2 focus-within:ring-2',
     'outline-none',
   ],
   variants: {
@@ -18,7 +18,7 @@ const inputWrapper = cva({
     },
     error: {
       true: ['ring-destructive/60', 'focus-within:!ring-destructive'],
-      false: ['hover:ring-ring/40', 'focus-within:!ring-ring'],
+      false: ['ring-input', 'hover:ring-ring/40', 'focus-within:!ring-ring'],
     },
   },
   defaultVariants: {
@@ -44,7 +44,7 @@ type Props = React.ComponentProps<'input'> & {
 const Input = React.forwardRef<HTMLInputElement, Props>(
   ({ className, type, disabled, icon, error = false, ...props }, ref) => {
     return (
-      <div className={inputWrapper({ disabled, error })}>
+      <div className={wrapper({ disabled, error })}>
         {icon && <span className="pl-2">{icon}</span>}
         <input type={type} className={cn(input, className)} ref={ref} {...props} />
       </div>

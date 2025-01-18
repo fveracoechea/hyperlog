@@ -11,7 +11,7 @@ import { App } from './types.ts';
 export type ServerSession = Awaited<ReturnType<typeof createNewSession>>;
 
 /** Session cookie name */
-export const SESSION_COOKIE = 'session';
+export const SESSION_COOKIE = 'hyperlog-session';
 
 /** Average session time per IT */
 export const TWENTY_EIGHT_MINUTES_IN_MS = 28 * 60000;

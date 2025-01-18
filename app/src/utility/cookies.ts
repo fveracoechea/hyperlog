@@ -26,7 +26,7 @@ function makeCookie<S extends z.ZodTypeAny>(
   });
 
   return {
-    async get(request: Request): Promise<S> {
+    async get(request: Request): Promise<z.infer<S>> {
       const payload = await cookie.parse(request.headers.get('Cookie'));
       return await schema.parseAsync(payload);
     },
