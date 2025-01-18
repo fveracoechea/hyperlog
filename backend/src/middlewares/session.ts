@@ -1,10 +1,9 @@
-import { getCookie } from 'hono/cookie';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
 
 import {
-  SESSION_COOKIE,
   createNewSession,
+  getSessionCookie,
   setSessionCookie,
   verifySession,
 } from '../utils/session.ts';
@@ -28,7 +27,7 @@ function getAuthenticationError(message?: string) {
 export const sessionMiddleware = createMiddleware<App>(async (ctx, next) => {
   try {
     // get session token
-    const sessionToken = getCookie(ctx, SESSION_COOKIE);
+    const sessionToken = await getSessionCookie(ctx);
     if (!sessionToken) throw getAuthenticationError();
 
     // verify current session
@@ -36,7 +35,7 @@ export const sessionMiddleware = createMiddleware<App>(async (ctx, next) => {
 
     // extend the session for 28 minutes
     const newSession = await createNewSession(currentSession.user);
-    setSessionCookie(newSession, ctx);
+    await setSessionCookie(newSession, ctx);
 
     // store session in the hono context
     ctx.set('session', newSession.payload);

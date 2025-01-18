@@ -46,11 +46,17 @@ export const cookies = {
   /** Used to display informative message-callouts */
   info: makeCookie(
     'hyperlog-message',
-    z.object({ message: z.string(), type: z.enum(['info', 'destructive']).default('info') }),
+    z
+      .object({ message: z.string(), type: z.enum(['info', 'destructive']).default('info') })
+      .nullable()
+      .default(null),
     {
       maxAge: 6,
     },
   ),
   /** Allows for redirects to a specific pathname */
-  redirect: makeCookie('hyperlog-redirect', z.object({ pathname: z.string() })),
+  redirect: makeCookie(
+    'hyperlog-redirect',
+    z.object({ pathname: z.string() }).nullable().default(null),
+  ),
 };

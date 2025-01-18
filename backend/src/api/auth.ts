@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Hono } from 'hono';
 
 import { zValidator } from '@hono/zod-validator';
@@ -8,7 +7,7 @@ import { eq, or } from 'drizzle-orm';
 import { db } from '../db/db.ts';
 import { users } from '../db/schema.ts';
 import { createHasher, validatePassword } from '../utils/hasher.ts';
-import { createNewSession, setSessionCookie } from '../utils/session.ts';
+import { createNewSession, deleteSessionCookie, setSessionCookie } from '../utils/session.ts';
 import { App } from '../utils/types.ts';
 
 async function findFirstUserByUsername(username: string) {
@@ -80,6 +79,15 @@ const app = new Hono<App>()
     setSessionCookie(session, ctx);
 
     return ctx.var.success({ session: session.payload });
+  })
+  /*
+   * Logout
+   * */
+  .post('/logout', async ctx => {
+    deleteSessionCookie(ctx);
+    return ctx.var.success({
+      message: 'You have been successfully logged out.',
+    });
   });
 
 export default app;

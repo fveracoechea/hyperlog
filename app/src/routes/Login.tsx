@@ -1,5 +1,6 @@
 import { Form, redirect } from 'react-router';
 
+import { cookies } from '@/utility/cookies';
 import { api, getSession } from '@/utility/hono';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginSchema, type LoginSchemaType } from '@hyperlog/shared';
@@ -24,13 +25,18 @@ export async function action({ request }: Route.ActionArgs) {
   const response = await api.auth.login.$post({ json: form.data }, getSession(request));
 
   const json = await response.json();
+  console.log('login', json);
   if (!json.success) return json.error.message;
 
-  const headers = new Headers(response.headers);
-  return redirect('/', { headers });
+  return redirect('/', { headers: response.headers });
 }
 
-export default function Login({ actionData }: Route.ComponentProps) {
+export async function loader({ request }: Route.LoaderArgs) {
+  const info = await cookies.info.get(request);
+  return { info };
+}
+
+export default function Login({ actionData, loaderData }: Route.ComponentProps) {
   const {
     handleSubmit,
     register,
@@ -67,6 +73,7 @@ export default function Login({ actionData }: Route.ComponentProps) {
             className="flex flex-col gap-4"
             noValidate
           >
+            {loaderData.info && <Alert variant="info">{loaderData.info.message}</Alert>}
             <FormField
               label="Username or Email"
               required
@@ -79,7 +86,7 @@ export default function Login({ actionData }: Route.ComponentProps) {
               {...register('password')}
               errorMessage={errors.password?.message}
             />
-            {actionData && typeof actionData === 'string' && (
+            {!isSubmitting && actionData && typeof actionData === 'string' && (
               <Alert variant="destructive">{actionData}</Alert>
             )}
             <Button className="mt-1">{isSubmitting ? 'Loading...' : 'Log In'}</Button>

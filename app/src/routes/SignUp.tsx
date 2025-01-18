@@ -97,7 +97,7 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
               {...register('verifyPassword')}
               errorMessage={errors.verifyPassword?.message}
             />
-            {actionData && typeof actionData === 'string' && (
+            {!isSubmitting && actionData && typeof actionData === 'string' && (
               <Alert variant="destructive">{actionData}</Alert>
             )}
             <Button className="mt-1">{isSubmitting ? 'Loading...' : 'Sign Up'}</Button>

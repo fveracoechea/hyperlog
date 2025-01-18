@@ -28,8 +28,12 @@ export function Alert(props: Props) {
   const { variant = 'info', className, children } = props;
   return (
     <div role="alert" className={cn(alert({ variant }), className)}>
-      {variant === 'info' && <Info className="text-cpt-sky" width="24" height="24" />}
-      {variant === 'destructive' && <TriangleAlert className="text-destructive h-6 w-6" />}
+      {variant === 'info' && (
+        <Info className="text-cpt-sky min-h-4 min-w-4" width="22" height="22" />
+      )}
+      {variant === 'destructive' && (
+        <TriangleAlert className="text-destructive min-h-4 min-w-4" width="22" height="22" />
+      )}
       <Typography variant="small">{children}</Typography>
     </div>
   );
