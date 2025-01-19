@@ -1,5 +1,5 @@
 import { Context } from 'hono';
-import { deleteCookie, getSignedCookie, setCookie, setSignedCookie } from 'hono/cookie';
+import { deleteCookie, getSignedCookie, setSignedCookie } from 'hono/cookie';
 import { sign, verify } from 'hono/jwt';
 import { SignatureAlgorithm } from 'hono/utils/jwt/jwa';
 

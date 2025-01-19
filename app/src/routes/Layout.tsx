@@ -1,7 +1,7 @@
-import { Outlet, redirect } from 'react-router';
+import { Outlet, data, redirect } from 'react-router';
 
 import { cookies } from '@/utility/cookies';
-import { api, getSession } from '@/utility/hono';
+import { api, assertResponse, getSession } from '@/utility/hono';
 
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
@@ -9,21 +9,33 @@ import { Sidebar } from '@/components/layout/Sidebar';
 
 import type { Route } from './+types/Layout';
 
+async function getLayoutData(req: Request) {
+  const response = await api.user.layout.$get({ json: {} }, getSession(req));
+  const json = await assertResponse(response);
+  return json.data;
+}
+
 export async function loader({ request }: Route.LoaderArgs) {
   const response = await api.user.whoami.$get({}, getSession(request));
-  const json = await response.json();
+  const whoami = await response.json();
 
-  if (!response.ok || !json.success) {
+  if (!response.ok || !whoami.success) {
     // Types not being inferred because there is no error response in this endpoint
     // However the sessionMiddleware can respond with this format
-    const error = json.error as unknown as { message: string };
+    const error = whoami.error as unknown as { message: string };
 
     const headers = new Headers();
     headers.append('Set-Cookie', await cookies.info.set({ ...error, type: 'info' }));
     throw redirect('/login', { headers });
   }
 
-  return json.data;
+  return data(
+    {
+      session: whoami.data.session,
+      layoutPromise: getLayoutData(request),
+    },
+    { headers: response.headers },
+  );
 }
 
 export default function Layout() {
