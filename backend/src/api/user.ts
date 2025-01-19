@@ -15,29 +15,5 @@ const app = new Hono<App>()
   .get('/whoami', async ctx => {
     const session = ctx.var.session;
     return ctx.var.success({ session });
-  })
-  /*
-   * GET layout data for active session (find-many)
-   * */
-  .get('/layout', async ctx => {
-    const session = ctx.var.session;
-
-    const data = await db.query.users.findFirst({
-      where: eq(schema.users.id, session.user.id),
-      with: {
-        collections: {
-          with: {
-            collection: true,
-          },
-        },
-        tags: true,
-      },
-    });
-
-    return ctx.var.success({
-      collections: data?.collections.map(c => c.collection),
-      tags: data?.tags,
-    });
   });
-
 export default app;

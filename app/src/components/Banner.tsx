@@ -1,22 +1,26 @@
-import type { ReactNode } from 'react';
+import type { LucideProps } from 'lucide-react';
 
 import { Typography } from '@/components/ui/typography';
 
 type Props = {
-  icon: ReactNode;
+  Icon: React.FunctionComponent<LucideProps & React.RefAttributes<SVGSVGElement>>;
   title: string;
+  subtitle?: string;
 };
 
 export function Banner(props: Props) {
-  const { title, icon } = props;
+  const { title, Icon, subtitle } = props;
   return (
-    <section className="flex flex-col gap-4">
-      <header className="flex gap-2 items-center">
-        {icon}
+    <header>
+      <div className="flex gap-1 items-center">
+        <Icon className="h-8 w-8 stroke-primary" />
         <Typography as="h2" variant="lead">
           {title}
         </Typography>
-      </header>
-    </section>
+      </div>
+      <Typography variant="small" muted>
+        {subtitle}
+      </Typography>
+    </header>
   );
 }

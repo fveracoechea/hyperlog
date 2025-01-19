@@ -1,36 +1,17 @@
-import { HomeIcon } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 import { Banner } from '@/components/Banner';
+
+import type { Route } from './+types/Home';
+
+export async function loader({ request }: Route.LoaderArgs) {}
 
 export default function Home() {
   return (
     <>
-      <Banner icon={<HomeIcon className="h-8 w-8 stroke-primary" />} title="Home" />
-      <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error perspiciatis officia
-        voluptatum consectetur consequatur totam nesciunt praesentium alias asperiores aut
-        veritatis cupiditate quam cumque in repellat, fugiat iusto culpa velit!
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error perspiciatis officia
-        voluptatum consectetur consequatur totam nesciunt praesentium alias asperiores aut
-        veritatis cupiditate quam cumque in repellat, fugiat iusto culpa velit!
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error perspiciatis officia
-        voluptatum consectetur consequatur totam nesciunt praesentium alias asperiores aut
-        veritatis cupiditate quam cumque in repellat, fugiat iusto culpa velit!
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error perspiciatis officia
-        voluptatum consectetur consequatur totam nesciunt praesentium alias asperiores aut
-        veritatis cupiditate quam cumque in repellat, fugiat iusto culpa velit!
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error perspiciatis officia
-        voluptatum consectetur consequatur totam nesciunt praesentium alias asperiores aut
-        veritatis cupiditate quam cumque in repellat, fugiat iusto culpa velit!
-      </p>
+      <section className="flex flex-col gap-4">
+        <Banner title="Favorites" subtitle="Easily access your top picks" Icon={Star} />
+      </section>
     </>
   );
 }

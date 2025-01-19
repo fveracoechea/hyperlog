@@ -10,7 +10,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import type { Route } from './+types/Layout';
 
 async function getLayoutData(req: Request) {
-  const response = await api.user.layout.$get({ json: {} }, getSession(req));
+  const response = await api.dashboard.layout.$get({ json: {} }, getSession(req));
   const json = await assertResponse(response);
   return json.data;
 }
