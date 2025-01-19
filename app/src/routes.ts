@@ -5,7 +5,9 @@ export default [
     index('./routes/Home.tsx'),
     route('links', './routes/Links.tsx'),
     route('collections', './routes/Collections.tsx'),
+    route('collections/:collectionId', './routes/CollectionPage.tsx'),
     route('tags', './routes/Tags.tsx'),
+    route('tags/:tagId', './routes/TagPage.tsx'),
   ]),
   layout('./routes/PlublicLayout.tsx', [
     route('login', './routes/Login.tsx'),
