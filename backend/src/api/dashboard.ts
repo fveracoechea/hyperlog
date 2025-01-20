@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 import { db } from '../db/db.ts';
 import * as schema from '../db/schema.ts';
@@ -26,23 +26,6 @@ const app = new Hono<App>()
     return ctx.var.success({
       collections: data?.collections.map(c => c.collection),
       tags: data?.tags,
-    });
-  })
-  /*
-   * GET homepage data for active session (find-many)
-   * */
-  .get('/home', async ctx => {
-    const session = ctx.var.session;
-
-    const favorites = await db.query.links.findMany({
-      where: and(eq(schema.links.ownerId, session.user.id), eq(schema.links.isPinned, true)),
-      with: {
-        tag: true,
-      },
-    });
-
-    return ctx.var.success({
-      favorites,
     });
   });
 

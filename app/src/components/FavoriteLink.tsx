@@ -1,7 +1,10 @@
+import { useFetcher } from 'react-router';
+
 import clsx from 'clsx';
-import { Link, Link2, Tag } from 'lucide-react';
+import { Link, Link2, StarOffIcon, Tag } from 'lucide-react';
 
 import type { Route } from '../routes/+types/Home';
+import { Button } from './ui/button';
 import { Typography } from './ui/typography';
 
 type Props = {
@@ -9,19 +12,25 @@ type Props = {
 };
 
 export function FavoriteLink({ link }: Props) {
+  const remove = useFetcher();
+
+  console.log('linkId ', remove.formData?.get('linkId'));
+
+  if (remove.formData?.get('linkId')) return null;
+
   return (
     <a
       href={link.url}
       rel="noreferrer"
       target="_blank"
       className={clsx(
-        'block rounded focus-visible:ring-2 focus-visible:ring-muted-foreground min-h-20',
+        'group block rounded focus-visible:ring-2 focus-visible:ring-muted-foreground min-h-20',
         'hover:!ring-primary hover:!ring-1',
       )}
     >
       <article
         className={clsx(
-          'group border rounded border-border h-full',
+          'border rounded border-border h-full',
           'relative overflow-hidden transition-shadow',
         )}
       >
@@ -68,12 +77,32 @@ export function FavoriteLink({ link }: Props) {
                 width="28"
                 height="28"
                 role="presentation"
-                className="rounded bg-cpt-crust border-1 border-border"
+                className="rounded w-7 h-7 bg-cpt-crust border-1 border-border object-cover"
               />
             ) : (
               <Link2 width="28" height="28" />
             )}
           </div>
+
+          <remove.Form
+            method="post"
+            className={clsx(
+              'transition-opacity opacity-0 group-hover:opacity-100',
+              'absolute top-2 right-2',
+            )}
+          >
+            <input type="hidden" name="linkId" value={link.id} />
+            <Button
+              tabIndex={-1}
+              variant="outline"
+              name="intent"
+              value="remove-favorite"
+              size="xs"
+              title="Remove from favorites"
+            >
+              <StarOffIcon />
+            </Button>
+          </remove.Form>
         </div>
       </article>
     </a>

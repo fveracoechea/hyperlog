@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Hono } from 'hono';
 import { rateLimiter } from 'hono-rate-limiter';
 import { cors } from 'hono/cors';
@@ -15,8 +14,6 @@ import { checkDBConnection } from './db/db.ts';
 import { env } from './env.ts';
 import { jsonResponseMiddleware } from './middlewares/jsonResponse.ts';
 import { App } from './utils/types.ts';
-
-console.log('ser');
 
 const app = new Hono<App>()
   // Log requested api with status
@@ -81,28 +78,4 @@ serve(
   },
 );
 
-// // Add event listeners for SIGINT and SIGTERM
-// process.on('SIGINT', async () => {
-//   console.log('Received SIGINT signal. Shutting down server...');
-//   await shutdownServer();
-// });
-//
-// process.on('SIGTERM', async () => {
-//   console.log('Received SIGTERM signal. Shutting down server...');
-//   await shutdownServer();
-// });
-//
-// async function shutdownServer() {
-//   try {
-//     // Close the server
-//     await server.close();
-//
-//     console.log('Server shut down successfully.');
-//     process.exit(0);
-//   } catch (error) {
-//     console.error('Error shutting down server:', error);
-//     process.exit(1);
-//   }
-// }
-//
 export type HonoApp = typeof app;

@@ -27,16 +27,14 @@ export function getSession(request: Request) {
   };
 }
 
-export async function assertResponse<R extends Response>(
-  response: R,
-): Promise<ReturnType<R['json']>> {
+export async function assertResponse<R extends Response>(response: R) {
   const json = await response.json();
 
   if (!response.ok || !json.success) {
     throw data(json.error?.message ?? null, { status: response.status });
   }
 
-  return json;
+  return json as ReturnType<R['json']>;
 }
 
 /**
