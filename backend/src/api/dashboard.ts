@@ -15,8 +15,6 @@ const app = new Hono<App>()
   .get('/layout', async ctx => {
     const session = ctx.var.session;
 
-    await new Promise(r => setTimeout(r, 500));
-
     const data = await db.query.users.findFirst({
       where: eq(schema.users.id, session.user.id),
       with: {
@@ -38,6 +36,9 @@ const app = new Hono<App>()
 
     const favorites = await db.query.links.findMany({
       where: and(eq(schema.links.ownerId, session.user.id), eq(schema.links.isPinned, true)),
+      with: {
+        tag: true,
+      },
     });
 
     return ctx.var.success({

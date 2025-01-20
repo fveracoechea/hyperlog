@@ -9,13 +9,15 @@ export function Header() {
     <header
       className={clsx(
         'flex bg-cpt-mantle py-4 px-8 gap-8 items-center justify-between',
-        'border-solid border-b border-muted sticky top-0',
+        'border-solid border-b border-muted sticky top-0 z-30',
       )}
     >
       <div className="flex gap-8 items-center">
         <div className="flex gap-2">
           <Unlink className="text-primary" />
-          <Typography variant="title">Hyperlog</Typography>
+          <Typography as="h1" variant="title">
+            Hyperlog
+          </Typography>
         </div>
 
         <nav>

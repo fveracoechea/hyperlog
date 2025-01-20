@@ -49,6 +49,8 @@ const typography = cva({
       large: 'text-xl font-normal leading-loose',
       base: 'text-base font-normal leading-normal',
       small: 'text-sm font-normal leading-tight',
+      xsmall: 'text-xs font-normal leading-tight',
+
       nav: [
         'text-cpt-subtext0 text-base font-normal hover:text-foreground leading-none',
         '[&.active]:text-foreground',

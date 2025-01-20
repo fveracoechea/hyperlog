@@ -6,15 +6,15 @@ const EnvSchema = z.object({
   COOKIE_SECRET: z
     .string()
     .optional()
-    .transform((arg, ctx) => {
+    .transform((arg, _ctx) => {
       if (!arg) {
-        if (import.meta.env.PROD) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'COOKIE_SECRET',
-          });
-          return z.NEVER;
-        }
+        // if (import.meta.env.PROD) {
+        //   ctx.addIssue({
+        //     code: z.ZodIssueCode.custom,
+        //     message: 'COOKIE_SECRET',
+        //   });
+        //   return z.NEVER;
+        // }
         return 'secret';
       }
 

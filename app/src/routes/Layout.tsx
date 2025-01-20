@@ -1,4 +1,4 @@
-import { Outlet, data, redirect } from 'react-router';
+import { Outlet, type ShouldRevalidateFunctionArgs, data, redirect } from 'react-router';
 
 import { cookies } from '@/utility/cookies';
 import { api, assertResponse, getSession } from '@/utility/hono';
@@ -13,6 +13,11 @@ async function getLayoutData(req: Request) {
   const response = await api.dashboard.layout.$get({ json: {} }, getSession(req));
   const json = await assertResponse(response);
   return json.data;
+}
+
+export async function shouldRevalidare({}: ShouldRevalidateFunctionArgs) {
+  // TODO: check when creating new tags or collections
+  return false;
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
