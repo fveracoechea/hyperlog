@@ -4,7 +4,7 @@ import type { Route } from '../routes/+types/Home';
 import { Typography } from './ui/typography';
 
 type Props = {
-  link: Route.ComponentProps['loaderData']['favorites'][number];
+  link: Awaited<Route.ComponentProps['loaderData']['recentActivityPromise']>[number];
 };
 
 export function LinkCard({ link }: Props) {
@@ -19,7 +19,17 @@ export function LinkCard({ link }: Props) {
       )}
     >
       <article className="">
-        {link.previewImage && <img src={link.previewImage} />}
+        {link.previewImage ? (
+          <img
+            height="630"
+            width="1200"
+            src={link.previewImage}
+            alt="Website preview"
+            className="aspect-[1.91/1] object-cover"
+          />
+        ) : (
+          <div role="presentation" className="aspect-[1.91/1]" />
+        )}
         <Typography variant="small">{link.title}</Typography>
       </article>
     </a>

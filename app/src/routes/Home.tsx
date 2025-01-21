@@ -1,4 +1,4 @@
-import { data } from 'react-router';
+import { Await, data } from 'react-router';
 
 import { api, assertResponse, getSession } from '@/utility/hono';
 import { HistoryIcon, Star } from 'lucide-react';
@@ -14,16 +14,14 @@ async function removeFromFavorites(req: Request, linkId: string) {
     { param: { linkId }, json: {} },
     getSession(req),
   );
-
   await assertResponse(response);
-
   return response.headers;
 }
 
 async function getRecentActivity(req: Request) {
   const response = await api.links.recents.$get({ json: {} }, getSession(req));
   const json = await assertResponse(response);
-  return json.data;
+  return json.data.recentlyViewed;
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -73,10 +71,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           title="Recent Activity"
           subtitle="Revisit your latest discoveries, recently visited links appear here"
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-          {favorites.map(link => (
-            <LinkCard key={link.id} link={link} />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5">
+          <Await resolve={loaderData.recentActivityPromise}>
+            {recents => recents.map(link => <LinkCard key={link.id} link={link} />)}
+          </Await>
         </div>
       </section>
     </>
