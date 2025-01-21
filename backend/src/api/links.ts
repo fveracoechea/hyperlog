@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 
 import { zValidator } from '@hono/zod-validator';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { db } from '../db/db.ts';
@@ -12,9 +12,9 @@ import { App } from '../utils/types.ts';
 const app = new Hono<App>()
   .use(sessionMiddleware)
   /*
-   * GET homepage data for active session (find-many)
+   * GET favorite links for active session (find-many)
    * */
-  .get('/loader', async ctx => {
+  .get('/favorites', async ctx => {
     const session = ctx.var.session;
 
     const favorites = await db.query.links.findMany({
@@ -28,6 +28,28 @@ const app = new Hono<App>()
       favorites,
     });
   })
+  /*
+   * GET most recently visited links for active session (find-many)
+   * */
+  .get('/recents', async ctx => {
+    const session = ctx.var.session;
+
+    const recentlyViewed = await db.query.links.findMany({
+      where: and(eq(schema.links.ownerId, session.user.id)),
+      orderBy: [asc(schema.links.lastVisit)],
+      limit: 12,
+      with: {
+        tag: true,
+      },
+    });
+
+    return ctx.var.success({
+      recentlyViewed,
+    });
+  })
+  /*
+   * DELETE removes a given link from favorites
+   * */
   .delete(
     '/favorite/:linkId',
     zValidator('param', z.object({ linkId: z.string().uuid() })),
@@ -35,12 +57,10 @@ const app = new Hono<App>()
     async ctx => {
       const params = ctx.req.valid('param');
 
-      const result = await db
+      await db
         .update(schema.links)
         .set({ isPinned: false })
         .where(eq(schema.links.id, params.linkId));
-
-      console.log('remove favorite', result.toJSON());
 
       return ctx.var.success({
         message: 'Removed from favorites',

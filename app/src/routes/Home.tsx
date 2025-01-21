@@ -1,15 +1,16 @@
 import { data } from 'react-router';
 
 import { api, assertResponse, getSession } from '@/utility/hono';
-import { Star } from 'lucide-react';
+import { HistoryIcon, Star } from 'lucide-react';
 
 import { Banner } from '@/components/Banner';
 import { FavoriteLink } from '@/components/FavoriteLink';
+import { LinkCard } from '@/components/LinkCard';
 
 import type { Route } from './+types/Home';
 
 async function removeFromFavorites(req: Request, linkId: string) {
-  const response = await api.homepage.favorite[':linkId'].$delete(
+  const response = await api.links.favorite[':linkId'].$delete(
     { param: { linkId }, json: {} },
     getSession(req),
   );
@@ -19,10 +20,23 @@ async function removeFromFavorites(req: Request, linkId: string) {
   return response.headers;
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const response = await api.homepage.loader.$get({ json: {} }, getSession(request));
+async function getRecentActivity(req: Request) {
+  const response = await api.links.recents.$get({ json: {} }, getSession(req));
   const json = await assertResponse(response);
-  return data(json.data, { headers: request.headers });
+  return json.data;
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const response = await api.links.favorites.$get({ json: {} }, getSession(request));
+  const json = await assertResponse(response);
+
+  return data(
+    {
+      favorites: json.data.favorites,
+      recentActivityPromise: getRecentActivity(request),
+    },
+    { headers: request.headers },
+  );
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -42,10 +56,26 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <section className="flex flex-col gap-4">
-        <Banner title="Favorites" subtitle="Easily access your top picks" Icon={Star} />
+        <Banner
+          Icon={Star}
+          title="Favorites"
+          subtitle="Your personal collection of go-to links, saved for quick access"
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
           {favorites.map(link => (
             <FavoriteLink key={link.id} link={link} />
+          ))}
+        </div>
+      </section>
+      <section className="flex flex-col gap-4 pt-6">
+        <Banner
+          Icon={HistoryIcon}
+          title="Recent Activity"
+          subtitle="Revisit your latest discoveries, recently visited links appear here"
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+          {favorites.map(link => (
+            <LinkCard key={link.id} link={link} />
           ))}
         </div>
       </section>

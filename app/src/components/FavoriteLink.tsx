@@ -13,11 +13,7 @@ type Props = {
 
 export function FavoriteLink({ link }: Props) {
   const remove = useFetcher();
-
-  console.log('linkId ', remove.formData?.get('linkId'));
-
   if (remove.formData?.get('linkId')) return null;
-
   return (
     <a
       href={link.url}
@@ -25,15 +21,10 @@ export function FavoriteLink({ link }: Props) {
       target="_blank"
       className={clsx(
         'group block rounded focus-visible:ring-2 focus-visible:ring-muted-foreground min-h-20',
-        'hover:!ring-primary hover:!ring-1',
+        'hover:!ring-primary hover:!ring-1 transition-shadow',
       )}
     >
-      <article
-        className={clsx(
-          'border rounded border-border h-full',
-          'relative overflow-hidden transition-shadow',
-        )}
-      >
+      <article className="border rounded border-border h-full relative overflow-hidden">
         {link.previewImage && (
           <img
             src={link.previewImage}
@@ -43,66 +34,64 @@ export function FavoriteLink({ link }: Props) {
         )}
         <div
           className={clsx(
-            'relative z-[2] bg-cpt-base/80',
+            'relative z-[2] bg-gradient-to-r from-cpt-base via-cpt-base/90 to-cpt-base/60',
             'p-2 flex flex-col gap-2 justify-between relative h-full',
           )}
         >
-          <div className="flex flex-col gap-1">
-            <Typography
-              as="h4"
-              variant="small"
-              className="transition-colors group-hover:text-primary"
-            >
-              {link.title}
-            </Typography>
-            <div className="flex gap-1.5 items-center">
-              <Link className="h-3.5 w-3.5 stroke-primary" />
-              <Typography as="span" variant="xsmall" className="no-underline">
-                {link.url}
-              </Typography>
-            </div>
-            {link.tag && (
+          <Typography
+            as="h4"
+            variant="small"
+            className="transition-colors group-hover:text-primary"
+          >
+            {link.title}
+          </Typography>
+          <div className="flex justify-between items-end gap-2">
+            <div className="flex flex-col gap-1">
               <div className="flex gap-1.5 items-center">
-                <Tag className="h-3.5 w-3.5 stroke-primary" />
+                <Link className="h-3.5 w-3.5 stroke-primary" />
                 <Typography as="span" variant="xsmall" className="no-underline">
-                  {link.tag.name}
+                  {link.url}
                 </Typography>
               </div>
-            )}
-          </div>
-          <div className="flex justify-end gap-4">
-            {link.favicon ? (
+              {link.tag && (
+                <div className="flex gap-1.5 items-center">
+                  <Tag className="h-3.5 w-3.5 stroke-primary" />
+                  <Typography as="span" variant="xsmall" className="no-underline">
+                    {link.tag.name}
+                  </Typography>
+                </div>
+              )}
+            </div>
+            {link.favicon && (
               <img
                 src={link.favicon}
                 width="28"
                 height="28"
                 role="presentation"
-                className="rounded w-7 h-7 bg-cpt-crust border-1 border-border object-cover"
+                className="rounded w-7 h-7 border-1 border-border object-cover"
               />
-            ) : (
-              <Link2 width="28" height="28" />
             )}
           </div>
 
-          <remove.Form
-            method="post"
-            className={clsx(
-              'transition-opacity opacity-0 group-hover:opacity-100',
-              'absolute top-2 right-2',
-            )}
-          >
-            <input type="hidden" name="linkId" value={link.id} />
-            <Button
-              tabIndex={-1}
-              variant="outline"
-              name="intent"
-              value="remove-favorite"
-              size="xs"
-              title="Remove from favorites"
-            >
-              <StarOffIcon />
-            </Button>
-          </remove.Form>
+          {/* <remove.Form */}
+          {/*   method="post" */}
+          {/*   className={clsx( */}
+          {/*     'transition-opacity opacity-0 group-hover:opacity-100', */}
+          {/*     'absolute top-0 right-0', */}
+          {/*   )} */}
+          {/* > */}
+          {/*   <input type="hidden" name="linkId" value={link.id} /> */}
+          {/*   <Button */}
+          {/*     tabIndex={-1} */}
+          {/*     variant="outline" */}
+          {/*     name="intent" */}
+          {/*     value="remove-favorite" */}
+          {/*     size="xs" */}
+          {/*     title="Remove from favorites" */}
+          {/*   > */}
+          {/*     <StarOffIcon /> */}
+          {/*   </Button> */}
+          {/* </remove.Form> */}
         </div>
       </article>
     </a>
