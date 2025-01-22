@@ -40,6 +40,7 @@ const app = new Hono<App>()
       limit: 12,
       with: {
         tag: true,
+        collection: true,
       },
     });
 

@@ -71,7 +71,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           title="Recent Activity"
           subtitle="Revisit your latest discoveries, recently visited links appear here"
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
           <Await resolve={loaderData.recentActivityPromise}>
             {recents => recents.map(link => <LinkCard key={link.id} link={link} />)}
           </Await>

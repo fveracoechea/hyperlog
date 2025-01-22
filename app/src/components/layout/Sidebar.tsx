@@ -44,7 +44,7 @@ function SideNav(props: SideNavProps) {
             <NavLink
               className={clsx(
                 'group flex gap-1.5 items-center hover:bg-cpt-surface0',
-                'rounded transition-colors p-1',
+                'rounded transition-colors p-1 overflow-hidden w-full',
                 'text-sm text-muted-foreground hover:text-foreground',
                 '[&.active]:bg-primary/20 [&.active]:text-primary',
               )}
@@ -53,10 +53,10 @@ function SideNav(props: SideNavProps) {
               {type === 'collections' && (
                 <Folder
                   className={clsx(
-                    'h-5 w-5 text-muted-foreground transition-colors',
-                    'group-hover:text-foreground group-[.active]:text-foreground',
+                    'w-4 h-4 min-w-4 min-h-4',
+                    'group-hover:!stroke-foreground group-[.active]:!stroke-primary',
                   )}
-                  style={{ fill: link.color ?? undefined }}
+                  style={{ stroke: link.color ?? undefined }}
                 />
               )}
               {type === 'tags' && (
@@ -67,7 +67,9 @@ function SideNav(props: SideNavProps) {
                   )}
                 />
               )}
-              <span className="text-inherit">{link.name}</span>
+              <span className="whitespace-pre overflow-hidden text-inherit overflow-ellipsis">
+                {link.name}
+              </span>
             </NavLink>
           </li>
         ))}
@@ -81,7 +83,7 @@ export function Sidebar() {
   return (
     <aside
       className={clsx(
-        'min-h-[calc(100vh-75px)] h-full w-72 sticky top-[75px]',
+        'min-h-[calc(100vh-75px)] h-full w-64 sticky top-[75px]',
         'bg-cpt-mantle flex gap-4 z-30',
         'border-solid border-r border-muted',
       )}
