@@ -21,7 +21,7 @@ export function FavoriteLink({ link }: Props) {
       className={clsx(
         'group block rounded min-h-20',
         'focus-visible:ring-2 focus-visible:ring-muted-foreground',
-        'hover:!ring-primary active:ring-2 active:ring-primary',
+        'hover:ring-primary',
       )}
     >
       <article

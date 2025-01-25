@@ -17,7 +17,7 @@ export function LinkCard({ link }: Props) {
       target="_blank"
       className={clsx(
         'group block rounded focus-visible:ring-2 focus-visible:ring-muted-foreground',
-        'hover:!ring-primary active:ring-2 active:ring-primary',
+        'hover:ring-primary',
       )}
     >
       <article className="transition-colors rounded border border-border h-full group-hover:border-primary">
@@ -55,15 +55,18 @@ export function LinkCard({ link }: Props) {
                 'bg-gradient-to-bl group-hover:from-cpt-base/90 group-hover:via-primary/30  group-hover:to-primary/40',
               )}
             />
-            <button
-              className={clsx(
-                'absolute top-0 right-0 transition p-2 rounded-bl rounded-tr',
-                'bg-transparent text-foreground hover:text-white',
-                'hover:scale-125',
-              )}
-            >
-              <EllipsisVerticalIcon className="h-6 w-6 stroke-current" />
-            </button>
+            <form onSubmit={e => e.preventDefault()}>
+              <button
+                onClick={e => e.stopPropagation()}
+                className={clsx(
+                  'absolute top-0 right-0 transition p-2 rounded-bl rounded-tr',
+                  'bg-transparent text-foreground hover:text-white',
+                  'hover:scale-125 active:!scale-100',
+                )}
+              >
+                <EllipsisVerticalIcon className="h-6 w-6 stroke-current" />
+              </button>
+            </form>
           </div>
         ) : (
           <div role="presentation" className="aspect-[1.91/1]" />
