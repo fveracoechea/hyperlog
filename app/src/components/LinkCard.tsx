@@ -1,5 +1,13 @@
 import clsx from 'clsx';
-import { EllipsisVerticalIcon, Folder, Link, Tag } from 'lucide-react';
+import { formatDistance } from 'date-fns';
+import {
+  CalendarIcon,
+  EllipsisVerticalIcon,
+  EyeIcon,
+  FolderIcon,
+  LinkIcon,
+  TagIcon,
+} from 'lucide-react';
 
 import type { Route } from '../routes/+types/Home';
 import { Button } from './ui/button';
@@ -51,7 +59,7 @@ export function LinkCard({ link }: Props) {
               role="presentation"
               className={clsx(
                 'absolute inset-0 w-full h-full',
-                'transition-colors bg-transparent group-hover:bg-cpt-surface2/50',
+                'transition-colors bg-primary/0 group-hover:bg-primary/40',
               )}
             />
             <Button
@@ -67,36 +75,52 @@ export function LinkCard({ link }: Props) {
         ) : (
           <div role="presentation" className="aspect-[1.91/1]" />
         )}
-        <div className="p-2 flex flex-col gap-2">
-          <Typography variant="small" className="group-hover:text-primary">
-            {link.title}
-          </Typography>
-
-          <div className="flex gap-1.5 items-center">
-            <Link className="h-4 w-4 stroke-primary" />
-            <Typography as="span" variant="xsmall" className="no-underline">
-              {link.url}
+        <div className="flex flex-col gap-2 justify-between">
+          <div className="p-2 flex flex-col gap-2">
+            <Typography variant="small" className="group-hover:text-primary">
+              {link.title}
             </Typography>
+
+            <div className="flex gap-1.5 items-center" title="URL">
+              <LinkIcon className="h-3.5 w-3.5 stroke-muted-foreground group-hover:stroke-primary" />
+              <Typography as="span" variant="xsmall" muted className="no-underline">
+                {link.url}
+              </Typography>
+            </div>
+            {link.tag ? (
+              <div className="flex gap-1.5 items-center" title="tag">
+                <TagIcon className="h-3.5 w-3.5 stroke-muted-foreground group-hover:stroke-primary" />
+                <Typography as="span" variant="xsmall" muted className="no-underline">
+                  {link.tag.name}
+                </Typography>
+              </div>
+            ) : (
+              <div role="presentation" className="h-4" />
+            )}
           </div>
-          {link.tag && (
-            <div className="flex gap-1.5 items-center">
-              <Tag className="h-4 w-4 stroke-primary" />
-              <Typography as="span" variant="xsmall" className="no-underline">
-                {link.tag.name}
+
+          <div className="p-2 flex gap-4 items-center w-full border-t border-border justify-between">
+            {link.collection ? (
+              <div className="flex gap-1.5 items-center" title="Collection">
+                <FolderIcon
+                  className="h-4 w-4"
+                  style={{ stroke: link.collection.color ?? undefined }}
+                />
+                <Typography as="span" variant="xsmall" muted className="">
+                  {link.collection.name}
+                </Typography>
+              </div>
+            ) : (
+              <div />
+            )}
+
+            <div className="flex gap-1.5 items-center" title="Last visit">
+              <EyeIcon className="h-4 w-4 stroke-muted-foreground" />
+              <Typography as="span" variant="xsmall" muted className="">
+                {formatDistance(link.lastVisit ?? Date.now(), Date.now(), { addSuffix: true })}
               </Typography>
             </div>
-          )}
-          {link.collection && (
-            <div className="flex gap-1.5 items-center">
-              <Folder
-                className="h-4 w-4"
-                style={{ stroke: link.collection.color ?? undefined }}
-              />
-              <Typography as="span" variant="xsmall" className="no-underline">
-                {link.collection.name}
-              </Typography>
-            </div>
-          )}
+          </div>
         </div>
       </article>
     </a>
