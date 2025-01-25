@@ -1,12 +1,4 @@
 {
-  "extends": [
-    "@tsconfig/node22/tsconfig.json",
-    "../tsconfig.base.json"
-  ],
-  "include": [
-    "./src",
-    "./src/**/*",
-    "*.ts",
-    "./src/api/@routes.ts"
-  ]
+  "extends": ["@tsconfig/node22/tsconfig.json", "../tsconfig.base.json"],
+  "include": ["./src", "./src/**/*", "*.ts", "./src/api/@routes.ts"]
 }

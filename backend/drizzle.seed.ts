@@ -1,5 +1,6 @@
-import { faker } from '@faker-js/faker';
 import 'dotenv/config';
+
+import { faker } from '@faker-js/faker';
 import { reset } from 'drizzle-seed';
 
 import { db } from './src/db/db.ts';

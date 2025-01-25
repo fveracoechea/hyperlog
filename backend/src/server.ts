@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { Hono } from 'hono';
 import { rateLimiter } from 'hono-rate-limiter';
 import { cors } from 'hono/cors';
