@@ -1,3 +1,5 @@
+import { useSearchParams } from 'react-router';
+
 import clsx from 'clsx';
 import { formatDistance } from 'date-fns';
 import { EllipsisVerticalIcon, EyeIcon, FolderIcon, LinkIcon, TagIcon } from 'lucide-react';
@@ -10,6 +12,7 @@ type Props = {
 };
 
 export function LinkCard({ link }: Props) {
+  const [searchParams, setSearchParams] = useSearchParams();
   return (
     <a
       href={link.url}
@@ -55,18 +58,22 @@ export function LinkCard({ link }: Props) {
                 'bg-gradient-to-bl group-hover:from-cpt-base/90 group-hover:via-primary/30  group-hover:to-primary/40',
               )}
             />
-            <form onSubmit={e => e.preventDefault()}>
-              <button
-                onClick={e => e.stopPropagation()}
-                className={clsx(
-                  'absolute top-0 right-0 transition p-2 rounded-bl rounded-tr',
-                  'bg-transparent text-foreground hover:text-white',
-                  'hover:scale-125 active:!scale-100',
-                )}
-              >
-                <EllipsisVerticalIcon className="h-6 w-6 stroke-current" />
-              </button>
-            </form>
+            <button
+              title="Show link details"
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                searchParams.set('link', link.id);
+                setSearchParams(searchParams, { preventScrollReset: true });
+              }}
+              className={clsx(
+                'absolute top-0 right-0 transition p-2 rounded-bl rounded-tr',
+                'bg-transparent text-foreground hover:text-white',
+                'hover:scale-125 active:!scale-100',
+              )}
+            >
+              <EllipsisVerticalIcon className="h-6 w-6 stroke-current" />
+            </button>
           </div>
         ) : (
           <div role="presentation" className="aspect-[1.91/1]" />
