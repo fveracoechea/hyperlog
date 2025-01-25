@@ -97,15 +97,23 @@ export function LinkCard({ link }: Props) {
 
           <div className="p-2 flex gap-4 items-center w-full border-t border-border justify-between">
             {link.collection ? (
-              <div className="flex gap-1.5 items-center" title="Collection">
+              <div
+                className="flex gap-1.5 items-center max-w-min overflow-x-hidden"
+                title="Collection"
+              >
                 <FolderIcon
-                  className="h-4 w-4"
+                  className="h-4 w-4 min-w-4"
                   style={{
                     stroke: link.collection.color ?? undefined,
                     fill: link.collection.color ?? undefined,
                   }}
                 />
-                <Typography as="span" variant="small" muted className="">
+                <Typography
+                  as="span"
+                  variant="small"
+                  muted
+                  className="whitespace-nowrap overflow-x-hidden overflow-ellipsis"
+                >
                   {link.collection.name}
                 </Typography>
               </div>
@@ -113,9 +121,9 @@ export function LinkCard({ link }: Props) {
               <div />
             )}
 
-            <div className="flex gap-1.5 items-center" title="Last visit">
+            <div className="flex gap-1.5 items-center w-max" title="Last visit">
               <EyeIcon className="h-4 w-4 stroke-muted-foreground" />
-              <Typography as="span" variant="xsmall" muted className="">
+              <Typography as="span" variant="xsmall" muted className="whitespace-nowrap">
                 {formatDistance(link.lastVisit ?? Date.now(), Date.now(), { addSuffix: true })}
               </Typography>
             </div>

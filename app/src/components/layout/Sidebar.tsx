@@ -54,9 +54,12 @@ function SideNav(props: SideNavProps) {
                 <Folder
                   className={clsx(
                     'w-4 h-4 min-w-4 min-h-4',
-                    'group-hover:!stroke-foreground group-[.active]:!stroke-primary',
+                    'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
                   )}
-                  style={{ stroke: link.color ?? undefined }}
+                  style={{
+                    stroke: link.color ?? undefined,
+                    fill: link.color ?? undefined,
+                  }}
                 />
               )}
               {type === 'tags' && (
