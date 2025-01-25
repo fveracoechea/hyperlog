@@ -1,10 +1,9 @@
 import { useFetcher } from 'react-router';
 
 import clsx from 'clsx';
-import { Link, Link2, StarOffIcon, Tag } from 'lucide-react';
+import { LinkIcon, TagIcon } from 'lucide-react';
 
 import type { Route } from '../routes/+types/Home';
-import { Button } from './ui/button';
 import { Typography } from './ui/typography';
 
 type Props = {
@@ -20,11 +19,17 @@ export function FavoriteLink({ link }: Props) {
       rel="noreferrer"
       target="_blank"
       className={clsx(
-        'group block rounded focus-visible:ring-2 focus-visible:ring-muted-foreground min-h-20',
-        'hover:!ring-primary hover:!ring-1 transition-shadow',
+        'group block rounded min-h-20',
+        'focus-visible:ring-2 focus-visible:ring-muted-foreground',
+        'hover:!ring-primary active:ring-2 active:ring-primary',
       )}
     >
-      <article className="border rounded border-border h-full relative overflow-hidden">
+      <article
+        className={clsx(
+          'border rounded border-border h-full relative overflow-hidden',
+          'group-hover:border-primary',
+        )}
+      >
         {link.previewImage && (
           <img
             src={link.previewImage}
@@ -48,14 +53,14 @@ export function FavoriteLink({ link }: Props) {
           <div className="flex justify-between items-end gap-2">
             <div className="flex flex-col gap-1">
               <div className="flex gap-1.5 items-center">
-                <Link className="h-3.5 w-3.5 stroke-primary" />
+                <LinkIcon className="h-3.5 w-3.5 stroke-primary" />
                 <Typography as="span" variant="xsmall" className="no-underline">
                   {link.url}
                 </Typography>
               </div>
               {link.tag && (
                 <div className="flex gap-1.5 items-center">
-                  <Tag className="h-3.5 w-3.5 stroke-primary" />
+                  <TagIcon className="h-3.5 w-3.5 stroke-primary" />
                   <Typography as="span" variant="xsmall" className="no-underline">
                     {link.tag.name}
                   </Typography>

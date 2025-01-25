@@ -1,16 +1,8 @@
 import clsx from 'clsx';
 import { formatDistance } from 'date-fns';
-import {
-  CalendarIcon,
-  EllipsisVerticalIcon,
-  EyeIcon,
-  FolderIcon,
-  LinkIcon,
-  TagIcon,
-} from 'lucide-react';
+import { EllipsisVerticalIcon, EyeIcon, FolderIcon, LinkIcon, TagIcon } from 'lucide-react';
 
 import type { Route } from '../routes/+types/Home';
-import { Button } from './ui/button';
 import { Typography } from './ui/typography';
 
 type Props = {
@@ -25,10 +17,10 @@ export function LinkCard({ link }: Props) {
       target="_blank"
       className={clsx(
         'group block rounded focus-visible:ring-2 focus-visible:ring-muted-foreground',
-        'hover:!ring-primary hover:!ring-1',
+        'hover:!ring-primary active:ring-2 active:ring-primary',
       )}
     >
-      <article className="rounded border border-border h-full">
+      <article className="transition-colors rounded border border-border h-full group-hover:border-primary">
         {link.previewImage ? (
           <div
             className={clsx(
@@ -58,39 +50,40 @@ export function LinkCard({ link }: Props) {
             <div
               role="presentation"
               className={clsx(
-                'absolute inset-0 w-full h-full',
-                'transition-colors bg-primary/0 group-hover:bg-primary/40',
+                'absolute inset-0 w-full h-full transition-colors',
+                'bg-gradient-to-bl from-cpt-base/80 via-cpt-base/10 to-cpt-base/0',
+                'bg-gradient-to-bl group-hover:from-cpt-base/90 group-hover:via-primary/30  group-hover:to-primary/40',
               )}
             />
-            <Button
-              variant="secondary"
-              size="xs"
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-              title="More options"
-              tabIndex={-1}
+            <button
+              className={clsx(
+                'absolute top-0 right-0 transition p-2 rounded-bl rounded-tr',
+                'bg-transparent text-foreground hover:text-white',
+                'hover:scale-125',
+              )}
             >
-              <EllipsisVerticalIcon />
-            </Button>
+              <EllipsisVerticalIcon className="h-6 w-6 stroke-current" />
+            </button>
           </div>
         ) : (
           <div role="presentation" className="aspect-[1.91/1]" />
         )}
         <div className="flex flex-col gap-2 justify-between">
           <div className="p-2 flex flex-col gap-2">
-            <Typography variant="small" className="group-hover:text-primary">
+            <Typography variant="base" className="group-hover:text-primary">
               {link.title}
             </Typography>
 
             <div className="flex gap-1.5 items-center" title="URL">
-              <LinkIcon className="h-3.5 w-3.5 stroke-muted-foreground group-hover:stroke-primary" />
-              <Typography as="span" variant="xsmall" muted className="no-underline">
+              <LinkIcon className="h-4 w-4 stroke-muted-foreground group-hover:stroke-primary" />
+              <Typography as="span" variant="small" muted className="no-underline">
                 {link.url}
               </Typography>
             </div>
             {link.tag ? (
               <div className="flex gap-1.5 items-center" title="tag">
-                <TagIcon className="h-3.5 w-3.5 stroke-muted-foreground group-hover:stroke-primary" />
-                <Typography as="span" variant="xsmall" muted className="no-underline">
+                <TagIcon className="h-4 w-4 stroke-muted-foreground group-hover:stroke-primary" />
+                <Typography as="span" variant="small" muted className="no-underline">
                   {link.tag.name}
                 </Typography>
               </div>
@@ -104,9 +97,12 @@ export function LinkCard({ link }: Props) {
               <div className="flex gap-1.5 items-center" title="Collection">
                 <FolderIcon
                   className="h-4 w-4"
-                  style={{ stroke: link.collection.color ?? undefined }}
+                  style={{
+                    stroke: link.collection.color ?? undefined,
+                    fill: link.collection.color ?? undefined,
+                  }}
                 />
-                <Typography as="span" variant="xsmall" muted className="">
+                <Typography as="span" variant="small" muted className="">
                   {link.collection.name}
                 </Typography>
               </div>
