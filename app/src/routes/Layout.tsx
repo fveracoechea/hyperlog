@@ -2,6 +2,7 @@ import { Outlet, data, redirect } from 'react-router';
 
 import { cookies } from '@/utility/cookies';
 import { api, assertResponse, getSession } from '@/utility/hono';
+import { zJsonString } from '@hyperlog/shared';
 
 import { LinkDetailsDrawer } from '@/components/LinkDetailsDrawer';
 import { Footer } from '@/components/layout/Footer';
@@ -10,21 +11,29 @@ import { Sidebar } from '@/components/layout/Sidebar';
 
 import type { Route } from './+types/Layout';
 
-async function getLayoutData(req: Request) {
-  const response = await api.dashboard.layout.$get({ json: {} }, getSession(req));
+async function getSidebarData(req: Request) {
+  const response = await api.dashboard.sidebar.$get({ json: {} }, getSession(req));
   const json = await assertResponse(response);
   return json.data;
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const response = await api.user.whoami.$get({}, getSession(request));
-  const whoami = await response.json();
+async function getWhoAmI(request: Request) {
+  const response = await api.user.whoami.$get({ json: {} }, getSession(request));
+  const whoAmI = await response.json();
+  return { whoAmI, response };
+}
 
-  if (!response.ok || !whoami.success) {
+export async function loader({ request }: Route.LoaderArgs) {
+  console.log('layout loader');
+  const [sidebar, { whoAmI, response }] = await Promise.all([
+    getSidebarData(request),
+    getWhoAmI(request),
+  ]);
+
+  if (!response.ok || !whoAmI.success) {
     // Types not being inferred because there is no error response in this endpoint
     // However the sessionMiddleware can respond with this format
-    const error = whoami.error as unknown as { message: string };
-
+    const error = whoAmI.error as unknown as { message: string };
     const headers = new Headers();
     headers.append('Set-Cookie', await cookies.info.set({ ...error, type: 'info' }));
     throw redirect('/login', { headers });
@@ -32,11 +41,21 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   return data(
     {
-      session: whoami.data.session,
-      layoutPromise: getLayoutData(request),
+      session: whoAmI.data.session,
+      sidebar: sidebar,
     },
     { headers: response.headers },
   );
+}
+
+export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
+  const cacheKey = 'layout-loader';
+  const cached = await zJsonString.safeParseAsync(sessionStorage.getItem(cacheKey));
+  if (cached.success && cached.data) return cached.data as never;
+
+  const serverData = await serverLoader();
+  sessionStorage.setItem(cacheKey, JSON.stringify(serverData));
+  return serverData;
 }
 
 export default function Layout() {

@@ -1,7 +1,6 @@
 import { data } from 'react-router';
 
-import { type ClientResponse, type InferResponseType, hc } from 'hono/client';
-import type { ResponseFormat } from 'hono/types';
+import { type InferResponseType, hc } from 'hono/client';
 
 import { env } from '@/utility/env';
 import type { HonoApp } from '@hyperlog/backend';
@@ -43,3 +42,9 @@ export async function assertResponse<R extends Response>(response: R) {
  * @method GET
  * */
 export type WhoAmIResponse = InferResponseType<(typeof api)['user']['whoami']['$get'], 200>;
+
+/**
+ * @endpoint /api/link/:linkId
+ * @method GET
+ * */
+export type LinkResource = InferResponseType<(typeof api)['links'][':linkId']['$get']>;

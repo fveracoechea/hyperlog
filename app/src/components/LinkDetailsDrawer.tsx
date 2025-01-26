@@ -1,8 +1,12 @@
-import { useSearchParams } from 'react-router';
+import { Suspense, useMemo } from 'react';
+import { Await, useLoaderData, useRouteLoaderData, useSearchParams } from 'react-router';
+
+import { fetchLinkResource } from '@/routes/resource/link';
 
 import { Button } from '@/components/ui/button';
 import {
   Drawer,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -11,12 +15,14 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 
+import type { Route } from '../routes/+types/Layout';
 import { Typography } from './ui/typography';
 
 export function LinkDetailsDrawer() {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const linkId = searchParams.get('link');
+
+  const promise = useMemo(() => fetchLinkResource(searchParams), [searchParams]);
 
   return (
     <Drawer
@@ -27,23 +33,44 @@ export function LinkDetailsDrawer() {
       }}
     >
       <DrawerContent>
-        <div className="w-full">
-          <DrawerHeader>
-            <DrawerTitle>Move Goal</DrawerTitle>
-            <DrawerDescription>Set your daily activity goal.</DrawerDescription>
-          </DrawerHeader>
-          <div className="p-4 pb-0">
-            <div className="flex items-center justify-center space-x-2">
-              <Typography variant="lead">Link details</Typography>
-            </div>
-          </div>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Await resolve={promise}>
+            {result => {
+              const link = result?.data?.link;
+
+              return link ? (
+                <div className="w-full">
+                  <DrawerHeader>
+                    <DrawerTitle>{link.title}</DrawerTitle>
+                    <DrawerDescription>{link.description}</DrawerDescription>
+                  </DrawerHeader>
+                  <DrawerBody>
+                    <Typography variant="lead">Link details</Typography>
+                  </DrawerBody>
+                  <DrawerFooter>
+                    <Button>Submit</Button>
+                    <DrawerClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </div>
+              ) : (
+                <div className="w-full">
+                  <DrawerHeader>
+                    <DrawerTitle>Link Not Found</DrawerTitle>
+                    <DrawerDescription>Set your daily activity goal.</DrawerDescription>
+                  </DrawerHeader>
+                  <DrawerFooter>
+                    <Button>Submit</Button>
+                    <DrawerClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </div>
+              );
+            }}
+          </Await>
+        </Suspense>
       </DrawerContent>
     </Drawer>
   );

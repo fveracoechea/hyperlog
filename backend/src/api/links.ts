@@ -11,6 +11,7 @@ import { App } from '../utils/types.ts';
 
 const app = new Hono<App>()
   .use(sessionMiddleware)
+
   /*
    * GET favorite links for active session (find-many)
    * */
@@ -68,5 +69,26 @@ const app = new Hono<App>()
         linkId: params.linkId,
       });
     },
-  );
+  )
+  /*
+   * GET link details (find-one)
+   * */
+  .get('/:linkId', zValidator('param', z.object({ linkId: z.string().uuid() })), async ctx => {
+    const params = ctx.req.valid('param');
+
+    await new Promise(r => setTimeout(r, 1500));
+
+    const link = await db.query.links.findFirst({
+      where: and(eq(schema.links.id, params.linkId)),
+      with: {
+        tag: true,
+        collection: true,
+      },
+    });
+
+    if (!link) return ctx.var.error({ message: 'Link Not Found' }, 404);
+
+    return ctx.var.success({ link });
+  });
+
 export default app;

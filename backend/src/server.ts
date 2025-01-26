@@ -23,7 +23,7 @@ const app = new Hono<App>()
   // Security layer for XSS, Clickjackingn etc, Similar to helmet
   .use(secureHeaders())
   // CSRF Protection
-  .use(csrf())
+  // .use(csrf())
   // CORS Middleware
   .use('*', cors({ origin: env.ALLOWED_ROUTES }))
   // Apply the rate limiting middleware to all requests.

@@ -82,7 +82,7 @@ function SideNav(props: SideNavProps) {
 }
 
 export function Sidebar() {
-  const loader = useLoaderData<Route.ComponentProps['loaderData']>();
+  const { sidebar } = useLoaderData<Route.ComponentProps['loaderData']>();
   return (
     <aside
       className={clsx(
@@ -91,23 +91,28 @@ export function Sidebar() {
         'border-solid border-r border-muted',
       )}
     >
-      <Suspense
-        fallback={
-          <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto">
-            <NavFallback type="collections" />
-            <NavFallback type="tags" />
-          </div>
-        }
-      >
-        <Await resolve={loader.layoutPromise}>
-          {data => (
-            <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto">
-              <SideNav type="collections" links={data.collections ?? []} />
-              <SideNav type="tags" links={data.tags ?? []} />
-            </div>
-          )}
-        </Await>
-      </Suspense>
+      <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto">
+        <SideNav type="collections" links={sidebar.collections ?? []} />
+        <SideNav type="tags" links={sidebar.tags ?? []} />
+      </div>
+
+      {/* <Suspense */}
+      {/*   fallback={ */}
+      {/*     <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto"> */}
+      {/*       <NavFallback type="collections" /> */}
+      {/*       <NavFallback type="tags" /> */}
+      {/*     </div> */}
+      {/*   } */}
+      {/* > */}
+      {/*   <Await resolve={loader.layoutPromise}> */}
+      {/*     {data => ( */}
+      {/*       <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto"> */}
+      {/*         <SideNav type="collections" links={data.collections ?? []} /> */}
+      {/*         <SideNav type="tags" links={data.tags ?? []} /> */}
+      {/*       </div> */}
+      {/*     )} */}
+      {/*   </Await> */}
+      {/* </Suspense> */}
     </aside>
   );
 }

@@ -27,7 +27,7 @@ export type EnvVars = z.infer<typeof EnvSchema>;
 let values = null;
 
 try {
-  values = EnvSchema.parse(process.env);
+  values = EnvSchema.parse(import.meta.env);
 } catch (error) {
   if (error instanceof z.ZodError) {
     let message = 'Missing required ENV variables: \n';

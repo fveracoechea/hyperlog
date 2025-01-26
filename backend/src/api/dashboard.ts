@@ -12,7 +12,7 @@ const app = new Hono<App>()
   /*
    * GET layout data for active session (find-many)
    * */
-  .get('/layout', async ctx => {
+  .get('/sidebar', async ctx => {
     const session = ctx.var.session;
 
     const data = await db.query.users.findFirst({
