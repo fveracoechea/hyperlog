@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 
+import { zValidator } from '@hono/zod-validator';
 import { eq } from 'drizzle-orm';
 
 import { db } from '../db/db.ts';
@@ -24,6 +25,7 @@ const app = new Hono<App>()
     });
 
     return ctx.var.success({
+      session,
       collections: data?.collections.map(c => c.collection),
       tags: data?.tags,
     });

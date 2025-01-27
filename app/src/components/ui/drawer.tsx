@@ -47,7 +47,7 @@ const DrawerContent = React.forwardRef<
       ref={ref}
       className={cn(
         'right-0 top-0 bottom-0 fixed z-10 outline-none w-full max-w-screen-md flex',
-        'border-cpt-overlay1 border-l bg-background z-50',
+        'border-cpt-overlay1 border-l bg-cpt-mantle z-50',
 
         className,
       )}
@@ -56,7 +56,7 @@ const DrawerContent = React.forwardRef<
       <div
         className={clsx(
           'ml-2 my-auto w-2 h-40 rounded-full cursor-grab',
-          'transition-colors bg-cpt-surface0 hover:bg-cpt-surface1',
+          'transition-colors bg-cpt-surface1 hover:bg-cpt-surface2',
         )}
       />
       <div className="w-full flex flex-col h-full flex-1">{children}</div>

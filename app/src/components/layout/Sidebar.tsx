@@ -1,5 +1,4 @@
-import { Suspense } from 'react';
-import { Await, NavLink, useLoaderData } from 'react-router';
+import { NavLink, useLoaderData } from 'react-router';
 
 import clsx from 'clsx';
 import { Folder, Tag } from 'lucide-react';
@@ -11,24 +10,6 @@ type SideNavProps = {
   type: 'tags' | 'collections';
   links: { color?: string | null; name: string; id: string }[];
 };
-
-function NavFallback({ type }: Pick<SideNavProps, 'type'>) {
-  return (
-    <nav className="flex flex-col gap-2">
-      <Typography as="h4" variant="small" muted className="flex gap-1.5">
-        {type === 'collections' && 'Collections'}
-        {type === 'tags' && 'Tags'}
-      </Typography>
-      <ul className="animate-pulse flex flex-col gap-3">
-        <li className="h-5 w-2/3 bg-muted rounded cursor-wait" />
-        <li className="h-5 w-3/4 bg-muted rounded cursor-wait" />
-        <li className="h-5 w-1/2 bg-muted rounded cursor-wait" />
-        <li className="h-5 w-2/3 bg-muted rounded cursor-wait" />
-        <li className="h-5 w-3/4 bg-muted rounded cursor-wait" />
-      </ul>
-    </nav>
-  );
-}
 
 function SideNav(props: SideNavProps) {
   const { links, type } = props;
@@ -82,7 +63,7 @@ function SideNav(props: SideNavProps) {
 }
 
 export function Sidebar() {
-  const { sidebar } = useLoaderData<Route.ComponentProps['loaderData']>();
+  const data = useLoaderData<Route.ComponentProps['loaderData']>();
   return (
     <aside
       className={clsx(
@@ -92,27 +73,9 @@ export function Sidebar() {
       )}
     >
       <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto">
-        <SideNav type="collections" links={sidebar.collections ?? []} />
-        <SideNav type="tags" links={sidebar.tags ?? []} />
+        <SideNav type="collections" links={data.collections ?? []} />
+        <SideNav type="tags" links={data.tags ?? []} />
       </div>
-
-      {/* <Suspense */}
-      {/*   fallback={ */}
-      {/*     <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto"> */}
-      {/*       <NavFallback type="collections" /> */}
-      {/*       <NavFallback type="tags" /> */}
-      {/*     </div> */}
-      {/*   } */}
-      {/* > */}
-      {/*   <Await resolve={loader.layoutPromise}> */}
-      {/*     {data => ( */}
-      {/*       <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto"> */}
-      {/*         <SideNav type="collections" links={data.collections ?? []} /> */}
-      {/*         <SideNav type="tags" links={data.tags ?? []} /> */}
-      {/*       </div> */}
-      {/*     )} */}
-      {/*   </Await> */}
-      {/* </Suspense> */}
     </aside>
   );
 }

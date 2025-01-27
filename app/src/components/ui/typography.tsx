@@ -36,6 +36,10 @@ type RouterLinkProps = {
   as: 'link';
 } & LinkProps;
 
+type ALinkProps = {
+  as: 'a';
+} & ComponentPropsWithRef<'a'>;
+
 type RouterNavLinkProps = {
   as: 'nav';
 } & NavLinkProps;
@@ -94,13 +98,14 @@ type Props = (
   | SpanProps
   | RouterLinkProps
   | RouterNavLinkProps
+  | ALinkProps
 ) &
   VariantProps<typeof typography>;
 
 export function Typography(props: Partial<Props>) {
-  const { as: element, variant, className, muted, ...otherProps } = props;
+  const { as: element, variant, className, muted, link: isLink, ...otherProps } = props;
 
-  let link = false;
+  let link = isLink ?? false;
   let Element: ElementType = element ?? 'span';
 
   if (Element === 'link') {

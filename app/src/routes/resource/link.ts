@@ -1,22 +1,15 @@
-import { type LinkResource, api, getSession } from '@/utility/hono';
+import { api, getSession } from '@/utility/hono';
 
 import type { Route } from './+types/link';
 
 export async function loader({ request, params: { linkId } }: Route.LoaderArgs) {
-  const response = await api.links[':linkId'].$get({ param: { linkId } }, getSession(request));
-  const json = await response.json();
-  return Response.json(json);
+  const res = await api.links[':linkId'].$get({ param: { linkId } }, getSession(request));
+  const json = await res.json();
+  return json.data?.link ?? null;
 }
 
 export function headers({}: Route.HeadersArgs) {
   return {
-    'Cache-Control': 'private, max-age=30',
+    'Cache-Control': 'private, max-age=3600',
   };
-}
-
-export async function fetchLinkResource(searchParams: URLSearchParams) {
-  const linkId = searchParams.get('link');
-  if (!linkId) return null;
-  const response = await fetch(`/resource/link/${linkId}`);
-  return response.json() as Promise<LinkResource>;
 }
