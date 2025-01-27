@@ -29,6 +29,7 @@ export const config = [
     },
     settings: { react: { version: 'detect' } },
     rules: {
+      'react-compiler/react-compiler': 'error',
       ...pluginReactHooks.configs.recommended.rules,
     },
   },

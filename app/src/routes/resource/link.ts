@@ -1,3 +1,4 @@
+import { env } from '@/utility/env';
 import { api, getSession } from '@/utility/hono';
 
 import type { Route } from './+types/link';
@@ -9,7 +10,9 @@ export async function loader({ request, params: { linkId } }: Route.LoaderArgs) 
 }
 
 export function headers({}: Route.HeadersArgs) {
-  return {
-    'Cache-Control': 'private, max-age=3600',
-  };
+  if (env.isProd)
+    return {
+      'Cache-Control': 'private, max-age=3600',
+    };
+  else return {};
 }

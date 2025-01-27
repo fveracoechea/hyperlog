@@ -68,13 +68,15 @@ export function LinkDetailsDrawer() {
     >
       <DrawerContent>
         {fetcher.state === 'loading' && (
-          <div className="w-full animate-pulse flex flex-col gap-4">
+          <div className="w-full animate-pulse">
             <DrawerHeader>
               <DrawerTitle className="sr-only">Loading</DrawerTitle>
               <DrawerDescription className="sr-only">Fetching link data</DrawerDescription>
-              <div aria-busy="true" className="h-6 w-8/12 bg-cpt-surface0 rounded" />
-              <div className="flex flex-col gap-2">
-                <div aria-busy="true" className="h-4 w-10/12 bg-cpt-surface0 rounded" />
+              <div className="flex flex-col gap-4 pt-2">
+                <div aria-busy="true" className="h-6 w-8/12 bg-cpt-surface0 rounded" />
+                <div className="flex flex-col gap-2">
+                  <div aria-busy="true" className="h-4 w-10/12 bg-cpt-surface0 rounded" />
+                </div>
               </div>
             </DrawerHeader>
             <DrawerFooter className="justify-self-end">
@@ -97,15 +99,19 @@ export function LinkDetailsDrawer() {
                   {link.url}
                 </Typography>
               </LineItem>
-              {link.tag && (
-                <LineItem title="Tag" Icon={TagIcon}>
+              <LineItem title="Tag" Icon={TagIcon}>
+                {link.tag ? (
                   <Typography as="link" className="font-light" to={`/tags/${link.tagId}`}>
                     {link.tag?.name}
                   </Typography>
-                </LineItem>
-              )}
-              {link.collection && (
-                <LineItem title="Collection" Icon={LibraryIcon}>
+                ) : (
+                  <Typography muted className="font-light">
+                    No tag
+                  </Typography>
+                )}
+              </LineItem>
+              <LineItem title="Collection" Icon={FolderIcon}>
+                {link.collection ? (
                   <Typography
                     as="link"
                     className="font-light"
@@ -113,8 +119,12 @@ export function LinkDetailsDrawer() {
                   >
                     {link.collection?.name}
                   </Typography>
-                </LineItem>
-              )}
+                ) : (
+                  <Typography muted className="font-light">
+                    No collection
+                  </Typography>
+                )}
+              </LineItem>
             </DrawerBody>
             <DrawerFooter className="justify-self-end">
               <DrawerClose asChild>

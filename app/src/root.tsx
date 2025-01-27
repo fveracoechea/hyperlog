@@ -12,6 +12,7 @@ import {
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
 import { cookies } from './utility/cookies';
+import { env } from './utility/env';
 import { api, getSession } from './utility/hono';
 
 export const links: Route.LinksFunction = () => [
@@ -50,6 +51,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {env.isDev && <script src="https://unpkg.com/react-scan/dist/auto.global.js" />}
         <Meta />
         <Links />
       </head>

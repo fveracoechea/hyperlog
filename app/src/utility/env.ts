@@ -1,26 +1,32 @@
 import { z } from 'zod';
 
-const EnvSchema = z.object({
-  VITE_BACKEND_URL: z.string().url().default('http://localhost:3333/'),
-  NODE_ENV: z.enum(['development', 'production']).default('development'),
-  COOKIE_SECRET: z
-    .string()
-    .optional()
-    .transform((arg, _ctx) => {
-      if (!arg) {
-        // if (import.meta.env.PROD) {
-        //   ctx.addIssue({
-        //     code: z.ZodIssueCode.custom,
-        //     message: 'COOKIE_SECRET',
-        //   });
-        //   return z.NEVER;
-        // }
-        return 'secret';
-      }
+const EnvSchema = z
+  .object({
+    VITE_BACKEND_URL: z.string().url().default('http://localhost:3333/'),
+    NODE_ENV: z.enum(['development', 'production']).default('development'),
+    COOKIE_SECRET: z
+      .string()
+      .optional()
+      .transform((arg, _ctx) => {
+        if (!arg) {
+          // if (import.meta.env.PROD) {
+          //   ctx.addIssue({
+          //     code: z.ZodIssueCode.custom,
+          //     message: 'COOKIE_SECRET',
+          //   });
+          //   return z.NEVER;
+          // }
+          return 'secret';
+        }
 
-      return arg;
-    }),
-});
+        return arg;
+      }),
+  })
+  .transform(v => ({
+    ...v,
+    isDev: v.NODE_ENV === 'development',
+    isProd: v.NODE_ENV === 'production',
+  }));
 
 export type EnvVars = z.infer<typeof EnvSchema>;
 
