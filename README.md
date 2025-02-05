@@ -3,7 +3,7 @@
 Bookmark manager to collect, organize and share. Keep track of all the interesting things you
 discover on the web.
 
-## App TODO
+### App todo
 
 - [ ] Links page (with search and sort by most visited)
 - [ ] Integrate db in react-router app using a shared package
