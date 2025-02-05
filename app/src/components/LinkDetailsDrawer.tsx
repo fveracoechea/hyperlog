@@ -1,16 +1,13 @@
-import { type PropsWithChildren, useRef, useState } from 'react';
+import { type PropsWithChildren, useState } from 'react';
 import { useFetcher, useSearchParams } from 'react-router';
 
 import { formatDate } from 'date-fns';
 import {
-  DeleteIcon,
   FolderIcon,
-  ImageIcon,
   Link2OffIcon,
   LinkIcon,
   type LucideProps,
   TagIcon,
-  TrashIcon,
   XIcon,
 } from 'lucide-react';
 
@@ -86,17 +83,22 @@ export function LinkDetailsDrawer() {
               </DrawerClose>
               <DrawerTitle className="sr-only">Loading</DrawerTitle>
               <DrawerDescription className="sr-only">Fetching link data</DrawerDescription>
-              <div className="flex flex-col gap-4 pt-2">
+              <div className="flex flex-col gap-6 pt-4">
                 <div aria-busy="true" className="bg-cpt-surface0 h-6 w-8/12 rounded" />
                 <div className="flex flex-col gap-2">
                   <div aria-busy="true" className="bg-cpt-surface0 h-4 w-10/12 rounded" />
                 </div>
               </div>
             </DrawerHeader>
-            <DrawerBody className="flex flex-col gap-10 pt-16">
+            <DrawerBody className="flex flex-col gap-8 pt-16">
               <div aria-busy="true" className="bg-cpt-surface0 h-10 w-full rounded" />
               <div aria-busy="true" className="bg-cpt-surface0 h-10 w-full rounded" />
               <div aria-busy="true" className="bg-cpt-surface0 h-10 w-full rounded" />
+              <div
+                aria-busy="true"
+                className="bg-cpt-surface0 aspect-[1.91/1] w-full rounded"
+              />
+              <div aria-busy="true" className="bg-cpt-surface0 h-4 w-1/2 rounded" />
             </DrawerBody>
             <DrawerFooter className="justify-self-end">
               <DrawerClose asChild>

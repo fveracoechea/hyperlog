@@ -10,9 +10,10 @@ export async function loader({ request, params: { linkId } }: Route.LoaderArgs) 
 }
 
 export function headers({}: Route.HeadersArgs) {
+  const maxAge = 3600 * 24;
   if (env.isProd)
     return {
-      'Cache-Control': 'private, max-age=3600',
+      'Cache-Control': `private, max-age=${maxAge}`,
     };
   else return {};
 }
