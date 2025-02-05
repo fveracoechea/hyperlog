@@ -24,9 +24,9 @@ function SideNav(props: SideNavProps) {
           <li key={link.id}>
             <NavLink
               className={clsx(
-                'group flex gap-1.5 items-center hover:bg-cpt-surface0',
-                'rounded transition-colors p-1 overflow-hidden w-full',
-                'text-sm text-muted-foreground hover:text-foreground',
+                'hover:bg-cpt-surface0 group flex items-center gap-1.5',
+                'w-full overflow-hidden rounded p-1 transition-colors',
+                'text-muted-foreground hover:text-foreground text-sm',
                 '[&.active]:bg-primary/20 [&.active]:text-primary',
               )}
               to={`/${type}/${link.id}`}
@@ -34,7 +34,7 @@ function SideNav(props: SideNavProps) {
               {type === 'collections' && (
                 <Folder
                   className={clsx(
-                    'w-4 h-4 min-w-4 min-h-4',
+                    'h-4 min-h-4 w-4 min-w-4',
                     'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
                   )}
                   style={{
@@ -46,12 +46,12 @@ function SideNav(props: SideNavProps) {
               {type === 'tags' && (
                 <Tag
                   className={clsx(
-                    'h-4 w-4 stroke-muted-foreground transition-colors',
+                    'stroke-muted-foreground h-4 w-4 transition-colors',
                     'group-hover:stroke-foreground group-[.active]:stroke-primary',
                   )}
                 />
               )}
-              <span className="whitespace-pre overflow-hidden text-inherit overflow-ellipsis">
+              <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
                 {link.name}
               </span>
             </NavLink>
@@ -67,12 +67,12 @@ export function Sidebar() {
   return (
     <aside
       className={clsx(
-        'min-h-[calc(100vh-75px)] h-full w-64 sticky top-[75px]',
-        'bg-cpt-mantle flex gap-4 z-30',
-        'border-solid border-r border-muted',
+        'sticky top-[75px] h-full min-h-[calc(100vh-75px)] w-64',
+        'bg-cpt-mantle z-30 flex gap-4',
+        'border-muted border-r border-solid',
       )}
     >
-      <div className="flex flex-col p-4 gap-4 flex-1 h-[calc(100vh-75px)] overflow-y-auto">
+      <div className="flex h-[calc(100vh-75px)] flex-1 flex-col gap-4 overflow-y-auto p-4">
         <SideNav type="collections" links={data.collections ?? []} />
         <SideNav type="tags" links={data.tags ?? []} />
       </div>

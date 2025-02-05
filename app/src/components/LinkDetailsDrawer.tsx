@@ -33,12 +33,12 @@ type Props = PropsWithChildren<{
 function LineItem(props: Props) {
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex gap-2 items-center">
+      <div className="flex items-center gap-2">
         <Typography muted>{props.title}</Typography>
       </div>
-      <div className="px-4 py-2 bg-cpt-base border border-border rounded-lg flex gap-2 justify-between items-center">
+      <div className="bg-cpt-base border-border flex items-center justify-between gap-2 rounded-lg border px-4 py-2">
         {props.children}
-        {props.Icon && <props.Icon className="h-5 w-5 stroke-muted-foreground" />}
+        {props.Icon && <props.Icon className="stroke-muted-foreground h-5 w-5" />}
       </div>
     </div>
   );
@@ -73,9 +73,9 @@ export function LinkDetailsDrawer() {
               <DrawerTitle className="sr-only">Loading</DrawerTitle>
               <DrawerDescription className="sr-only">Fetching link data</DrawerDescription>
               <div className="flex flex-col gap-4 pt-2">
-                <div aria-busy="true" className="h-6 w-8/12 bg-cpt-surface0 rounded" />
+                <div aria-busy="true" className="bg-cpt-surface0 h-6 w-8/12 rounded" />
                 <div className="flex flex-col gap-2">
-                  <div aria-busy="true" className="h-4 w-10/12 bg-cpt-surface0 rounded" />
+                  <div aria-busy="true" className="bg-cpt-surface0 h-4 w-10/12 rounded" />
                 </div>
               </div>
             </DrawerHeader>
@@ -88,7 +88,7 @@ export function LinkDetailsDrawer() {
         )}
 
         {fetcher.state === 'idle' && link && (
-          <div className="w-full h-full flex flex-col">
+          <div className="flex h-full w-full flex-col">
             <DrawerHeader>
               <DrawerTitle>{link.title}</DrawerTitle>
               <DrawerDescription>{link.description}</DrawerDescription>
@@ -135,13 +135,13 @@ export function LinkDetailsDrawer() {
         )}
 
         {fetcher.state === 'idle' && fetcher.data === null && (
-          <div className="w-full h-full flex flex-col">
+          <div className="flex h-full w-full flex-col">
             <DrawerHeader>
               <DrawerTitle>Link Not Found</DrawerTitle>
               <DrawerDescription className="sr-only">Link Not Found.</DrawerDescription>
             </DrawerHeader>
-            <DrawerBody className="flex items-center justify-center flex-1">
-              <Link2OffIcon className="h-24 w-24 stroke-cpt-surface2" />
+            <DrawerBody className="flex flex-1 items-center justify-center">
+              <Link2OffIcon className="stroke-cpt-surface2 h-24 w-24" />
             </DrawerBody>
             <DrawerFooter className="justify-self-end">
               <DrawerClose asChild>

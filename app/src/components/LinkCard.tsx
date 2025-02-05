@@ -19,16 +19,16 @@ export function LinkCard({ link }: Props) {
       rel="noreferrer"
       target="_blank"
       className={clsx(
-        'group block rounded focus-visible:ring-2 focus-visible:ring-muted-foreground',
+        'focus-visible:ring-muted-foreground group block rounded focus-visible:ring-2',
         'hover:ring-primary',
       )}
     >
-      <article className="transition-colors rounded border border-border h-full group-hover:border-primary">
+      <article className="border-border group-hover:border-primary h-full rounded border transition-colors">
         {link.previewImage ? (
           <div
             className={clsx(
-              'relative rounded-t aspect-[1.91/1]',
-              'flex justify-start items-start p-2',
+              'relative aspect-[1.91/1] rounded-t',
+              'flex items-start justify-start p-2',
             )}
           >
             <img
@@ -36,7 +36,7 @@ export function LinkCard({ link }: Props) {
               width="1200"
               src={link.previewImage}
               alt="Website preview"
-              className="absolute inset-0 w-full h-full object-cover rounded-t"
+              className="absolute inset-0 h-full w-full rounded-t object-cover"
             />
             {link.favicon && (
               <img
@@ -45,7 +45,7 @@ export function LinkCard({ link }: Props) {
                 height="40"
                 role="presentation"
                 className={clsx(
-                  'relative rounded w-10 h-10 border-2 border-muted-foreground',
+                  'border-muted-foreground relative h-10 w-10 rounded border-2',
                   'object-cover',
                 )}
               />
@@ -53,9 +53,9 @@ export function LinkCard({ link }: Props) {
             <div
               role="presentation"
               className={clsx(
-                'absolute inset-0 w-full h-full transition-colors',
-                'bg-gradient-to-bl from-cpt-base/80 via-cpt-base/10 to-cpt-base/0',
-                'bg-gradient-to-bl group-hover:from-cpt-base/90 group-hover:via-primary/30  group-hover:to-primary/40',
+                'absolute inset-0 h-full w-full transition-colors',
+                'from-cpt-base/80 via-cpt-base/10 to-cpt-base/0 bg-gradient-to-bl',
+                'group-hover:from-cpt-base/90 group-hover:via-primary/30 group-hover:to-primary/40 bg-gradient-to-bl',
               )}
             />
             <button
@@ -67,8 +67,8 @@ export function LinkCard({ link }: Props) {
                 setSearchParams(searchParams, { preventScrollReset: true });
               }}
               className={clsx(
-                'absolute top-0 right-0 transition p-2 rounded-bl rounded-tr',
-                'bg-transparent text-foreground hover:text-white',
+                'absolute right-0 top-0 rounded-bl rounded-tr p-2 transition',
+                'text-foreground bg-transparent hover:text-white',
                 'hover:scale-125 active:!scale-100',
               )}
             >
@@ -78,21 +78,21 @@ export function LinkCard({ link }: Props) {
         ) : (
           <div role="presentation" className="aspect-[1.91/1]" />
         )}
-        <div className="flex flex-col gap-2 justify-between">
-          <div className="p-2 flex flex-col gap-2">
+        <div className="flex flex-col justify-between gap-2">
+          <div className="flex flex-col gap-2 p-2">
             <Typography variant="base" className="group-hover:text-primary">
               {link.title}
             </Typography>
 
-            <div className="flex gap-1.5 items-center" title="URL">
-              <LinkIcon className="h-4 w-4 stroke-muted-foreground group-hover:stroke-primary" />
+            <div className="flex items-center gap-1.5" title="URL">
+              <LinkIcon className="stroke-muted-foreground group-hover:stroke-primary h-4 w-4" />
               <Typography as="span" variant="small" muted className="no-underline">
                 {link.url}
               </Typography>
             </div>
             {link.tag ? (
-              <div className="flex gap-1.5 items-center" title="tag">
-                <TagIcon className="h-4 w-4 stroke-muted-foreground group-hover:stroke-primary" />
+              <div className="flex items-center gap-1.5" title="tag">
+                <TagIcon className="stroke-muted-foreground group-hover:stroke-primary h-4 w-4" />
                 <Typography as="span" variant="small" muted className="no-underline">
                   {link.tag.name}
                 </Typography>
@@ -102,10 +102,10 @@ export function LinkCard({ link }: Props) {
             )}
           </div>
 
-          <div className="p-2 flex gap-4 items-center w-full border-t border-border justify-between">
+          <div className="border-border flex w-full items-center justify-between gap-4 border-t p-2">
             {link.collection ? (
               <div
-                className="flex gap-1.5 items-center max-w-min overflow-x-hidden"
+                className="flex max-w-min items-center gap-1.5 overflow-x-hidden"
                 title="Collection"
               >
                 <FolderIcon
@@ -119,7 +119,7 @@ export function LinkCard({ link }: Props) {
                   as="span"
                   variant="small"
                   muted
-                  className="whitespace-nowrap overflow-x-hidden overflow-ellipsis"
+                  className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
                 >
                   {link.collection.name}
                 </Typography>
@@ -128,8 +128,8 @@ export function LinkCard({ link }: Props) {
               <div />
             )}
 
-            <div className="flex gap-1.5 items-center w-max" title="Last visit">
-              <EyeIcon className="h-4 w-4 stroke-muted-foreground" />
+            <div className="flex w-max items-center gap-1.5" title="Last visit">
+              <EyeIcon className="stroke-muted-foreground h-4 w-4" />
               <Typography as="span" variant="xsmall" muted className="whitespace-nowrap">
                 {formatDistance(link.lastVisit ?? Date.now(), Date.now(), { addSuffix: true })}
               </Typography>

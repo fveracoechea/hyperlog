@@ -12,8 +12,8 @@ export function Banner(props: Props) {
   const { title, Icon, subtitle } = props;
   return (
     <header>
-      <div className="flex gap-1 items-center">
-        <Icon className="h-8 w-8 stroke-primary" />
+      <div className="flex items-center gap-1">
+        <Icon className="stroke-primary h-8 w-8" />
         <Typography as="h2" variant="lead">
           {title}
         </Typography>

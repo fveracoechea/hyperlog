@@ -8,11 +8,11 @@ export function Header() {
   return (
     <header
       className={clsx(
-        'flex bg-cpt-mantle py-4 px-8 gap-8 items-center justify-between',
-        'border-solid border-b border-muted sticky top-0 z-30',
+        'bg-cpt-mantle flex items-center justify-between gap-8 px-8 py-4',
+        'border-muted sticky top-0 z-30 border-b border-solid',
       )}
     >
-      <div className="flex gap-8 items-center">
+      <div className="flex items-center gap-8">
         <div className="flex gap-2">
           <Unlink className="text-primary" />
           <Typography as="h1" variant="title">
@@ -21,7 +21,7 @@ export function Header() {
         </div>
 
         <nav>
-          <ul className="flex items-center justify-center gap-6 list-none">
+          <ul className="flex list-none items-center justify-center gap-6">
             <li>
               <Typography variant="nav" to="/">
                 Home

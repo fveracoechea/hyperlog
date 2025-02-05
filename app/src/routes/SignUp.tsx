@@ -39,8 +39,8 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
   return (
     <main
       className={clsx(
-        'flex flex-col gap-8 min-h-svh justify-center items-center py-10 px-6',
-        'bg-gradient-to-b from-cpt-crust to-cpt-base',
+        'flex min-h-svh flex-col items-center justify-center gap-8 px-6 py-10',
+        'from-cpt-crust to-cpt-base bg-gradient-to-b',
       )}
     >
       <div className="flex gap-2">
@@ -51,7 +51,7 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
       </div>
       <Card className="w-full max-w-96">
         <CardHeader>
-          <CardTitle className="flex gap-2 items-center">
+          <CardTitle className="flex items-center gap-2">
             <UserRoundPlus width="24" height="24" />
             <Typography as="h2" variant="lead" className="text-2xl">
               Sign Up

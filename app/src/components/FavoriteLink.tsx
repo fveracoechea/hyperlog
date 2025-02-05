@@ -19,14 +19,14 @@ export function FavoriteLink({ link }: Props) {
       rel="noreferrer"
       target="_blank"
       className={clsx(
-        'group block rounded min-h-20',
-        'focus-visible:ring-2 focus-visible:ring-muted-foreground',
+        'group block min-h-20 rounded',
+        'focus-visible:ring-muted-foreground focus-visible:ring-2',
         'hover:ring-primary',
       )}
     >
       <article
         className={clsx(
-          'border rounded border-border h-full relative overflow-hidden',
+          'border-border relative h-full overflow-hidden rounded border',
           'group-hover:border-primary',
         )}
       >
@@ -34,33 +34,33 @@ export function FavoriteLink({ link }: Props) {
           <img
             src={link.previewImage}
             role="presentation"
-            className="absolute inset-0 h-full w-full z-[1] object-cover"
+            className="absolute inset-0 z-[1] h-full w-full object-cover"
           />
         )}
         <div
           className={clsx(
-            'relative z-[2] bg-gradient-to-r from-cpt-base via-cpt-base/90 to-cpt-base/60',
-            'p-2 flex flex-col gap-2 justify-between relative h-full',
+            'from-cpt-base via-cpt-base/90 to-cpt-base/60 relative z-[2] bg-gradient-to-r',
+            'relative flex h-full flex-col justify-between gap-2 p-2',
           )}
         >
           <Typography
             as="h4"
             variant="small"
-            className="transition-colors group-hover:text-primary"
+            className="group-hover:text-primary transition-colors"
           >
             {link.title}
           </Typography>
-          <div className="flex justify-between items-end gap-2">
+          <div className="flex items-end justify-between gap-2">
             <div className="flex flex-col gap-1">
-              <div className="flex gap-1.5 items-center">
-                <LinkIcon className="h-3.5 w-3.5 stroke-primary" />
+              <div className="flex items-center gap-1.5">
+                <LinkIcon className="stroke-primary h-3.5 w-3.5" />
                 <Typography as="span" variant="xsmall" className="no-underline">
                   {link.url}
                 </Typography>
               </div>
               {link.tag && (
-                <div className="flex gap-1.5 items-center">
-                  <TagIcon className="h-3.5 w-3.5 stroke-primary" />
+                <div className="flex items-center gap-1.5">
+                  <TagIcon className="stroke-primary h-3.5 w-3.5" />
                   <Typography as="span" variant="xsmall" className="no-underline">
                     {link.tag.name}
                   </Typography>
@@ -73,7 +73,7 @@ export function FavoriteLink({ link }: Props) {
                 width="28"
                 height="28"
                 role="presentation"
-                className="rounded w-7 h-7 border-1 border-border object-cover"
+                className="border-1 border-border h-7 w-7 rounded object-cover"
               />
             )}
           </div>
