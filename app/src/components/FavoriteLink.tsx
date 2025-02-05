@@ -18,6 +18,7 @@ export function FavoriteLink({ link }: Props) {
       href={link.url}
       rel="noreferrer"
       target="_blank"
+      data-linkid={link.id}
       className={clsx(
         'group block min-h-20 rounded',
         'focus-visible:ring-muted-foreground focus-visible:ring-2',

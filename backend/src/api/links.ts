@@ -76,8 +76,6 @@ const app = new Hono<App>()
   .get('/:linkId', zValidator('param', z.object({ linkId: z.string().uuid() })), async ctx => {
     const params = ctx.req.valid('param');
 
-    await new Promise(r => setTimeout(r, 1500));
-
     const link = await db.query.links.findFirst({
       where: and(eq(schema.links.id, params.linkId)),
       with: {

@@ -1,14 +1,7 @@
-import { type PropsWithChildren, useEffect } from 'react';
+import { type PropsWithChildren, useRef, useState } from 'react';
 import { useFetcher, useSearchParams } from 'react-router';
 
-import {
-  FolderIcon,
-  LibraryIcon,
-  Link2OffIcon,
-  LinkIcon,
-  type LucideProps,
-  TagIcon,
-} from 'lucide-react';
+import { FolderIcon, Link2OffIcon, LinkIcon, type LucideProps, TagIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -44,18 +37,18 @@ function LineItem(props: Props) {
   );
 }
 
-let old: string | null = null;
-
 export function LinkDetailsDrawer() {
   const fetcher = useFetcher<Route.ComponentProps['loaderData']>();
   const link = fetcher.data;
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const [previusId, setPreviousId] = useState<string | null>(null);
+
   const linkId = searchParams.get('link');
 
-  if (linkId !== old) {
-    old = linkId;
-    if (linkId) fetcher.load(`/resource/link/${linkId}`);
+  if (linkId && linkId !== previusId) {
+    fetcher.load(`/resource/link/${linkId}`);
+    setPreviousId(linkId);
   }
 
   return (
@@ -68,7 +61,7 @@ export function LinkDetailsDrawer() {
     >
       <DrawerContent>
         {fetcher.state === 'loading' && (
-          <div className="w-full animate-pulse">
+          <div className="flex h-full w-full animate-pulse flex-col">
             <DrawerHeader>
               <DrawerTitle className="sr-only">Loading</DrawerTitle>
               <DrawerDescription className="sr-only">Fetching link data</DrawerDescription>
@@ -79,6 +72,11 @@ export function LinkDetailsDrawer() {
                 </div>
               </div>
             </DrawerHeader>
+            <DrawerBody className="flex flex-col gap-10 pt-16">
+              <div aria-busy="true" className="bg-cpt-surface0 h-10 w-full rounded" />
+              <div aria-busy="true" className="bg-cpt-surface0 h-10 w-full rounded" />
+              <div aria-busy="true" className="bg-cpt-surface0 h-10 w-full rounded" />
+            </DrawerBody>
             <DrawerFooter className="justify-self-end">
               <DrawerClose asChild>
                 <Button variant="outline">Close</Button>
