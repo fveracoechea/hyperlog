@@ -74,7 +74,7 @@ export function FavoriteLink({ link }: Props) {
                 width="28"
                 height="28"
                 role="presentation"
-                className="border-1 border-border h-7 w-7 rounded object-cover"
+                className="border-border h-7 w-7 rounded border-2 object-cover"
               />
             )}
           </div>

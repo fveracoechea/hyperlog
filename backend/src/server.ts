@@ -28,14 +28,14 @@ const app = new Hono<App>()
   .use('*', cors({ origin: env.ALLOWED_ROUTES }))
   // Apply the rate limiting middleware to all requests.
   // we can provide custom response
-  .use(
-    rateLimiter({
-      windowMs: 1 * 60 * 1000, // 1 minutes
-      limit: 100, // Limit each IP to 100 requests per `window` (here, per 1 minutes).
-      standardHeaders: 'draft-6', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-      keyGenerator: c => c.req.header('cf-connecting-ip') ?? '', // Method to generate custom identifiers for clients.
-    }),
-  )
+  // .use(
+  //   rateLimiter({
+  //     windowMs: 1 * 60 * 1000, // 1 minutes
+  //     limit: 100, // Limit each IP to 100 requests per `window` (here, per 1 minutes).
+  //     standardHeaders: 'draft-6', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  //     keyGenerator: c => c.req.header('cf-connecting-ip') ?? '', // Method to generate custom identifiers for clients.
+  //   }),
+  // )
   // API
   .use(jsonResponseMiddleware)
   .route('/api', apiRoutes)

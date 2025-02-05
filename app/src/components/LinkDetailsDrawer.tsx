@@ -1,7 +1,18 @@
 import { type PropsWithChildren, useRef, useState } from 'react';
 import { useFetcher, useSearchParams } from 'react-router';
 
-import { FolderIcon, Link2OffIcon, LinkIcon, type LucideProps, TagIcon } from 'lucide-react';
+import { formatDate } from 'date-fns';
+import {
+  DeleteIcon,
+  FolderIcon,
+  ImageIcon,
+  Link2OffIcon,
+  LinkIcon,
+  type LucideProps,
+  TagIcon,
+  TrashIcon,
+  XIcon,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -62,7 +73,17 @@ export function LinkDetailsDrawer() {
       <DrawerContent>
         {fetcher.state === 'loading' && (
           <div className="flex h-full w-full animate-pulse flex-col">
-            <DrawerHeader>
+            <DrawerHeader className="relative">
+              <DrawerClose asChild className="justify-self-start">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute right-1 top-1"
+                  title="Close drawer"
+                >
+                  <XIcon className="min-h-5 min-w-5" />
+                </Button>
+              </DrawerClose>
               <DrawerTitle className="sr-only">Loading</DrawerTitle>
               <DrawerDescription className="sr-only">Fetching link data</DrawerDescription>
               <div className="flex flex-col gap-4 pt-2">
@@ -87,11 +108,21 @@ export function LinkDetailsDrawer() {
 
         {fetcher.state === 'idle' && link && (
           <div className="flex h-full w-full flex-col">
-            <DrawerHeader>
+            <DrawerHeader className="relative">
+              <DrawerClose asChild className="justify-self-start">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute right-1 top-1"
+                  title="Close drawer"
+                >
+                  <XIcon className="min-h-5 min-w-5" />
+                </Button>
+              </DrawerClose>
               <DrawerTitle>{link.title}</DrawerTitle>
               <DrawerDescription>{link.description}</DrawerDescription>
             </DrawerHeader>
-            <DrawerBody className="flex flex-col gap-4">
+            <DrawerBody className="flex flex-col gap-6">
               <LineItem title="Link" Icon={LinkIcon}>
                 <Typography as="a" className="font-light" link href={link.url}>
                   {link.url}
@@ -123,11 +154,43 @@ export function LinkDetailsDrawer() {
                   </Typography>
                 )}
               </LineItem>
+              {link.previewImage && (
+                <div className="relative">
+                  <img
+                    src={link.previewImage}
+                    height="630"
+                    width="1200"
+                    className="border-border bg-cpt-base aspect-[1.91/1] rounded border"
+                  />
+                  {link.favicon && (
+                    <img
+                      src={link.favicon}
+                      width="40"
+                      height="40"
+                      alt="favicon"
+                      className="border-border absolute left-2 top-2 rounded border-2"
+                    />
+                  )}
+                </div>
+              )}
+              <Typography muted>
+                Saved: {formatDate(link.createdAt ?? new Date(), 'PPPP')}
+              </Typography>
             </DrawerBody>
-            <DrawerFooter className="justify-self-end">
-              <DrawerClose asChild>
-                <Button variant="outline">Close</Button>
+            <DrawerFooter className="flex flex-row justify-between gap-4 justify-self-end">
+              <DrawerClose asChild className="justify-self-start">
+                <Button variant="ghost">
+                  <span>Close</span>
+                </Button>
               </DrawerClose>
+              <div className="flex gap-4">
+                <Button variant="outline">
+                  <span>Delete</span>
+                </Button>
+                <Button variant="default">
+                  <span>View Screenshot</span>
+                </Button>
+              </div>
             </DrawerFooter>
           </div>
         )}

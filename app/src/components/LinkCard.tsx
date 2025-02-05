@@ -41,11 +41,11 @@ export function LinkCard({ link }: Props) {
             {link.favicon && (
               <img
                 src={link.favicon}
-                width="40"
-                height="40"
+                width="32"
+                height="32"
                 role="presentation"
                 className={clsx(
-                  'border-muted-foreground relative h-10 w-10 rounded border-2',
+                  'border-muted-foreground relative h-8 w-8 rounded border-2',
                   'object-cover',
                 )}
               />
