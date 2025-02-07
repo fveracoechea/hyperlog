@@ -39,7 +39,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const links = t.sqliteTable('links', {
   id,
   url: t.text().notNull(),
-  title: t.text(),
+  title: t.text().notNull(),
   description: t.text(),
   previewImage: t.text(),
   favicon: t.text(),

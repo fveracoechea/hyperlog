@@ -40,7 +40,7 @@ export const SessionPayloadSchema = z.object({
     email: z.string().email(),
     username: zUsername.optional().nullable(),
     isActive: z.boolean().nullable().default(true),
-    locale: z.string().default('en'),
+    locale: z.string().nullable(),
     createdAt: z.string(),
   }),
   exp: z.number(),

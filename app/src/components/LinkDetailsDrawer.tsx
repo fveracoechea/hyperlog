@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/drawer';
 
 import type { Route } from '../routes/resource/+types/link';
+import { DeleteLinkDialog } from './DeleteLinkDialog';
 import { Typography } from './ui/typography';
 
 type Props = PropsWithChildren<{
@@ -186,9 +187,7 @@ export function LinkDetailsDrawer() {
                 </Button>
               </DrawerClose>
               <div className="flex gap-4">
-                <Button variant="outline">
-                  <span>Delete</span>
-                </Button>
+                <DeleteLinkDialog link={link} />
                 <Button variant="default">
                   <span>View Screenshot</span>
                 </Button>

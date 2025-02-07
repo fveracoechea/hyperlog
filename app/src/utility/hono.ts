@@ -22,6 +22,8 @@ export function getSession(request: Request) {
   return {
     headers: {
       cookie: request.headers.get('cookie') ?? '',
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
   };
 }

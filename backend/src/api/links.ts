@@ -55,7 +55,6 @@ const app = new Hono<App>()
   .delete(
     '/favorite/:linkId',
     zValidator('param', z.object({ linkId: z.string().uuid() })),
-    zValidator('json', z.object({})),
     async ctx => {
       const params = ctx.req.valid('param');
 
@@ -66,6 +65,23 @@ const app = new Hono<App>()
 
       return ctx.var.success({
         message: 'Removed from favorites',
+        linkId: params.linkId,
+      });
+    },
+  )
+  /*
+   * DELETE a given link
+   * */
+  .delete(
+    '/:linkId',
+    zValidator('param', z.object({ linkId: z.string().uuid() })),
+    async ctx => {
+      const params = ctx.req.valid('param');
+
+      await db.delete(schema.links).where(eq(schema.links.id, params.linkId));
+
+      return ctx.var.success({
+        message: 'Link has been deleted',
         linkId: params.linkId,
       });
     },
