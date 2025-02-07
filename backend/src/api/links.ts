@@ -11,7 +11,6 @@ import { App } from '../utils/types.ts';
 
 const app = new Hono<App>()
   .use(sessionMiddleware)
-
   /*
    * GET favorite links for active session (find-many)
    * */
@@ -49,6 +48,33 @@ const app = new Hono<App>()
       recentlyViewed,
     });
   })
+  /**
+   * PUT - Add link to collection
+   * */
+  .put(
+    '/:linkId/collection/:collectionId',
+    zValidator(
+      'param',
+      z.object({
+        collectionId: z.string().uuid(),
+        linkId: z.string().uuid(),
+      }),
+    ),
+    async ctx => {
+      const params = ctx.req.valid('param');
+
+      await db
+        .update(schema.links)
+        .set({ collectionId: params.collectionId })
+        .where(eq(schema.links.id, params.linkId));
+
+      return ctx.var.success({
+        message: 'Link added to collection',
+        collectionId: params.collectionId,
+        linkId: params.linkId,
+      });
+    },
+  )
   /*
    * DELETE removes a given link from favorites
    * */
