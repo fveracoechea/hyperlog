@@ -1,7 +1,7 @@
 import { Form, redirect } from 'react-router';
 
-import { cookies } from '@/utility/cookies';
-import { api, getSession } from '@/utility/hono';
+import { cookies } from '@/utils/cookies';
+import { api, getSession } from '@/utils/hono';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginSchema, type LoginSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';

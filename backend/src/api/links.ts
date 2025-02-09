@@ -1,11 +1,10 @@
 import { Hono } from 'hono';
 
 import { zValidator } from '@hono/zod-validator';
+import { db, schema } from '@hyperlog/db';
 import { and, asc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { db } from '../db/db.ts';
-import * as schema from '../db/schema.ts';
 import { sessionMiddleware } from '../middlewares/session.ts';
 import { App } from '../utils/types.ts';
 

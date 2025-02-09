@@ -1,6 +1,6 @@
 import { Form, redirect } from 'react-router';
 
-import { api, getSession } from '@/utility/hono';
+import { api, getSession } from '@/utils/hono';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupSchema, type SignupSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';

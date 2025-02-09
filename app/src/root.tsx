@@ -11,9 +11,9 @@ import {
 
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
-import { cookies } from './utility/cookies';
-import { env } from './utility/env';
-import { api, getSession } from './utility/hono';
+import { cookies } from './utils/cookies';
+import { env } from './utils/env';
+import { api, getSession } from './utils/hono';
 
 export const links: Route.LinksFunction = () => [
   {

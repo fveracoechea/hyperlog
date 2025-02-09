@@ -1,6 +1,6 @@
 import { compare, genSalt, hash } from 'bcrypt-ts/node';
 
-import { env } from '../env.ts';
+import { env } from './env.ts';
 
 export async function createHasher(password: string) {
   const salt = await genSalt(env.SALT_ROUNDS);

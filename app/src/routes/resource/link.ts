@@ -1,7 +1,7 @@
 import { redirect } from 'react-router';
 
-import { env } from '@/utility/env';
-import { api, assertResponse, getSession } from '@/utility/hono';
+import { env } from '@/utils/env';
+import { api, assertResponse, getSession } from '@/utils/hono';
 
 import type { Route } from './+types/link';
 

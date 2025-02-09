@@ -1,6 +1,6 @@
 import { Outlet, redirect } from 'react-router';
 
-import { api, getSession } from '@/utility/hono';
+import { api, getSession } from '@/utils/hono';
 
 export async function loader({ request }: Route.LoaderArgs) {
   const response = await api.user.whoami.$get({}, getSession(request));

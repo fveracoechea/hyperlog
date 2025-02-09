@@ -1,6 +1,6 @@
 import { Await, data } from 'react-router';
 
-import { api, assertResponse, getSession } from '@/utility/hono';
+import { api, assertResponse, getSession } from '@/utils/hono';
 import { HistoryIcon, Star } from 'lucide-react';
 
 import { Banner } from '@/components/Banner';

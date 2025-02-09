@@ -5,7 +5,7 @@ import { SignatureAlgorithm } from 'hono/utils/jwt/jwa';
 
 import { SessionPayloadSchema, SessionPayloadSchemaType } from '@hyperlog/shared';
 
-import { env } from '../env.ts';
+import { env } from './env.ts';
 import { App } from './types.ts';
 
 export type ServerSession = Awaited<ReturnType<typeof createNewSession>>;

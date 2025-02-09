@@ -3,9 +3,9 @@ import 'dotenv/config';
 import { faker } from '@faker-js/faker';
 import { reset } from 'drizzle-seed';
 
-import { db } from './src/db/db.ts';
-import * as schema from './src/db/schema.ts';
-import { createHasher } from './src/utils/hasher.ts';
+import { db } from '../../backend/src/db/db.ts';
+import * as schema from '../../backend/src/db/schema.ts';
+import { createHasher } from '../../backend/src/utils/hasher.ts';
 
 type InsertUser = typeof schema.users.$inferInsert;
 type SelectUser = typeof schema.users.$inferSelect;

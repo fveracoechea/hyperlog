@@ -2,7 +2,7 @@ import { data } from 'react-router';
 
 import { type InferResponseType, hc } from 'hono/client';
 
-import { env } from '@/utility/env';
+import { env } from '@/utils/env';
 import type { HonoApp } from '@hyperlog/backend';
 
 const client = hc<HonoApp>(env.VITE_BACKEND_URL);

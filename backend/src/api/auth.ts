@@ -1,11 +1,10 @@
 import { Hono } from 'hono';
 
 import { zValidator } from '@hono/zod-validator';
+import { db, schema } from '@hyperlog/db';
 import { LoginSchema, SignupSchema } from '@hyperlog/shared';
 import { eq, or } from 'drizzle-orm';
 
-import { db } from '../db/db.ts';
-import { users } from '../db/schema.ts';
 import { createHasher, validatePassword } from '../utils/hasher.ts';
 import { createNewSession, deleteSessionCookie, setSessionCookie } from '../utils/session.ts';
 import { App } from '../utils/types.ts';
@@ -14,15 +13,15 @@ async function findFirstUserByUsername(username: string) {
   return await db.query.users.findFirst({
     where: or(
       // look-up by email and username
-      eq(users.email, username),
-      eq(users.username, username),
+      eq(schema.users.email, username),
+      eq(schema.users.username, username),
     ),
   });
 }
 
 async function findFirstUserByEmail(email: string) {
   return await db.query.users.findFirst({
-    where: or(eq(users.email, email)),
+    where: or(eq(schema.users.email, email)),
   });
 }
 
@@ -46,7 +45,7 @@ const app = new Hono<App>()
     const hashedPassword = await createHasher(input.password);
 
     const result = await db
-      .insert(users)
+      .insert(schema.users)
       .values({ ...userData, password: hashedPassword })
       .returning();
 

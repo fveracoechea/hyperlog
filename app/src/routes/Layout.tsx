@@ -1,6 +1,6 @@
 import { Outlet, data, useSearchParams } from 'react-router';
 
-import { api, assertResponse, getSession } from '@/utility/hono';
+import { api, assertResponse, getSession } from '@/utils/hono';
 import { ClientOnly } from 'remix-utils/client-only';
 
 import { LinkDetailsDrawer } from '@/components/LinkDetailsDrawer';
