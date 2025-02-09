@@ -1,5 +1,6 @@
 import { Form, redirect } from 'react-router';
 
+import { auth } from '@/.server/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupSchema, type SignupSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';
@@ -16,17 +17,18 @@ import type { Route } from './+types/SignUp';
 
 const resolver = zodResolver(SignupSchema);
 
-// export async function action({ request }: Route.ActionArgs) {
-//   const form = await getValidatedFormData<SignupSchemaType>(request, resolver);
-//   if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
-//
-//   const response = await api.auth['sign-up'].$post({ json: form.data }, getSession(request));
-//
-//   const json = await response.json();
-//   if (!json.success) return json.error.message;
-//
-//   return redirect('/', { headers: response.headers });
-// }
+export async function action({ request }: Route.ActionArgs) {
+  const form = await getValidatedFormData<SignupSchemaType>(request, resolver);
+  if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
+
+  const response = await auth.api.signUpEmail({
+    body: form.data,
+    asResponse: true,
+  });
+
+  // TODO: add error handling
+  return redirect('/', { headers: response.headers });
+}
 
 export default function SignUp({ actionData }: Route.ComponentProps) {
   const {
@@ -65,22 +67,17 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
             className="flex flex-col gap-4"
           >
             <FormField
+              label="Name"
+              required
+              {...register('name')}
+              errorMessage={errors.name?.message}
+            />
+            <FormField
               label="Email"
               type="email"
               required
               {...register('email')}
               errorMessage={errors.email?.message}
-            />
-            <FormField
-              label="First Name"
-              required
-              {...register('firstName')}
-              errorMessage={errors.firstName?.message}
-            />
-            <FormField
-              label="Last Name"
-              {...register('lastName')}
-              errorMessage={errors.lastName?.message}
             />
             <FormField
               label="Password"

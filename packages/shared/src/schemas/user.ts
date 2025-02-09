@@ -22,8 +22,7 @@ export const SignupSchema = z
     password: zPassword,
     email: z.string().email('Invalid email address.'),
     verifyPassword: z.string(),
-    firstName: z.string().min(1, 'First Name is required.'),
-    lastName: z.string().optional(),
+    name: z.string().min(1, 'Name is required.'),
   })
   .refine(data => data.password === data.verifyPassword, {
     message: 'The confirmation password doesn’t match.',
