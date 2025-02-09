@@ -2,8 +2,8 @@ import 'dotenv/config';
 
 import { faker } from '@faker-js/faker';
 
-import { db } from './src/.server/db.ts';
-import * as schema from './src/.server/schema';
+import { db } from './db';
+import * as schema from './schema';
 
 // type InsertUser = typeof schema.user.$inferInsert;
 type SelectUser = typeof schema.user.$inferSelect;

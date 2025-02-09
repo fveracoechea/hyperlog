@@ -1,4 +1,4 @@
-import { env } from '@/utils/env.ts';
+import { env } from '@/.server/env';
 import { drizzle } from 'drizzle-orm/libsql/node';
 
 import * as schema from './schema';

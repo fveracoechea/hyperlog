@@ -35,9 +35,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.54.2(react@19.0.0))
-      '@hyperlog/backend':
-        specifier: workspace:*
-        version: link:../backend
       '@hyperlog/shared':
         specifier: workspace:*
         version: link:../packages/shared
@@ -183,125 +180,6 @@ importers:
       vite-tsconfig-paths:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.7.3)(vite@6.0.11(@types/node@22.13.1)(jiti@1.21.7)(tsx@4.19.2)(yaml@2.7.0))
-
-  backend:
-    dependencies:
-      '@hono/node-server':
-        specifier: ^1.13.8
-        version: 1.13.8(hono@4.6.20)
-      '@hono/zod-validator':
-        specifier: ^0.4.2
-        version: 0.4.2(hono@4.6.20)(zod@3.24.1)
-      '@hyperlog/db':
-        specifier: workspace:*
-        version: link:../packages/db
-      '@hyperlog/shared':
-        specifier: workspace:*
-        version: link:../packages/shared
-      '@libsql/client':
-        specifier: ^0.14.0
-        version: 0.14.0
-      bcrypt-ts:
-        specifier: ^5.0.3
-        version: 5.0.3
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
-      drizzle-orm:
-        specifier: ^0.39.1
-        version: 0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0)
-      hono:
-        specifier: ^4.6.20
-        version: 4.6.20
-      hono-rate-limiter:
-        specifier: ^0.4.2
-        version: 0.4.2(hono@4.6.20)
-      uuid:
-        specifier: ^11.0.5
-        version: 11.0.5
-      zod:
-        specifier: ^3.24.1
-        version: 3.24.1
-    devDependencies:
-      '@hyperlog/eslint-config':
-        specifier: workspace:*
-        version: link:../packages/eslint-config
-      '@tsconfig/node22':
-        specifier: ^22.0.0
-        version: 22.0.0
-      '@types/better-sqlite3':
-        specifier: ^7.6.12
-        version: 7.6.12
-      '@types/node':
-        specifier: ^22.13.1
-        version: 22.13.1
-      eslint:
-        specifier: ^9.19.0
-        version: 9.19.0(jiti@1.21.7)
-      tsup:
-        specifier: ^8.3.6
-        version: 8.3.6(jiti@1.21.7)(postcss@8.5.1)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
-      tsx:
-        specifier: ^4.19.2
-        version: 4.19.2
-
-  packages/db:
-    dependencies:
-      '@hyperlog/shared':
-        specifier: workspace:*
-        version: link:../shared
-      '@libsql/client':
-        specifier: ^0.14.0
-        version: 0.14.0
-      bcrypt-ts:
-        specifier: ^5.0.3
-        version: 5.0.3
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
-      drizzle-orm:
-        specifier: ^0.39.1
-        version: 0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0)
-      drizzle-zod:
-        specifier: ^0.7.0
-        version: 0.7.0(drizzle-orm@0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0))(zod@3.24.1)
-      uuid:
-        specifier: ^11.0.5
-        version: 11.0.5
-      zod:
-        specifier: ^3.24.1
-        version: 3.24.1
-    devDependencies:
-      '@faker-js/faker':
-        specifier: ^9.4.0
-        version: 9.4.0
-      '@hyperlog/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@tsconfig/node22':
-        specifier: ^22.0.0
-        version: 22.0.0
-      '@types/node':
-        specifier: ^22.13.1
-        version: 22.13.1
-      drizzle-dbml-generator:
-        specifier: ^0.10.0
-        version: 0.10.0(drizzle-orm@0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0))
-      drizzle-kit:
-        specifier: ^0.30.4
-        version: 0.30.4
-      drizzle-seed:
-        specifier: ^0.3.1
-        version: 0.3.1(drizzle-orm@0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0))
-      eslint:
-        specifier: ^9.19.0
-        version: 9.19.0(jiti@1.21.7)
-      tsup:
-        specifier: ^8.3.6
-        version: 8.3.6(jiti@1.21.7)(postcss@8.5.1)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
-      tsx:
-        specifier: ^4.19.2
-        version: 4.19.2
 
   packages/eslint-config:
     devDependencies:
@@ -1151,18 +1029,6 @@ packages:
       eslint: ^9.0.0
       typescript: ^5.0.0
 
-  '@hono/node-server@1.13.8':
-    resolution: {integrity: sha512-fsn8ucecsAXUoVxrUil0m13kOEq4mkX4/4QozCqmY+HpGfKl74OYSn8JcMA8GnG0ClfdRI4/ZSeG7zhFaVg+wg==}
-    engines: {node: '>=18.14.1'}
-    peerDependencies:
-      hono: ^4
-
-  '@hono/zod-validator@0.4.2':
-    resolution: {integrity: sha512-1rrlBg+EpDPhzOV4hT9pxr5+xDVmKuz6YJl+la7VCwK6ass5ldyKm5fD+umJdV2zhHD6jROoCCv8NbTwyfhT0g==}
-    peerDependencies:
-      hono: '>=3.9.0'
-      zod: ^3.19.1
-
   '@hookform/resolvers@3.10.0':
     resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
     peerDependencies:
@@ -1921,10 +1787,6 @@ packages:
     resolution: {integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==}
     engines: {node: '>= 0.8'}
 
-  bcrypt-ts@5.0.3:
-    resolution: {integrity: sha512-2FcgD12xPbwCoe5i9/HK0jJ1xA1m+QfC1e6htG9Bl/hNOnLyaFmQSlqLKcfe3QdnoMPKpKEGFCbESBTg+SJNOw==}
-    engines: {node: '>=18'}
-
   better-auth@1.1.16:
     resolution: {integrity: sha512-Xc5pxafKZw4QVU8WYfkV2z4Hd8KCXXbphrgOpe2gA/EfanysLBhE1G/F7cEi5e0bW2pGR+vw6gf0ARHA7VFihg==}
 
@@ -2214,11 +2076,6 @@ packages:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
     engines: {node: '>=12'}
 
-  drizzle-dbml-generator@0.10.0:
-    resolution: {integrity: sha512-cMZq9E3U3RlmE0uBeXyc6oWJ0royOkC6HiTlc9LDeMe+W87poZTzKoNYUyAxZrs4Q1RQtob+cGKiefV4ZoI8HA==}
-    peerDependencies:
-      drizzle-orm: '>=0.36.0'
-
   drizzle-kit@0.30.4:
     resolution: {integrity: sha512-B2oJN5UkvwwNHscPWXDG5KqAixu7AUzZ3qbe++KU9SsQ+cZWR4DXEPYcvWplyFAno0dhRJECNEhNxiDmFaPGyQ==}
     hasBin: true
@@ -2322,12 +2179,6 @@ packages:
     peerDependenciesMeta:
       drizzle-orm:
         optional: true
-
-  drizzle-zod@0.7.0:
-    resolution: {integrity: sha512-xgCRYYVEzRkeXTS33GSMgoowe3vKsMNBjSI+cwG1oLQVEhAWWbqtb/AAMlm7tkmV4fG/uJjEmWzdzlEmTgWOoQ==}
-    peerDependencies:
-      drizzle-orm: '>=0.36.0'
-      zod: '>=3.0.0'
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -2781,11 +2632,6 @@ packages:
 
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
-
-  hono-rate-limiter@0.4.2:
-    resolution: {integrity: sha512-AAtFqgADyrmbDijcRTT/HJfwqfvhalya2Zo+MgfdrMPas3zSMD8SU03cv+ZsYwRU1swv7zgVt0shwN059yzhjw==}
-    peerDependencies:
-      hono: ^4.1.1
 
   hono@4.6.20:
     resolution: {integrity: sha512-5qfNQeaIptMaJKyoJ6N/q4gIq0DBp2FCRaLNuUI3LlJKL4S37DY/rLL1uAxA4wrPB39tJ3s+f7kgI79O4ScSug==}
@@ -4892,15 +4738,6 @@ snapshots:
       - eslint-plugin-import
       - supports-color
 
-  '@hono/node-server@1.13.8(hono@4.6.20)':
-    dependencies:
-      hono: 4.6.20
-
-  '@hono/zod-validator@0.4.2(hono@4.6.20)(zod@3.24.1)':
-    dependencies:
-      hono: 4.6.20
-      zod: 3.24.1
-
   '@hookform/resolvers@3.10.0(react-hook-form@7.54.2(react@19.0.0))':
     dependencies:
       react-hook-form: 7.54.2(react@19.0.0)
@@ -5470,6 +5307,7 @@ snapshots:
   '@types/better-sqlite3@7.6.12':
     dependencies:
       '@types/node': 22.13.1
+    optional: true
 
   '@types/cookie@0.6.0': {}
 
@@ -5715,8 +5553,6 @@ snapshots:
   basic-auth@2.0.1:
     dependencies:
       safe-buffer: 5.1.2
-
-  bcrypt-ts@5.0.3: {}
 
   better-auth@1.1.16:
     dependencies:
@@ -6016,10 +5852,6 @@ snapshots:
 
   dotenv@16.4.7: {}
 
-  drizzle-dbml-generator@0.10.0(drizzle-orm@0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0)):
-    dependencies:
-      drizzle-orm: 0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0)
-
   drizzle-kit@0.30.4:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
@@ -6043,11 +5875,6 @@ snapshots:
       pure-rand: 6.1.0
     optionalDependencies:
       drizzle-orm: 0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0)
-
-  drizzle-zod@0.7.0(drizzle-orm@0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0))(zod@3.24.1):
-    dependencies:
-      drizzle-orm: 0.39.1(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@19.0.8)(better-sqlite3@11.8.1)(kysely@0.27.5)(react@19.0.0)
-      zod: 3.24.1
 
   dunder-proto@1.0.1:
     dependencies:
@@ -6271,6 +6098,7 @@ snapshots:
       '@esbuild/win32-arm64': 0.23.1
       '@esbuild/win32-ia32': 0.23.1
       '@esbuild/win32-x64': 0.23.1
+    optional: true
 
   esbuild@0.24.2:
     optionalDependencies:
@@ -6752,10 +6580,6 @@ snapshots:
   hermes-parser@0.25.1:
     dependencies:
       hermes-estree: 0.25.1
-
-  hono-rate-limiter@0.4.2(hono@4.6.20):
-    dependencies:
-      hono: 4.6.20
 
   hono@4.6.20: {}
 
@@ -7982,6 +7806,7 @@ snapshots:
       get-tsconfig: 4.10.0
     optionalDependencies:
       fsevents: 2.3.3
+    optional: true
 
   tunnel-agent@0.6.0:
     dependencies:

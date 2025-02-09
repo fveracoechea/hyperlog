@@ -12,14 +12,14 @@ export async function getFavorites(userId: string) {
   });
 }
 
-export async function deleteFromFavorites(linkId: string) {
+export async function removeFromFavorites(linkId: string) {
   return await db
     .update(schema.link)
     .set({ isPinned: false })
     .where(eq(schema.link.id, linkId));
 }
 
-export async function getRecetlyViewed(userId: string) {
+export async function getRecentActivity(userId: string) {
   return await db.query.link.findMany({
     where: and(eq(schema.link.ownerId, userId)),
     orderBy: [asc(schema.link.lastVisit)],

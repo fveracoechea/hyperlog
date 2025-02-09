@@ -1,14 +1,19 @@
-import { redirect } from 'react-router';
+import { data, redirect } from 'react-router';
 
-import { env } from '@/utils/env';
-import { api, assertResponse, getSession } from '@/utils/hono';
+import { env } from '@/.server/env';
+import { deleteLink, getLinkDetails } from '@/.server/resources/link';
 
 import type { Route } from './+types/link';
 
-export async function loader({ request, params: { linkId } }: Route.LoaderArgs) {
-  const res = await api.links[':linkId'].$get({ param: { linkId } }, getSession(request));
-  const json = await res.json();
-  return json.data?.link ?? null;
+const maxAge = 3600 * 24;
+
+export async function loader({ params: { linkId } }: Route.LoaderArgs) {
+  const link = await getLinkDetails(linkId);
+
+  const headers = new Headers();
+  if (env.isProd) headers.append('Cache-Control', `private, max-age=${maxAge}`);
+
+  return data(link ?? null, { headers });
 }
 
 export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
@@ -16,19 +21,9 @@ export async function action({ request, params: { linkId } }: Route.LoaderArgs) 
   const redirectTo = String(formData.get('redirect'));
 
   if (request.method === 'DELETE') {
-    const res = await api.links[':linkId'].$delete({ param: { linkId } }, getSession(request));
-    await assertResponse(res);
+    await deleteLink(linkId);
     return redirect(redirectTo);
   }
 
   return null;
-}
-
-export function headers({}: Route.HeadersArgs) {
-  const maxAge = 3600 * 24;
-  if (env.isProd)
-    return {
-      'Cache-Control': `private, max-age=${maxAge}`,
-    };
-  else return {};
 }

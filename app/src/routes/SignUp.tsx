@@ -1,6 +1,5 @@
 import { Form, redirect } from 'react-router';
 
-import { api, getSession } from '@/utils/hono';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupSchema, type SignupSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';
@@ -17,17 +16,17 @@ import type { Route } from './+types/SignUp';
 
 const resolver = zodResolver(SignupSchema);
 
-export async function action({ request }: Route.ActionArgs) {
-  const form = await getValidatedFormData<SignupSchemaType>(request, resolver);
-  if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
-
-  const response = await api.auth['sign-up'].$post({ json: form.data }, getSession(request));
-
-  const json = await response.json();
-  if (!json.success) return json.error.message;
-
-  return redirect('/', { headers: response.headers });
-}
+// export async function action({ request }: Route.ActionArgs) {
+//   const form = await getValidatedFormData<SignupSchemaType>(request, resolver);
+//   if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
+//
+//   const response = await api.auth['sign-up'].$post({ json: form.data }, getSession(request));
+//
+//   const json = await response.json();
+//   if (!json.success) return json.error.message;
+//
+//   return redirect('/', { headers: response.headers });
+// }
 
 export default function SignUp({ actionData }: Route.ComponentProps) {
   const {

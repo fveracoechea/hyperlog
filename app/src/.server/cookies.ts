@@ -1,6 +1,6 @@
 import { type CookieOptions, createCookie } from 'react-router';
 
-import { env } from '@/utils/env';
+import { env } from '@/.server/env';
 import { z } from 'zod';
 
 function makeCookie<S extends z.ZodTypeAny>(

@@ -1,11 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "f1510c14-5645-49e3-a2fc-aa518aeb91f7",
+  "id": "6f4295d5-c6a9-46ea-9ea9-ab0562f7ad29",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "collections": {
-      "name": "collections",
+    "collection": {
+      "name": "collection",
       "columns": {
         "id": {
           "name": "id",
@@ -81,8 +81,8 @@
         }
       },
       "indexes": {
-        "collections_name_ownerId_unique": {
-          "name": "collections_name_ownerId_unique",
+        "collection_name_ownerId_unique": {
+          "name": "collection_name_ownerId_unique",
           "columns": [
             "name",
             "owner_id"
@@ -91,10 +91,10 @@
         }
       },
       "foreignKeys": {
-        "collections_parent_id_collections_id_fk": {
-          "name": "collections_parent_id_collections_id_fk",
-          "tableFrom": "collections",
-          "tableTo": "collections",
+        "collection_parent_id_collection_id_fk": {
+          "name": "collection_parent_id_collection_id_fk",
+          "tableFrom": "collection",
+          "tableTo": "collection",
           "columnsFrom": [
             "parent_id"
           ],
@@ -104,10 +104,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "collections_owner_id_users_id_fk": {
-          "name": "collections_owner_id_users_id_fk",
-          "tableFrom": "collections",
-          "tableTo": "users",
+        "collection_owner_id_user_id_fk": {
+          "name": "collection_owner_id_user_id_fk",
+          "tableFrom": "collection",
+          "tableTo": "user",
           "columnsFrom": [
             "owner_id"
           ],
@@ -122,8 +122,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "links": {
-      "name": "links",
+    "link": {
+      "name": "link",
       "columns": {
         "id": {
           "name": "id",
@@ -143,7 +143,7 @@
           "name": "title",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "description": {
@@ -230,10 +230,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "links_collection_id_collections_id_fk": {
-          "name": "links_collection_id_collections_id_fk",
-          "tableFrom": "links",
-          "tableTo": "collections",
+        "link_collection_id_collection_id_fk": {
+          "name": "link_collection_id_collection_id_fk",
+          "tableFrom": "link",
+          "tableTo": "collection",
           "columnsFrom": [
             "collection_id"
           ],
@@ -243,10 +243,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "links_tag_id_tags_id_fk": {
-          "name": "links_tag_id_tags_id_fk",
-          "tableFrom": "links",
-          "tableTo": "tags",
+        "link_tag_id_tag_id_fk": {
+          "name": "link_tag_id_tag_id_fk",
+          "tableFrom": "link",
+          "tableTo": "tag",
           "columnsFrom": [
             "tag_id"
           ],
@@ -256,10 +256,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "links_owner_id_users_id_fk": {
-          "name": "links_owner_id_users_id_fk",
-          "tableFrom": "links",
-          "tableTo": "users",
+        "link_owner_id_user_id_fk": {
+          "name": "link_owner_id_user_id_fk",
+          "tableFrom": "link",
+          "tableTo": "user",
           "columnsFrom": [
             "owner_id"
           ],
@@ -274,8 +274,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "tags": {
-      "name": "tags",
+    "tag": {
+      "name": "tag",
       "columns": {
         "id": {
           "name": "id",
@@ -323,8 +323,8 @@
         }
       },
       "indexes": {
-        "tags_name_ownerId_unique": {
-          "name": "tags_name_ownerId_unique",
+        "tag_name_ownerId_unique": {
+          "name": "tag_name_ownerId_unique",
           "columns": [
             "name",
             "owner_id"
@@ -333,10 +333,10 @@
         }
       },
       "foreignKeys": {
-        "tags_owner_id_users_id_fk": {
-          "name": "tags_owner_id_users_id_fk",
-          "tableFrom": "tags",
-          "tableTo": "users",
+        "tag_owner_id_user_id_fk": {
+          "name": "tag_owner_id_user_id_fk",
+          "tableFrom": "tag",
+          "tableTo": "user",
           "columnsFrom": [
             "owner_id"
           ],
@@ -351,106 +351,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "users": {
-      "name": "users",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "first_name": {
-          "name": "first_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "last_name": {
-          "name": "last_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "locale": {
-          "name": "locale",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'en'"
-        },
-        "username": {
-          "name": "username",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(CURRENT_TIMESTAMP)"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "columns": [
-            "email"
-          ],
-          "isUnique": true
-        },
-        "users_username_unique": {
-          "name": "users_username_unique",
-          "columns": [
-            "username"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "users_to_collections": {
-      "name": "users_to_collections",
+    "user_to_collection": {
+      "name": "user_to_collection",
       "columns": {
         "id": {
           "name": "id",
@@ -475,8 +377,8 @@
         }
       },
       "indexes": {
-        "users_to_collections_userId_collectionId_unique": {
-          "name": "users_to_collections_userId_collectionId_unique",
+        "user_to_collection_userId_collectionId_unique": {
+          "name": "user_to_collection_userId_collectionId_unique",
           "columns": [
             "user_id",
             "collection_id"
@@ -485,10 +387,10 @@
         }
       },
       "foreignKeys": {
-        "users_to_collections_user_id_users_id_fk": {
-          "name": "users_to_collections_user_id_users_id_fk",
-          "tableFrom": "users_to_collections",
-          "tableTo": "users",
+        "user_to_collection_user_id_user_id_fk": {
+          "name": "user_to_collection_user_id_user_id_fk",
+          "tableFrom": "user_to_collection",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
@@ -498,10 +400,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "users_to_collections_collection_id_collections_id_fk": {
-          "name": "users_to_collections_collection_id_collections_id_fk",
-          "tableFrom": "users_to_collections",
-          "tableTo": "collections",
+        "user_to_collection_collection_id_collection_id_fk": {
+          "name": "user_to_collection_collection_id_collection_id_fk",
+          "tableFrom": "user_to_collection",
+          "tableTo": "collection",
           "columnsFrom": [
             "collection_id"
           ],
@@ -512,6 +414,349 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "account": {
+      "name": "account",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "access_token": {
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "id_token": {
+          "name": "id_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "access_token_expires_at": {
+          "name": "access_token_expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "refresh_token_expires_at": {
+          "name": "refresh_token_expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "scope": {
+          "name": "scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "account_user_id_user_id_fk": {
+          "name": "account_user_id_user_id_fk",
+          "tableFrom": "account",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "session": {
+      "name": "session",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ip_address": {
+          "name": "ip_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "session_token_unique": {
+          "name": "session_token_unique",
+          "columns": [
+            "token"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "session_user_id_user_id_fk": {
+          "name": "session_user_id_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "user": {
+      "name": "user",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        },
+        "user_username_unique": {
+          "name": "user_username_unique",
+          "columns": [
+            "username"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "verification": {
+      "name": "verification",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}

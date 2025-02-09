@@ -1,7 +1,6 @@
 import { Form, redirect } from 'react-router';
 
-import { cookies } from '@/utils/cookies';
-import { api, getSession } from '@/utils/hono';
+import { cookies } from '@/.server/cookies';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginSchema, type LoginSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';
@@ -18,17 +17,17 @@ import type { Route } from './+types/Login';
 
 const resolver = zodResolver(LoginSchema);
 
-export async function action({ request }: Route.ActionArgs) {
-  const form = await getValidatedFormData<LoginSchemaType>(request, resolver);
-  if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
-
-  const response = await api.auth.login.$post({ json: form.data }, getSession(request));
-
-  const json = await response.json();
-  if (!json.success) return json.error.message;
-
-  return redirect('/', { headers: response.headers });
-}
+// export async function action({ request }: Route.ActionArgs) {
+//   const form = await getValidatedFormData<LoginSchemaType>(request, resolver);
+//   if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
+//
+//   const response = await api.auth.login.$post({ json: form.data }, getSession(request));
+//
+//   const json = await response.json();
+//   if (!json.success) return json.error.message;
+//
+//   return redirect('/', { headers: response.headers });
+// }
 
 export async function loader({ request }: Route.LoaderArgs) {
   const info = await cookies.info.get(request);

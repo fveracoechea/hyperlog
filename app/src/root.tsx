@@ -4,16 +4,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  data,
   isRouteErrorResponse,
-  redirect,
 } from 'react-router';
 
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
-import { cookies } from './utils/cookies';
-import { env } from './utils/env';
-import { api, getSession } from './utils/hono';
 
 export const links: Route.LinksFunction = () => [
   {
@@ -22,36 +17,15 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-const authRoutes = ['/login', '/sign-up'];
-
-export async function loader({ request }: Route.LoaderArgs) {
-  const { pathname } = new URL(request.url);
-  const response = await api.user.whoami.$get({ json: {} }, getSession(request));
-  const json = await response.json();
-
-  const isAuthRoute = authRoutes.includes(pathname);
-
-  if ((!response.ok || !json.success) && !isAuthRoute) {
-    // Types not being inferred because there is no error response in this endpoint
-    // However the sessionMiddleware can respond with this format
-    const error = json.error as unknown as { message: string };
-    const headers = new Headers();
-    headers.append('Set-Cookie', await cookies.info.set({ ...error, type: 'info' }));
-    throw redirect('/login', { headers });
-  } else if (isAuthRoute && response.ok) {
-    throw redirect('/', { headers: response.headers });
-  }
-
-  return data(json.data, { headers: response.headers });
-}
-
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {env.isDev && <script src="https://unpkg.com/react-scan/dist/auto.global.js" />}
+        {import.meta.env.DEV && (
+          <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
+        )}
         <Meta />
         <Links />
       </head>

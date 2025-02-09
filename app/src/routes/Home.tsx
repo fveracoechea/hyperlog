@@ -1,7 +1,9 @@
 import { Await, data } from 'react-router';
 
-import { api, assertResponse, getSession } from '@/utils/hono';
+import { getFavorites, getRecentActivity } from '@/.server/resources/link';
+import { getSessionOrRedirect } from '@/.server/session';
 import { HistoryIcon, Star } from 'lucide-react';
+import { promiseHash } from 'remix-utils/promise';
 
 import { Banner } from '@/components/Banner';
 import { FavoriteLink } from '@/components/FavoriteLink';
@@ -9,44 +11,16 @@ import { LinkCard } from '@/components/LinkCard';
 
 import type { Route } from './+types/Home';
 
-async function removeFromFavorites(req: Request, linkId: string) {
-  const response = await api.links.favorite[':linkId'].$delete(
-    { param: { linkId }, json: {} },
-    getSession(req),
-  );
-  await assertResponse(response);
-  return response.headers;
-}
-
-async function getRecentActivity(req: Request) {
-  const response = await api.links.recents.$get({ json: {} }, getSession(req));
-  const json = await assertResponse(response);
-  return json.data.recentlyViewed;
-}
-
 export async function loader({ request }: Route.LoaderArgs) {
-  const response = await api.links.favorites.$get({ json: {} }, getSession(request));
-  const json = await assertResponse(response);
+  const { user } = await getSessionOrRedirect(request);
 
   return data(
-    {
-      favorites: json.data.favorites,
-      recentActivityPromise: getRecentActivity(request),
-    },
+    await promiseHash({
+      favorites: getFavorites(user.id),
+      recentActivityPromise: getRecentActivity(user.id),
+    }),
     { headers: request.headers },
   );
-}
-
-export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const intent = formData.get('intent');
-
-  let headers = new Headers();
-
-  if (intent === 'remove-favorite')
-    headers = await removeFromFavorites(request, String(formData.get('linkId')));
-
-  return data(null, { headers });
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
