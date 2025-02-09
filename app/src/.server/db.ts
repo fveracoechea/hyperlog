@@ -1,9 +1,7 @@
+import { env } from '@/utils/env.ts';
 import { drizzle } from 'drizzle-orm/libsql/node';
 
-import { env } from '../../../backend/src/utils/env.ts';
-import * as schema from './schema.ts';
-
-export * as schema from './schema.ts';
+import * as schema from './schema';
 
 export const db = drizzle({
   casing: 'snake_case',

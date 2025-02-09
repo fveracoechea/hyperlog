@@ -1,26 +1,26 @@
 import { z } from 'zod';
 
+const zSecret = z
+  .string()
+  .optional()
+  .transform((arg, ctx) => {
+    if (!arg) {
+      if (import.meta.env.PROD) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: ctx.path.join('_') });
+        return z.NEVER;
+      }
+      return 'secret';
+    }
+    return arg;
+  });
+
 const EnvSchema = z
   .object({
-    VITE_BACKEND_URL: z.string().url().default('http://localhost:3333/'),
+    BETTER_AUTH_URL: z.string().url().default('http://localhost:3000'),
     NODE_ENV: z.enum(['development', 'production']).default('development'),
-    COOKIE_SECRET: z
-      .string()
-      .optional()
-      .transform((arg, _ctx) => {
-        if (!arg) {
-          // if (import.meta.env.PROD) {
-          //   ctx.addIssue({
-          //     code: z.ZodIssueCode.custom,
-          //     message: 'COOKIE_SECRET',
-          //   });
-          //   return z.NEVER;
-          // }
-          return 'secret';
-        }
-
-        return arg;
-      }),
+    DB_FILENAME: z.string(),
+    COOKIE_SECRET: zSecret,
+    BETTER_AUTH_SECRET: zSecret,
   })
   .transform(v => ({
     ...v,
@@ -30,21 +30,21 @@ const EnvSchema = z
 
 export type EnvVars = z.infer<typeof EnvSchema>;
 
-let values = null;
-
-try {
-  values = EnvSchema.parse(import.meta.env);
-} catch (error) {
-  if (error instanceof z.ZodError) {
-    let message = 'Missing required ENV variables: \n';
-    error.issues.forEach(issue => {
-      message += `- ${issue.path[0]} \n`;
-    });
-    const e = new Error(message);
-    throw e;
-  } else {
-    throw error;
+function loadEnv() {
+  try {
+    return EnvSchema.parse(import.meta.env);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      let message = 'Missing required ENV variables: \n';
+      error.issues.forEach(issue => {
+        message += `- ${issue.path[0]} \n`;
+      });
+      const e = new Error(message);
+      throw e;
+    } else {
+      throw error;
+    }
   }
 }
 
-export const env = values as EnvVars;
+export const env = loadEnv();

@@ -1,40 +1,21 @@
 import 'dotenv/config';
 
 import { faker } from '@faker-js/faker';
-import { reset } from 'drizzle-seed';
 
-import { db } from '../../backend/src/db/db.ts';
-import * as schema from '../../backend/src/db/schema.ts';
-import { createHasher } from '../../backend/src/utils/hasher.ts';
+import { db } from './src/.server/db.ts';
+import * as schema from './src/.server/schema';
 
-type InsertUser = typeof schema.users.$inferInsert;
-type SelectUser = typeof schema.users.$inferSelect;
+// type InsertUser = typeof schema.user.$inferInsert;
+type SelectUser = typeof schema.user.$inferSelect;
 
-type InsertLink = typeof schema.links.$inferInsert;
+type InsertLink = typeof schema.link.$inferInsert;
 
-type InsertTag = typeof schema.tags.$inferInsert;
-type SelectTag = typeof schema.tags.$inferSelect;
+type InsertTag = typeof schema.tag.$inferInsert;
+type SelectTag = typeof schema.tag.$inferSelect;
 
-type InsertCollection = typeof schema.collections.$inferInsert;
-type SelectCollection = typeof schema.collections.$inferSelect;
-type InsertUsersToCollections = typeof schema.usersToCollections.$inferInsert;
-
-const password = await createHasher('secret123');
-
-function* userGenerator() {
-  while (true) {
-    const firstName = faker.person.firstName();
-    const lastName = faker.person.lastName();
-    yield {
-      firstName,
-      lastName,
-      password,
-      email: faker.internet.email({ firstName, lastName }),
-      username: faker.internet.username({ firstName, lastName }),
-      isActive: true,
-    } satisfies InsertUser;
-  }
-}
+type InsertCollection = typeof schema.collection.$inferInsert;
+type SelectCollection = typeof schema.collection.$inferSelect;
+type InsertUsersToCollections = typeof schema.userToCollection.$inferInsert;
 
 function* collectionGenerator(user: SelectUser) {
   while (true) {
@@ -73,17 +54,6 @@ function* tagGenerator(user: SelectUser) {
   }
 }
 
-async function seedUsers() {
-  const users: InsertUser[] = [];
-
-  for (const user of userGenerator()) {
-    if (users.length === 100) break;
-    users.push(user);
-  }
-
-  return await db.insert(schema.users).values(users).returning();
-}
-
 async function seedCollections(user: SelectUser) {
   const collections: InsertCollection[] = [];
   const usersToCollections: InsertUsersToCollections[] = [];
@@ -95,13 +65,13 @@ async function seedCollections(user: SelectUser) {
     collections.push(collection);
   }
 
-  const result = await db.insert(schema.collections).values(collections).returning();
+  const result = await db.insert(schema.collection).values(collections).returning();
 
   for (const collection of result) {
     usersToCollections.push({ userId: user.id, collectionId: collection.id });
   }
 
-  await db.insert(schema.usersToCollections).values(usersToCollections);
+  await db.insert(schema.userToCollection).values(usersToCollections);
 
   return result;
 }
@@ -115,7 +85,7 @@ async function seedTags(user: SelectUser) {
     tags.push(tag);
   }
 
-  return await db.insert(schema.tags).values(tags).returning();
+  return await db.insert(schema.tag).values(tags).returning();
 }
 
 async function seedLinks(
@@ -156,14 +126,11 @@ async function seedLinks(
     }
   }
 
-  return await db.insert(schema.links).values(links).returning();
+  return await db.insert(schema.link).values(links).returning();
 }
 
 async function main() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await reset(db as any, schema);
-
-  const users = await seedUsers();
+  const users = await db.query.user.findMany({ limit: 5 });
 
   const collections = await Promise.all(users.map(seedCollections));
   const tags = await Promise.all(users.map(seedTags));

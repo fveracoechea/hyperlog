@@ -5,9 +5,9 @@
   "scripts": {
     "db:seed": "tsx ./drizzle.seed.ts",
     "db:kit": "drizzle-kit",
+    "db:dbml": "tsx ./drizzle.dbml.ts",
     "build": "tsup",
     "dev": "tsx watch src/server.ts",
-    "db:dbml": "tsx ./drizzle.dbml.ts",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint ."
   },
