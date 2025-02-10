@@ -1,6 +1,7 @@
 import { and, asc, eq } from 'drizzle-orm';
 
 import { db } from '../db';
+import { type PaginationSchemaType, pagination } from '../pagination';
 import * as schema from '../schema';
 
 export async function getFavorites(userId: string) {
@@ -12,13 +13,17 @@ export async function getFavorites(userId: string) {
   });
 }
 
-export async function getAllLinks(userId: string) {
-  return await db.query.link.findMany({
-    limit: 24,
-    where: eq(schema.link.ownerId, userId),
-    with: {
-      tag: true,
-      collection: true,
+export async function getAllLinks(userId: string, searchParams: PaginationSchemaType) {
+  return await pagination({
+    table: 'link',
+    where: [eq(schema.link.ownerId, userId)],
+    searchableFields: ['title', 'url'],
+    searchParams,
+    findManyArgs: {
+      with: {
+        tag: true,
+        collection: true,
+      },
     },
   });
 }

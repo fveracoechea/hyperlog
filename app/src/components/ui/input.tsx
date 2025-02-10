@@ -38,11 +38,12 @@ const input = clsx([
 
 export type InputProps = React.ComponentProps<'input'> & {
   icon?: React.ReactNode;
+  rightBtn?: React.ReactNode;
   error?: boolean;
 };
 
-const Input = React.forwardRef<HTMLInputElement, Props>(
-  ({ className, type, disabled, icon, error = false, ...props }, ref) => {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, disabled, icon, rightBtn, error = false, ...props }, ref) => {
     return (
       <div className={wrapper({ disabled, error })}>
         {icon && <span className="pl-2">{icon}</span>}
@@ -53,10 +54,12 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
           {...props}
           style={{ lineHeight: 'revert' }}
         />
+        {rightBtn && rightBtn}
       </div>
     );
   },
 );
+
 Input.displayName = 'Input';
 
 export { Input };
