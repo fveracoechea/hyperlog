@@ -36,7 +36,7 @@ const input = clsx([
   'autofill:!bg-background autofill:!text-foreground autofill:appearance-none',
 ]);
 
-type Props = React.ComponentProps<'input'> & {
+export type InputProps = React.ComponentProps<'input'> & {
   icon?: React.ReactNode;
   error?: boolean;
 };

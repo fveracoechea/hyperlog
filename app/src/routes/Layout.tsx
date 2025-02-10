@@ -1,6 +1,7 @@
-import { Outlet, data, useSearchParams } from 'react-router';
+import { Outlet, data } from 'react-router';
 
-import { api, assertResponse, getSession } from '@/utility/hono';
+import { getSidebarData } from '@/.server/resources/dashboard';
+import { getSessionOrRedirect } from '@/.server/session';
 import { ClientOnly } from 'remix-utils/client-only';
 
 import { LinkDetailsDrawer } from '@/components/LinkDetailsDrawer';
@@ -11,9 +12,12 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import type { Route } from './+types/Layout';
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const response = await api.dashboard.sidebar.$get({ json: {} }, getSession(request));
-  const json = await assertResponse(response);
-  return data(json.data, { headers: response.headers });
+  const {
+    data: { user },
+    headers,
+  } = await getSessionOrRedirect(request);
+
+  return data(await getSidebarData(user.id), { headers });
 }
 
 export default function Layout() {

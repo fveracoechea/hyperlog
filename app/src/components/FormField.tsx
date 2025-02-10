@@ -2,17 +2,26 @@ import { type ComponentPropsWithRef, useId } from 'react';
 
 import { cn } from '@/lib/utils';
 
-import { Input } from './ui/input';
+import { Input, type InputProps } from './ui/input';
+import { Textarea, type TextareaProps } from './ui/textarea';
 import { Typography } from './ui/typography';
+
+type FieldTextareaProps = {
+  variant: 'textarea';
+} & TextareaProps;
+
+type FieldInpuProps = {
+  variant?: 'input';
+} & InputProps;
 
 type Props = {
   label: string;
   fieldClassName?: string;
   errorMessage?: string;
-} & ComponentPropsWithRef<'input'>;
+} & (FieldInpuProps | FieldTextareaProps);
 
 export function FormField(props: Props) {
-  const { label, fieldClassName, errorMessage, ...inputProps } = props;
+  const { variant = 'input', label, fieldClassName, errorMessage, ...inputProps } = props;
   const id = useId();
 
   return (
@@ -21,7 +30,20 @@ export function FormField(props: Props) {
         {label}
         {inputProps.required && <span className="text-cpt-red ml-2">*</span>}
       </Typography>
-      <Input error={Boolean(errorMessage)} id={id} {...inputProps} />
+      {variant === 'textarea' && (
+        <Textarea
+          id={id}
+          error={Boolean(errorMessage)}
+          {...(inputProps as ComponentPropsWithRef<'textarea'>)}
+        />
+      )}
+      {variant === 'input' && (
+        <Input
+          id={id}
+          error={Boolean(errorMessage)}
+          {...(inputProps as ComponentPropsWithRef<'input'>)}
+        />
+      )}
       {errorMessage && (
         <Typography variant="small" className="text-destructive">
           {errorMessage}

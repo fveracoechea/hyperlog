@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "env": ["NODE_ENV", "PROD"],
+      "env": ["NODE_ENV", "PROD", "DEV"],
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**"]
     },

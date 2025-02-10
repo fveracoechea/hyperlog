@@ -1,11 +1,11 @@
-import { Form, redirect } from 'react-router';
+import { Form, redirect, useNavigation } from 'react-router';
 
-import { api, getSession } from '@/utility/hono';
+import { authClient } from '@/lib/authClient.client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupSchema, type SignupSchemaType } from '@hyperlog/shared';
 import clsx from 'clsx';
-import { Unlink, UserRoundPlus } from 'lucide-react';
-import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
+import { LoaderCircleIcon, Unlink, UserRoundPlus } from 'lucide-react';
+import { useRemixForm } from 'remix-hook-form';
 
 import { FormField } from '@/components/FormField';
 import { Alert } from '@/components/ui/alert';
@@ -17,24 +17,24 @@ import type { Route } from './+types/SignUp';
 
 const resolver = zodResolver(SignupSchema);
 
-export async function action({ request }: Route.ActionArgs) {
-  const form = await getValidatedFormData<SignupSchemaType>(request, resolver);
-  if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
+export async function clientAction({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
 
-  const response = await api.auth['sign-up'].$post({ json: form.data }, getSession(request));
+  const validation = await SignupSchema.safeParseAsync(Object.fromEntries(formData));
+  if (validation.error) return { formErrors: validation.error?.formErrors.fieldErrors };
 
-  const json = await response.json();
-  if (!json.success) return json.error.message;
+  const { error } = await authClient.signUp.email(validation.data);
+  if (!error) return redirect('/');
 
-  return redirect('/', { headers: response.headers });
+  console.log(error);
+
+  return { message: error.message };
 }
 
 export default function SignUp({ actionData }: Route.ComponentProps) {
-  const {
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    register,
-  } = useRemixForm<SignupSchemaType>({ resolver });
+  const navigation = useNavigation();
+  const errors = actionData?.formErrors;
+  const message = actionData?.message;
 
   return (
     <main
@@ -59,48 +59,41 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form
-            method="POST"
-            onSubmit={handleSubmit}
-            noValidate
-            className="flex flex-col gap-4"
-          >
+          <Form method="POST" noValidate className="flex flex-col gap-4">
+            <FormField label="Name" name="name" required errorMessage={errors?.name?.at(0)} />
             <FormField
               label="Email"
               type="email"
+              name="email"
               required
-              {...register('email')}
-              errorMessage={errors.email?.message}
-            />
-            <FormField
-              label="First Name"
-              required
-              {...register('firstName')}
-              errorMessage={errors.firstName?.message}
-            />
-            <FormField
-              label="Last Name"
-              {...register('lastName')}
-              errorMessage={errors.lastName?.message}
+              errorMessage={errors?.email?.at(0)}
             />
             <FormField
               label="Password"
               type="password"
+              name="password"
               required
-              {...register('password')}
-              errorMessage={errors.password?.message}
+              errorMessage={errors?.password?.at(0)}
             />
             <FormField
               label="Confirm Password"
               type="password"
               required
-              {...register('verifyPassword')}
-              errorMessage={errors.verifyPassword?.message}
+              name="verifyPassword"
+              errorMessage={errors?.verifyPassword?.at(0)}
             />
-            {!isSubmitting && actionData && typeof actionData === 'string' && (
-              <Alert variant="destructive">{actionData}</Alert>
+
+            {navigation.state === 'idle' && message && (
+              <Alert variant="destructive">{message}</Alert>
             )}
-            <Button className="mt-1">{isSubmitting ? 'Loading...' : 'Sign Up'}</Button>
+
+            <Button className="mt-1">
+              {navigation.state === 'loading' ? (
+                <LoaderCircleIcon className="animate-spin" />
+              ) : (
+                'Sign Up'
+              )}
+            </Button>
           </Form>
         </CardContent>
         <CardFooter>

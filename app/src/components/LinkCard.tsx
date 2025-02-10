@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router';
 
 import clsx from 'clsx';
-import { formatDistance } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { EllipsisVerticalIcon, EyeIcon, FolderIcon, LinkIcon, TagIcon } from 'lucide-react';
 
 import type { Route } from '../routes/+types/Home';
@@ -23,7 +23,12 @@ export function LinkCard({ link }: Props) {
         'hover:ring-primary',
       )}
     >
-      <article className="border-border group-hover:border-primary h-full rounded border transition-colors">
+      <article
+        className={clsx(
+          'border-border group-hover:border-primary h-full rounded border transition-colors',
+          'flex flex-col',
+        )}
+      >
         {link.previewImage ? (
           <div
             className={clsx(
@@ -78,9 +83,12 @@ export function LinkCard({ link }: Props) {
         ) : (
           <div role="presentation" className="aspect-[1.91/1]" />
         )}
-        <div className="flex flex-col justify-between gap-2">
+        <div className="flex flex-1 flex-col justify-between gap-2">
           <div className="flex flex-col gap-2 p-2">
-            <Typography variant="base" className="group-hover:text-primary">
+            <Typography
+              variant="base"
+              className="group-hover:text-primary max-h-12 overflow-y-hidden"
+            >
               {link.title}
             </Typography>
 
@@ -131,7 +139,9 @@ export function LinkCard({ link }: Props) {
             <div className="flex w-max items-center gap-1.5" title="Last visit">
               <EyeIcon className="stroke-muted-foreground h-4 w-4" />
               <Typography as="span" variant="xsmall" muted className="whitespace-nowrap">
-                {formatDistance(link.lastVisit ?? Date.now(), Date.now(), { addSuffix: true })}
+                {formatDistanceToNow(link.lastVisit ?? Date.now(), {
+                  addSuffix: true,
+                })}
               </Typography>
             </div>
           </div>

@@ -1,7 +1,10 @@
-import { type RouteConfig, index, layout, route } from '@react-router/dev/routes';
+import { type RouteConfig, index, layout, prefix, route } from '@react-router/dev/routes';
 
 export default [
-  route('resource/link/:linkId', './routes/resource/link.ts'),
+  ...prefix('api', [
+    route('link/:linkId', './routes/api/link.ts'),
+    route('auth/*', './routes/api/auth.ts'),
+  ]),
 
   layout('./routes/Layout.tsx', { id: 'layout' }, [
     index('./routes/Home.tsx'),
