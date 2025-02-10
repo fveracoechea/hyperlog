@@ -29,8 +29,8 @@ const wrapper = cva({
 
 const input = clsx([
   'flex gap-2 w-full rounded-md bg-background text-foreground',
-  'px-2 py-2 ring-offset-background transition-all appearance-none',
-  'placeholder:text-muted-foreground placeholder:font-normal',
+  'p-2 ring-offset-background transition-all appearance-none',
+  'placeholder:text-muted-foreground placeholder:font-light',
   'text-sm md:text-base',
   'disabled:cursor-not-allowed disabled:opacity-50',
   'autofill:!bg-background autofill:!text-foreground autofill:appearance-none',
@@ -46,7 +46,13 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
     return (
       <div className={wrapper({ disabled, error })}>
         {icon && <span className="pl-2">{icon}</span>}
-        <input type={type} className={cn(input, className)} ref={ref} {...props} />
+        <input
+          type={type}
+          className={cn(input, className)}
+          ref={ref}
+          {...props}
+          style={{ lineHeight: 'revert' }}
+        />
       </div>
     );
   },
