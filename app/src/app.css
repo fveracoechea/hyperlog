@@ -87,6 +87,14 @@
     --chart-5: 115 54% 76%; /* green */
   }
 
+  ::spelling-error,
+  ::grammar-error {
+    @apply text-inherit underline-offset-4;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: hsl(var(--destructive));
+  }
+
   * {
     outline: none;
     border-color: var(--border);

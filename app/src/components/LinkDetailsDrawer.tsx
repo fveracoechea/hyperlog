@@ -172,7 +172,13 @@ export function LinkDetailsDrawer() {
                   </Typography>
                 )}
               </LineItem>
-              <FormField label="Notes"></FormField>
+              {/* TODO: add rich markdown editor */}
+              <FormField
+                label="Notes"
+                variant="textarea"
+                className="min-h-36 resize-none"
+                defaultValue={link.notes ?? undefined}
+              />
               <Typography muted>
                 Last Saved: {formatDate(link.updatedAt ?? new Date(), 'PPPP')}
               </Typography>
@@ -185,9 +191,7 @@ export function LinkDetailsDrawer() {
               </DrawerClose>
               <div className="flex gap-4">
                 <DeleteLinkDialog link={link} />
-                <Button variant="default">
-                  <span>View Screenshot</span>
-                </Button>
+                <Button variant="default">Update Link</Button>
               </div>
             </DrawerFooter>
           </div>

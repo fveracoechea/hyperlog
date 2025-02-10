@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "08af7219-98cc-4c19-8c57-04ced8179000",
+  "id": "e915efee-0aa2-4364-baf6-1b4d84821881",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "collection": {
@@ -200,6 +200,13 @@
         },
         "tag_id": {
           "name": "tag_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "notes": {
+          "name": "notes",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

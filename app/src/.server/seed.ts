@@ -30,6 +30,7 @@ function* collectionGenerator(user: SelectUser) {
 
 function* linkGenerator(user: SelectUser) {
   while (true) {
+    const hasNotes = faker.datatype.boolean({ probability: 0.5 });
     const link: InsertLink = {
       url: faker.internet.url(),
       title: faker.lorem.words({ min: 3, max: 10 }),
@@ -40,6 +41,7 @@ function* linkGenerator(user: SelectUser) {
       ownerId: user.id,
       views: faker.number.int({ min: 1, max: 1000 }),
     };
+    if (hasNotes) link.notes = faker.lorem.paragraph();
     yield link;
   }
 }

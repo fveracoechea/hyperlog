@@ -26,6 +26,7 @@ CREATE TABLE `link` (
 	`is_pinned` integer DEFAULT false,
 	`collection_id` text,
 	`tag_id` text,
+	`notes` text,
 	`owner_id` text NOT NULL,
 	`created_at` integer DEFAULT (unixepoch()),
 	`updated_at` integer,

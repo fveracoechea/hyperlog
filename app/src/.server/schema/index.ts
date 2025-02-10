@@ -38,6 +38,7 @@ export const link = t.sqliteTable('link', {
   isPinned: t.integer({ mode: 'boolean' }).default(false),
   collectionId: t.text().references(() => collection.id),
   tagId: t.text().references(() => tag.id),
+  notes: t.text(),
   ownerId: t
     .text()
     .notNull()
