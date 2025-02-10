@@ -32,8 +32,8 @@ function* linkGenerator(user: SelectUser) {
   while (true) {
     const link: InsertLink = {
       url: faker.internet.url(),
-      title: faker.lorem.words(3),
-      description: faker.lorem.sentence(),
+      title: faker.lorem.words({ min: 3, max: 10 }),
+      description: faker.lorem.sentences(2),
       previewImage: faker.image.urlPicsumPhotos({ width: 1200, height: 600 }),
       favicon: faker.image.avatar(),
       isPinned: faker.datatype.boolean({ probability: 0.1 }),
@@ -130,6 +130,10 @@ async function seedLinks(
 }
 
 async function main() {
+  await db.delete(schema.link);
+  await db.delete(schema.tag);
+  await db.delete(schema.collection);
+
   const users = await db.query.user.findMany({ limit: 5 });
 
   const collections = await Promise.all(users.map(seedCollections));

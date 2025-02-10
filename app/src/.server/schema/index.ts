@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { user } from './auth-schema';
 
 const timestamps = {
-  createdAt: t.text().default(sql`(CURRENT_TIMESTAMP)`),
-  updatedAt: t.text().$onUpdateFn(() => sql`(CURRENT_TIMESTAMP)`),
+  createdAt: t.integer({ mode: 'timestamp' }).default(sql`(unixepoch())`),
+  updatedAt: t.integer({ mode: 'timestamp' }).$onUpdateFn(() => sql`(unixepoch())`),
 };
 
 /**
@@ -34,7 +34,7 @@ export const link = t.sqliteTable('link', {
   previewImage: t.text(),
   favicon: t.text(),
   views: t.integer().default(0),
-  lastVisit: t.text().default(sql`(CURRENT_TIMESTAMP)`),
+  lastVisit: t.integer({ mode: 'timestamp' }).default(sql`(unixepoch())`),
   isPinned: t.integer({ mode: 'boolean' }).default(false),
   collectionId: t.text().references(() => collection.id),
   tagId: t.text().references(() => tag.id),

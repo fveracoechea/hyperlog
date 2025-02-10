@@ -29,7 +29,6 @@ export type EnvVars = z.infer<typeof EnvSchema>;
 
 function loadEnv() {
   try {
-    console.log(import.meta.env);
     return EnvSchema.parse(process.env);
   } catch (error) {
     if (error instanceof z.ZodError) {

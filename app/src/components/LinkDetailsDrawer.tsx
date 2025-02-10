@@ -23,8 +23,9 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 
-import type { Route } from '../routes/resource/+types/link';
+import type { Route } from '../routes/api/+types/link';
 import { DeleteLinkDialog } from './DeleteLinkDialog';
+import { FormField } from './FormField';
 import { Typography } from './ui/typography';
 
 type Props = PropsWithChildren<{
@@ -36,7 +37,7 @@ function LineItem(props: Props) {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2">
-        <Typography muted>{props.title}</Typography>
+        <Typography>{props.title}</Typography>
       </div>
       <div className="bg-cpt-base border-border flex items-center justify-between gap-2 rounded-lg border px-4 py-2">
         {props.children}
@@ -56,7 +57,7 @@ export function LinkDetailsDrawer() {
   const linkId = searchParams.get('link');
 
   if (linkId && linkId !== previusId) {
-    fetcher.load(`/resource/link/${linkId}`);
+    fetcher.load(`/api/link/${linkId}`);
     setPreviousId(linkId);
   }
 
@@ -122,8 +123,22 @@ export function LinkDetailsDrawer() {
                   <XIcon className="min-h-5 min-w-5" />
                 </Button>
               </DrawerClose>
-              <DrawerTitle>{link.title}</DrawerTitle>
-              <DrawerDescription>{link.description}</DrawerDescription>
+
+              {link.favicon && (
+                <img
+                  src={link.favicon}
+                  width="32"
+                  height="32"
+                  alt="favicon"
+                  className="rounded"
+                />
+              )}
+              <div className="flex flex-col gap-2 pt-2">
+                <DrawerTitle className="leading-tight">{link.title}</DrawerTitle>
+                <DrawerDescription className="leading-tight">
+                  {link.description}
+                </DrawerDescription>
+              </div>
             </DrawerHeader>
             <DrawerBody className="flex flex-col gap-6">
               <LineItem title="Link" Icon={LinkIcon}>
@@ -157,27 +172,9 @@ export function LinkDetailsDrawer() {
                   </Typography>
                 )}
               </LineItem>
-              {link.previewImage && (
-                <div className="relative">
-                  <img
-                    src={link.previewImage}
-                    height="630"
-                    width="1200"
-                    className="border-border bg-cpt-base aspect-[1.91/1] rounded border"
-                  />
-                  {link.favicon && (
-                    <img
-                      src={link.favicon}
-                      width="40"
-                      height="40"
-                      alt="favicon"
-                      className="border-border absolute left-2 top-2 rounded border-2"
-                    />
-                  )}
-                </div>
-              )}
+              <FormField label="Notes"></FormField>
               <Typography muted>
-                Saved: {formatDate(link.createdAt ?? new Date(), 'PPPP')}
+                Last Saved: {formatDate(link.updatedAt ?? new Date(), 'PPPP')}
               </Typography>
             </DrawerBody>
             <DrawerFooter className="flex flex-row justify-between gap-4 justify-self-end">

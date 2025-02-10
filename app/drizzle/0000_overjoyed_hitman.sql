@@ -7,8 +7,8 @@ CREATE TABLE `collection` (
 	`order` integer DEFAULT 1,
 	`parent_id` text,
 	`owner_id` text NOT NULL,
-	`created_at` text DEFAULT (CURRENT_TIMESTAMP),
-	`updated_at` text,
+	`created_at` integer DEFAULT (unixepoch()),
+	`updated_at` integer,
 	FOREIGN KEY (`parent_id`) REFERENCES `collection`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
@@ -22,13 +22,13 @@ CREATE TABLE `link` (
 	`preview_image` text,
 	`favicon` text,
 	`views` integer DEFAULT 0,
-	`last_visit` text DEFAULT (CURRENT_TIMESTAMP),
+	`last_visit` integer DEFAULT (unixepoch()),
 	`is_pinned` integer DEFAULT false,
 	`collection_id` text,
 	`tag_id` text,
 	`owner_id` text NOT NULL,
-	`created_at` text DEFAULT (CURRENT_TIMESTAMP),
-	`updated_at` text,
+	`created_at` integer DEFAULT (unixepoch()),
+	`updated_at` integer,
 	FOREIGN KEY (`collection_id`) REFERENCES `collection`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`tag_id`) REFERENCES `tag`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
@@ -39,8 +39,8 @@ CREATE TABLE `tag` (
 	`name` text NOT NULL,
 	`order` integer DEFAULT 1 NOT NULL,
 	`owner_id` text NOT NULL,
-	`created_at` text DEFAULT (CURRENT_TIMESTAMP),
-	`updated_at` text,
+	`created_at` integer DEFAULT (unixepoch()),
+	`updated_at` integer,
 	FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
