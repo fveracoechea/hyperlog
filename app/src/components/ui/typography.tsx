@@ -105,6 +105,8 @@ type Props = (
 export function Typography(props: Partial<Props>) {
   const { as: element, variant, className, muted, link: isLink, ...otherProps } = props;
 
+  const linkProps: Partial<LinkProps> = {};
+
   let link = isLink ?? false;
   let Element: ElementType = element ?? 'span';
 
@@ -113,9 +115,16 @@ export function Typography(props: Partial<Props>) {
     link = true;
   }
 
-  if (variant === 'nav') Element = NavLink;
+  if (variant === 'nav') {
+    Element = NavLink;
+    linkProps.prefetch = 'intent';
+  }
 
   return (
-    <Element {...otherProps} className={cn(typography({ variant, className, link, muted }))} />
+    <Element
+      {...otherProps}
+      {...linkProps}
+      className={cn(typography({ variant, className, link, muted }))}
+    />
   );
 }

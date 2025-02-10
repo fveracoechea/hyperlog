@@ -67,7 +67,7 @@ export function Sidebar() {
   return (
     <aside
       className={clsx(
-        'sticky top-[75px] h-full min-h-[calc(100vh-75px)] w-64',
+        'sticky top-[68px] h-full min-h-[calc(100vh-68px)] w-64',
         'bg-cpt-mantle z-30 flex gap-4',
         'border-muted border-r border-solid',
       )}
