@@ -1,11 +1,10 @@
-import { Form, redirect } from 'react-router';
+import { Form, redirect, useNavigation } from 'react-router';
 
 import { cookies } from '@/.server/cookies';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { LoginSchema, type LoginSchemaType } from '@hyperlog/shared';
+import { authClient } from '@/lib/authClient.client';
+import { LoginSchema } from '@hyperlog/shared';
 import clsx from 'clsx';
-import { LogIn, Unlink } from 'lucide-react';
-import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
+import { LoaderCircleIcon, LogIn, Unlink } from 'lucide-react';
 
 import { FormField } from '@/components/FormField';
 import { Alert } from '@/components/ui/alert';
@@ -15,19 +14,16 @@ import { Typography } from '@/components/ui/typography';
 
 import type { Route } from './+types/Login';
 
-const resolver = zodResolver(LoginSchema);
+export async function clientAction({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const validation = await LoginSchema.safeParseAsync(Object.fromEntries(formData));
+  if (validation.error) return { formErrors: validation.error?.formErrors.fieldErrors };
 
-// export async function action({ request }: Route.ActionArgs) {
-//   const form = await getValidatedFormData<LoginSchemaType>(request, resolver);
-//   if (form.errors) return { errors: form.errors, defaultValues: form.receivedValues };
-//
-//   const response = await api.auth.login.$post({ json: form.data }, getSession(request));
-//
-//   const json = await response.json();
-//   if (!json.success) return json.error.message;
-//
-//   return redirect('/', { headers: response.headers });
-// }
+  const { error } = await authClient.signIn.email(validation.data);
+  if (!error) return redirect('/');
+
+  return { message: error.message };
+}
 
 export async function loader({ request }: Route.LoaderArgs) {
   const info = await cookies.info.get(request);
@@ -35,13 +31,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function Login({ actionData, loaderData }: Route.ComponentProps) {
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useRemixForm<LoginSchemaType>({
-    resolver,
-  });
+  const navigation = useNavigation();
+  const errors = actionData?.formErrors;
+  const message = actionData?.message;
   return (
     <main
       className={clsx(
@@ -65,30 +57,32 @@ export default function Login({ actionData, loaderData }: Route.ComponentProps) 
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form
-            method="POST"
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4"
-            noValidate
-          >
+          <Form method="POST" className="flex flex-col gap-4" noValidate>
             {loaderData.info && <Alert variant="info">{loaderData.info.message}</Alert>}
             <FormField
-              label="Username or Email"
+              label="Email"
+              name="email"
+              type="email"
               required
-              {...register('username')}
-              errorMessage={errors.username?.message}
+              errorMessage={errors?.email?.at(0)}
             />
             <FormField
               label="Password"
               type="password"
+              name="password"
               required
-              {...register('password')}
-              errorMessage={errors.password?.message}
+              errorMessage={errors?.password?.at(0)}
             />
-            {!isSubmitting && actionData && typeof actionData === 'string' && (
-              <Alert variant="destructive">{actionData}</Alert>
+            {message && navigation.state === 'idle' && (
+              <Alert variant="destructive">{message}</Alert>
             )}
-            <Button className="mt-1">{isSubmitting ? 'Loading...' : 'Log In'}</Button>
+            <Button className="mt-1">
+              {navigation.state === 'submitting' ? (
+                <LoaderCircleIcon className="animate-spin" />
+              ) : (
+                'Log In'
+              )}
+            </Button>
           </Form>
         </CardContent>
         <CardFooter>

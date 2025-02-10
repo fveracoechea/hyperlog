@@ -12,14 +12,17 @@ import { LinkCard } from '@/components/LinkCard';
 import type { Route } from './+types/Home';
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const { user } = await getSessionOrRedirect(request);
+  const {
+    data: { user },
+    headers,
+  } = await getSessionOrRedirect(request);
 
   return data(
     await promiseHash({
       favorites: getFavorites(user.id),
       recentActivityPromise: getRecentActivity(user.id),
     }),
-    { headers: request.headers },
+    { headers },
   );
 }
 

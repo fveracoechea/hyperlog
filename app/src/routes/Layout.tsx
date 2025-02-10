@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router';
+import { Outlet, data } from 'react-router';
 
 import { getSidebarData } from '@/.server/resources/dashboard';
 import { getSessionOrRedirect } from '@/.server/session';
@@ -12,8 +12,12 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import type { Route } from './+types/Layout';
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const { user } = await getSessionOrRedirect(request);
-  return getSidebarData(user.id);
+  const {
+    data: { user },
+    headers,
+  } = await getSessionOrRedirect(request);
+
+  return data(await getSidebarData(user.id), { headers });
 }
 
 export default function Layout() {

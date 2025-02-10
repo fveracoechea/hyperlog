@@ -12,7 +12,7 @@ function makeCookie<S extends z.ZodTypeAny>(
     sameSite = 'lax',
     httpOnly = true,
     secure = import.meta.env.PROD,
-    maxAge = 8 * 24 * 60 * 60, // 8 days
+    maxAge = 5, // 5 seconds by default
     ...otherOptions
   } = options;
 
@@ -50,9 +50,6 @@ export const cookies = {
       .object({ message: z.string(), type: z.enum(['info', 'destructive']).default('info') })
       .nullable()
       .default(null),
-    {
-      maxAge: 6,
-    },
   ),
   /** Allows for redirects to a specific pathname */
   redirect: makeCookie(
