@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function LinkCard({ link }: Props) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   return (
     <a
       href={link.url}
@@ -58,7 +58,7 @@ export function LinkCard({ link }: Props) {
             <div
               role="presentation"
               className={clsx(
-                'absolute inset-0 h-full w-full transition-colors',
+                'absolute inset-0 h-full w-full transition-all',
                 'from-cpt-base/80 via-cpt-base/10 to-cpt-base/0 bg-gradient-to-bl',
                 'group-hover:from-cpt-base/90 group-hover:via-primary/30 group-hover:to-primary/40 bg-gradient-to-bl',
               )}
@@ -68,8 +68,7 @@ export function LinkCard({ link }: Props) {
               onClick={e => {
                 e.stopPropagation();
                 e.preventDefault();
-                searchParams.set('link', link.id);
-                setSearchParams(searchParams, { preventScrollReset: true });
+                navigate(`/links/${link.id}`);
               }}
               className={clsx(
                 'absolute right-0 top-0 rounded-bl rounded-tr p-2 transition',

@@ -30,9 +30,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const params = PaginationSchema.parse(Object.fromEntries(new URL(request.url).searchParams));
 
-  // TODO: Remove
-  await new Promise(r => setTimeout(r, 300));
-
   return data({ ...(await getAllLinks(user.id, params)), params }, { headers });
 }
 

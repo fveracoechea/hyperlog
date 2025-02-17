@@ -61,8 +61,8 @@ export function DeleteLinkDialog(props: Props) {
               </div>
             )}
             {fetcher.state === 'idle' && (
-              <Button variant="destructive" type="submit" className="w-20">
-                Delete
+              <Button variant="destructive" type="submit" className="w-24">
+                Yes, Delete
               </Button>
             )}
           </fetcher.Form>
