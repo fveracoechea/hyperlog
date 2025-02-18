@@ -1,4 +1,5 @@
-import { useFetcher, useLocation } from 'react-router';
+import type { ReactNode } from 'react';
+import { useFetcher } from 'react-router';
 
 import { LoaderCircleIcon } from 'lucide-react';
 
@@ -16,6 +17,7 @@ import {
 import { Typography } from './ui/typography';
 
 type Props = {
+  trigger: ReactNode;
   link: {
     id: string;
     title: string;
@@ -25,19 +27,16 @@ type Props = {
 };
 
 export function DeleteLinkDialog(props: Props) {
-  const location = useLocation();
-
   const {
-    link: { title, url, id },
+    link: { title, url },
+    trigger,
   } = props;
 
   const fetcher = useFetcher();
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Delete</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Delete Link</DialogTitle>
@@ -53,8 +52,7 @@ export function DeleteLinkDialog(props: Props) {
               Close
             </Button>
           </DialogClose>
-          <fetcher.Form method="DELETE" action={`/resource/link/${id}`}>
-            <input type="hidden" name="redirect" value={location.pathname} />
+          <fetcher.Form method="DELETE">
             {fetcher.state === 'submitting' && (
               <div className="text-cpt-red flex h-10 w-20 items-center justify-center">
                 <LoaderCircleIcon className="h-6 w-6 animate-spin" />

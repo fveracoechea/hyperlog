@@ -1,7 +1,20 @@
 import type { CSSProperties, PropsWithChildren } from 'react';
-import { Link, data, isRouteErrorResponse, redirect, useNavigate } from 'react-router';
+import {
+  Form,
+  Link,
+  data,
+  isRouteErrorResponse,
+  redirect,
+  useNavigate,
+  useNavigation,
+} from 'react-router';
 
-import { deleteLink, getLinkDetails } from '@/.server/resources/link';
+import {
+  addToFavorites,
+  deleteLink,
+  getLinkDetails,
+  removeFromFavorites,
+} from '@/.server/resources/link';
 import { getSessionOrRedirect } from '@/.server/session';
 import clsx, { type ClassValue } from 'clsx';
 import { formatDate, formatDistanceToNow } from 'date-fns';
@@ -11,8 +24,11 @@ import {
   FolderIcon,
   Link2OffIcon,
   LinkIcon,
+  LoaderCircle,
   type LucideProps,
+  PenIcon,
   SaveIcon,
+  StarIcon,
   TagIcon,
   Undo2Icon,
 } from 'lucide-react';
@@ -53,25 +69,45 @@ function LineItem(props: LinkItemProps) {
 }
 
 export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
-  if (isRouteErrorResponse(props.error) && props.error.status === 404)
-    return (
-      <div className="flex h-full w-full flex-col">
-        <Typography>Link Not Found</Typography>
-        <Link2OffIcon className="stroke-cpt-surface2 h-24 w-24" />
-        <Button variant="outline">Bo gack</Button>
-      </div>
-    );
+  let headline = 'Oops, an unexpected error occurred';
+  let message =
+    'We apologize for the inconvenience. Please try again later. If the issue persists, contact support.';
 
-  return <div>Oops</div>;
+  if (isRouteErrorResponse(props.error) && props.error.status === 404) {
+    headline = 'Link Not Found';
+    message = 'The requested page could not be found';
+  }
+
+  return (
+    <section className="mx-auto flex max-w-96 flex-1 items-center pb-10">
+      <div className="flex flex-col items-center gap-4">
+        <Link2OffIcon className="stroke-cpt-surface1 h-24 w-24" />
+        <div className="flex flex-col justify-center gap-0 text-center">
+          <Typography variant="large">{headline}</Typography>
+          <Typography muted>{message}</Typography>
+        </div>
+        <Button asChild>
+          <Link to="/" replace>
+            Go to Homepage
+          </Link>
+        </Button>
+      </div>
+    </section>
+  );
 }
 
 export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
   const formData = await request.formData();
-  const redirectTo = String(formData.get('redirect'));
 
   if (request.method === 'DELETE') {
     await deleteLink(linkId);
-    return redirect(redirectTo);
+    return redirect('/links');
+  }
+
+  if (request.method === 'PUT') {
+    const value = String(formData.get('toggleFavorite'));
+    if (value === 'true') await removeFromFavorites(linkId);
+    if (value === 'false') await addToFavorites(linkId);
   }
 
   return null;
@@ -81,12 +117,16 @@ export async function loader({ request, params: { linkId } }: Route.LoaderArgs) 
   const { headers } = await getSessionOrRedirect(request);
   const link = await getLinkDetails(linkId);
   if (!link) throw data(null, { status: 404 });
-
   return data({ link }, { headers });
 }
 
 export default function LinkDetailsPage({ loaderData: { link } }: Route.ComponentProps) {
   const navigate = useNavigate();
+  const navigation = useNavigation();
+
+  const isTogglingFavorite =
+    navigation.state !== 'idle' && Boolean(navigation.formData?.has('toggleFavorite'));
+
   return (
     <div className="mx-auto my-0 flex w-full max-w-[1200px] flex-col gap-2">
       <div>
@@ -114,17 +154,27 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             />
           )}
 
+          {/* overlay */}
           <div className="from-cpt-base/65 to-cpt-base absolute inset-0 bg-gradient-to-b" />
 
-          {link.favicon && (
-            <img
-              src={link.favicon}
-              width="32"
-              height="32"
-              alt="favicon"
-              className="z-[1] rounded"
-            />
-          )}
+          <div className="z-[1] flex justify-between gap-8">
+            {link.favicon ? (
+              <img
+                src={link.favicon}
+                width="32"
+                height="32"
+                alt="favicon"
+                className="z-[1] h-8 w-8 rounded"
+              />
+            ) : (
+              <div role="presentation" />
+            )}
+            {link.isPinned ? (
+              <StarIcon className="fill-primary stroke-primary h-6 w-6" />
+            ) : (
+              <div role="presentation" />
+            )}
+          </div>
 
           <div className="z-[1] flex flex-col gap-2 text-left">
             <Typography variant="lead">{link.title}</Typography>
@@ -147,6 +197,38 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             <div className="flex gap-2" title="Views">
               <EyeIcon className="h-4 w-4" />
               <Typography variant="small">{link.views}</Typography>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <DeleteLinkDialog
+                link={link}
+                trigger={
+                  <Button size="sm" variant="ghost">
+                    Delete
+                  </Button>
+                }
+              />
+              <Form method="PUT">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  name="toggleFavorite"
+                  value={String(Boolean(link.isPinned))}
+                >
+                  {isTogglingFavorite && (
+                    <>
+                      <LoaderCircle className="stroke-primary h-4 w-4 animate-spin" />
+                      <span>Updating Favories</span>
+                    </>
+                  )}
+
+                  {!isTogglingFavorite &&
+                    (link.isPinned ? 'Remove from Favorites' : 'Add to Favorites')}
+                </Button>
+              </Form>
+              <Button size="sm" variant="outline" asChild>
+                <Link to={`/links/${link.id}/edit`}>Edit</Link>
+              </Button>
             </div>
           </div>
         </header>
@@ -190,22 +272,16 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
               </Typography>
             )}
           </LineItem>
+
           {/* TODO: add rich markdown editor */}
           <FormField
             label="Notes"
             variant="textarea"
+            readOnly
             fieldClassName="col-span-2"
             className="min-h-36 resize-none"
             defaultValue={link.notes ?? undefined}
           />
-
-          {/* <div className="col-span-2 flex justify-between gap-4"> */}
-          <div className="col-span-2 flex justify-end gap-4">
-            <DeleteLinkDialog link={link} />
-            <Button variant="outline">Add to Favorites</Button>
-            <Button>Save Changes</Button>
-          </div>
-          {/* </div> */}
         </div>
       </section>
     </div>

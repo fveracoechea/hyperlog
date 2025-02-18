@@ -35,6 +35,13 @@ export async function removeFromFavorites(linkId: string) {
     .where(eq(schema.link.id, linkId));
 }
 
+export async function addToFavorites(linkId: string) {
+  return await db
+    .update(schema.link)
+    .set({ isPinned: true })
+    .where(eq(schema.link.id, linkId));
+}
+
 export async function getRecentActivity(userId: string) {
   return await db.query.link.findMany({
     where: and(eq(schema.link.ownerId, userId)),

@@ -6,7 +6,7 @@ import { user } from './auth-schema';
 
 const timestamps = {
   createdAt: t.integer({ mode: 'timestamp' }).default(sql`(unixepoch())`),
-  updatedAt: t.integer({ mode: 'timestamp' }).$onUpdateFn(() => sql`(unixepoch())`),
+  updatedAt: t.integer({ mode: 'timestamp' }).$onUpdateFn(() => new Date()),
 };
 
 /**
