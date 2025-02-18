@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';

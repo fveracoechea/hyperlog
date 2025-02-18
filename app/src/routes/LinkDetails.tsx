@@ -150,7 +150,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
               width="1200"
               height="630"
               alt="favicon"
-              className="absolute inset-0 rounded-t"
+              className="absolute inset-0 rounded-t-lg"
             />
           )}
 
