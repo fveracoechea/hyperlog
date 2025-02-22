@@ -1,7 +1,33 @@
-import clsx from 'clsx';
-import { Search, Unlink } from 'lucide-react';
+import { Link, NavLink } from 'react-router';
 
+import clsx from 'clsx';
+import {
+  ChevronDown,
+  PaletteIcon,
+  PlusIcon,
+  Search,
+  Unlink,
+  UserCircleIcon,
+} from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
 import { Typography } from '@/components/ui/typography';
 
 export function Header() {
@@ -20,42 +46,63 @@ export function Header() {
           </Typography>
         </div>
 
-        <nav>
-          <ul className="flex list-none items-center justify-center gap-6">
-            <li>
-              <Typography variant="nav" to="/">
-                Home
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="nav" to="/links">
-                Links
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="nav" to="/collections">
-                Collections
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="nav" to="/tags">
-                Tags
-              </Typography>
-            </li>
-          </ul>
-        </nav>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <NavLink to="/">Home</NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <NavLink to="/links">Links</NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <NavLink to="/collections">Collections</NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <NavLink to="/tags">Tags</NavLink>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       </div>
 
-      <form method="GET" action="https://www.google.com/search" target="_blank">
-        <Input
-          autoComplete="off"
-          autoFocus
-          id="search-engine"
-          icon={<Search className="stroke-primary" />}
-          placeholder="Google search"
-          name="q"
-        />
-      </form>
+      <div className="flex items-center gap-4">
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Create New</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <NavigationMenuLink>Link</NavigationMenuLink>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Theme</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <NavigationMenuLink>Theme</NavigationMenuLink>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>
+                <UserCircleIcon className="min-h-6 min-w-6" />
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <NavigationMenuLink>Profile</NavigationMenuLink>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
     </header>
   );
 }

@@ -7,8 +7,8 @@ import clsx from 'clsx';
 const wrapper = cva({
   base: [
     'flex w-full justify-center items-center transition-shadow',
-    'ring-offset-0 rounded-md bg-background text-foreground',
-    'ring-1 hover:ring-2 focus-within:ring-2',
+    'ring-offset-0 rounded-md text-foreground',
+    'border hover:ring-1 focus-within:ring-1',
     'outline-none',
   ],
   variants: {
@@ -17,8 +17,8 @@ const wrapper = cva({
       false: '',
     },
     error: {
-      true: ['ring-destructive/60', 'focus-within:!ring-destructive'],
-      false: ['ring-input', 'hover:ring-ring/40', 'focus-within:!ring-ring'],
+      true: ['ring-destructive/60', 'border-destructive', 'focus-within:!ring-destructive'],
+      false: ['ring-input', 'border-border', 'hover:ring-ring/40', 'focus-within:!ring-ring'],
     },
   },
   defaultVariants: {

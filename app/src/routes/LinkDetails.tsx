@@ -241,7 +241,11 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
           </LineItem>
           <LineItem title="Tag" Icon={TagIcon}>
             {link.tag ? (
-              <Typography as="link" className="font-light" to={`/tags/${link.tagId}`}>
+              <Typography
+                as="link"
+                className="text-foreground no-underline"
+                to={`/tags/${link.tagId}`}
+              >
                 {link.tag?.name}
               </Typography>
             ) : (

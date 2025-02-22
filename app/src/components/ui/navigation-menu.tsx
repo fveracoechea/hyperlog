@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { cva } from '@/lib/cva';
 import { cn } from '@/lib/utils';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
+import { cva } from 'class-variance-authority';
 import { ChevronDown } from 'lucide-react';
 
 const NavigationMenu = React.forwardRef<
@@ -21,7 +21,6 @@ const NavigationMenu = React.forwardRef<
     <NavigationMenuViewport />
   </NavigationMenuPrimitive.Root>
 ));
-
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
 
 const NavigationMenuList = React.forwardRef<
@@ -41,9 +40,13 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
-const navigationMenuTriggerStyle = cva({
-  base: 'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50',
-});
+const navigationMenuTriggerStyle = cva([
+  'group inline-flex h-9 w-max items-center justify-center rounded-md bg-cpt-mantle px-3 py-2',
+  'text-sm font-medium transition-colors leading-none',
+  'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none',
+  'disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50',
+  'text-muted-foreground [&.active]:text-foregroun',
+]);
 
 const NavigationMenuTrigger = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
@@ -78,7 +81,13 @@ const NavigationMenuContent = React.forwardRef<
 ));
 NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 
-const NavigationMenuLink = NavigationMenuPrimitive.Link;
+function NavigationMenuLink(
+  props: React.ComponentPropsWithRef<typeof NavigationMenuPrimitive.Link> = {},
+) {
+  const classNames = cn(navigationMenuTriggerStyle(), props!.className);
+
+  return <NavigationMenuPrimitive.Link {...props} className={classNames} />;
+}
 
 const NavigationMenuViewport = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
