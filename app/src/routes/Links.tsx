@@ -172,7 +172,7 @@ export default function Links({ loaderData }: Route.ComponentProps) {
 
       <div
         className={clsx(
-          'grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4',
+          'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4',
           navigation.state !== 'idle' && 'opacity-50',
         )}
       >

@@ -20,34 +20,24 @@ export function FavoriteLink({ link }: Props) {
       target="_blank"
       data-linkid={link.id}
       className={clsx(
-        'group block min-h-20 rounded',
+        'group block min-h-20 rounded-md',
         'focus-visible:ring-muted-foreground focus-visible:ring-2',
         'hover:ring-primary',
       )}
     >
       <article
         className={clsx(
-          'border-border relative h-full overflow-hidden rounded border',
-          'group-hover:border-primary',
+          'border-border relative h-full overflow-hidden rounded-md border',
+          'group-hover:border-primary bg-cover bg-center bg-no-repeat',
         )}
+        style={{
+          backgroundImage: `url("${link.previewImage}")`,
+        }}
       >
-        {link.previewImage && (
-          <img
-            src={link.previewImage}
-            role="presentation"
-            className="absolute inset-0 z-[1] h-full w-full object-cover"
-          />
-        )}
-        <div
-          className={clsx(
-            'from-cpt-base via-cpt-base/90 to-cpt-base/60 relative z-[2] bg-gradient-to-r',
-            'relative flex h-full flex-col justify-between gap-2 p-2',
-          )}
-        >
+        <div className="bg-cpt-base/90 flex h-full flex-col justify-between gap-2 p-2">
           <Typography
             as="h4"
-            variant="small"
-            className="group-hover:text-primary transition-colors"
+            className="group-hover:text-primary max-h-12 overflow-y-hidden text-left leading-tight"
           >
             {link.title}
           </Typography>
@@ -55,8 +45,8 @@ export function FavoriteLink({ link }: Props) {
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1.5">
                 <LinkIcon className="stroke-primary h-3.5 w-3.5" />
-                <Typography as="span" variant="xsmall" className="no-underline">
-                  {link.url}
+                <Typography as="span" variant="small" className="no-underline">
+                  <span>{link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
                 </Typography>
               </div>
               {link.tag && (
@@ -78,26 +68,6 @@ export function FavoriteLink({ link }: Props) {
               />
             )}
           </div>
-
-          {/* <remove.Form */}
-          {/*   method="post" */}
-          {/*   className={clsx( */}
-          {/*     'transition-opacity opacity-0 group-hover:opacity-100', */}
-          {/*     'absolute top-0 right-0', */}
-          {/*   )} */}
-          {/* > */}
-          {/*   <input type="hidden" name="linkId" value={link.id} /> */}
-          {/*   <Button */}
-          {/*     tabIndex={-1} */}
-          {/*     variant="outline" */}
-          {/*     name="intent" */}
-          {/*     value="remove-favorite" */}
-          {/*     size="xs" */}
-          {/*     title="Remove from favorites" */}
-          {/*   > */}
-          {/*     <StarOffIcon /> */}
-          {/*   </Button> */}
-          {/* </remove.Form> */}
         </div>
       </article>
     </a>

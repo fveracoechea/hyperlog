@@ -9,6 +9,7 @@ export async function getFavorites(userId: string) {
     where: and(eq(schema.link.ownerId, userId), eq(schema.link.isPinned, true)),
     with: {
       tag: true,
+      collection: true,
     },
   });
 }

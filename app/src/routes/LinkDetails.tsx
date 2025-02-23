@@ -54,7 +54,7 @@ function LineItem(props: LinkItemProps) {
       <div className="flex items-center gap-2">
         <Typography>{title}</Typography>
       </div>
-      <div className="bg-cpt-base border-border flex items-center justify-between gap-2 rounded-lg border px-4 py-2">
+      <div className="bg-cpt-base border-border flex items-center justify-between gap-2 rounded-md border px-4 py-2">
         {children}
         {Icon && (
           <Icon
@@ -142,7 +142,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
         </Button>
       </div>
       <section
-        className="border-border flex overflow-hidden rounded-lg border bg-center bg-no-repeat"
+        className="border-border flex overflow-hidden rounded-md border bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url("${link.previewImage}")` }}
       >
         <div className="bg-cpt-base/85 flex flex-1 flex-col justify-between gap-8 p-4">

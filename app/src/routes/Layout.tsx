@@ -2,9 +2,7 @@ import { Outlet, data } from 'react-router';
 
 import { getSidebarData } from '@/.server/resources/dashboard';
 import { getSessionOrRedirect } from '@/.server/session';
-import { ClientOnly } from 'remix-utils/client-only';
 
-import { LinkDetailsDrawer } from '@/components/LinkDetailsDrawer';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -31,7 +29,6 @@ export default function Layout() {
             <Outlet />
           </main>
           <Footer />
-          <ClientOnly>{() => <LinkDetailsDrawer />}</ClientOnly>
         </div>
       </div>
     </>

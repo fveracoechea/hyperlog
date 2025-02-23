@@ -6,7 +6,6 @@ import { HistoryIcon, Search, Star } from 'lucide-react';
 import { promiseHash } from 'remix-utils/promise';
 
 import { Banner } from '@/components/Banner';
-import { FavoriteLink } from '@/components/FavoriteLink';
 import { LinkCard } from '@/components/LinkCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,7 +32,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <section className="flex flex-col gap-4">
-        {/* <Banner Icon={Star} title="Google Search" /> */}
         <form method="GET" action="https://www.google.com/search" target="_blank">
           <div className="flex w-full max-w-screen-sm gap-2">
             <Input
@@ -57,9 +55,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           title="Favorites"
           subtitle="Your personal collection of go-to links, saved for quick access"
         />
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
           {favorites.map(link => (
-            <FavoriteLink key={link.id} link={link} />
+            <LinkCard key={link.id} link={link} hideDetails />
           ))}
         </div>
       </section>
@@ -69,7 +67,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           title="Recent Activity"
           subtitle="Revisit your latest discoveries, recently visited links appear here"
         />
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
           <Await resolve={loaderData.recentActivityPromise}>
             {recents => recents.map(link => <LinkCard key={link.id} link={link} />)}
           </Await>
