@@ -26,7 +26,6 @@ import {
   LinkIcon,
   LoaderCircle,
   type LucideProps,
-  PenIcon,
   SaveIcon,
   StarIcon,
   TagIcon,
@@ -142,22 +141,12 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
           </Link>
         </Button>
       </div>
-      <section className="bg-base">
-        <header className="relative flex flex-col justify-between gap-8 overflow-y-hidden p-4">
-          {link.previewImage && (
-            <img
-              src={link.previewImage}
-              width="1200"
-              height="630"
-              alt="favicon"
-              className="absolute inset-0 rounded-t-lg"
-            />
-          )}
-
-          {/* overlay */}
-          <div className="from-cpt-base/65 to-cpt-base absolute inset-0 bg-gradient-to-b" />
-
-          <div className="z-[1] flex justify-between gap-8">
+      <section
+        className="border-border flex overflow-hidden rounded-lg border bg-center bg-no-repeat"
+        style={{ backgroundImage: `url("${link.previewImage}")` }}
+      >
+        <div className="bg-cpt-base/85 flex flex-1 flex-col justify-between gap-8 p-4">
+          <div className="flex justify-between gap-8">
             {link.favicon ? (
               <img
                 src={link.favicon}
@@ -177,8 +166,12 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
           </div>
 
           <div className="z-[1] flex flex-col gap-2 text-left">
-            <Typography variant="lead">{link.title}</Typography>
-            <Typography variant="base">{link.description}</Typography>
+            <Typography as="h2" variant="lead">
+              {link.title}
+            </Typography>
+            <Typography as="p" variant="base">
+              {link.description}
+            </Typography>
 
             <div className="flex gap-2" title="Last Saved">
               <SaveIcon className="h-4 w-4" />
@@ -231,63 +224,63 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
               </Button>
             </div>
           </div>
-        </header>
-
-        <div className="grid grid-cols-2 gap-6 p-4">
-          <LineItem title="Link" Icon={LinkIcon} className="col-span-2">
-            <Typography as="a" link href={link.url}>
-              {link.url}
-            </Typography>
-          </LineItem>
-          <LineItem title="Tag" Icon={TagIcon}>
-            {link.tag ? (
-              <Typography
-                as="link"
-                className="text-foreground no-underline"
-                to={`/tags/${link.tagId}`}
-              >
-                {link.tag?.name}
-              </Typography>
-            ) : (
-              <Typography muted className="font-light">
-                No tag
-              </Typography>
-            )}
-          </LineItem>
-          <LineItem
-            title="Collection"
-            Icon={FolderIcon}
-            iconStyle={{
-              stroke: link.collection?.color ?? undefined,
-              fill: link.collection?.color ?? undefined,
-            }}
-          >
-            {link.collection ? (
-              <Typography
-                as="link"
-                className="text-foreground no-underline"
-                to={`/collections/${link.collectionId}`}
-              >
-                {link.collection?.name}
-              </Typography>
-            ) : (
-              <Typography muted className="font-light">
-                No collection
-              </Typography>
-            )}
-          </LineItem>
-
-          {/* TODO: add rich markdown editor */}
-          <FormField
-            label="Notes"
-            variant="textarea"
-            readOnly
-            fieldClassName="col-span-2"
-            className="min-h-36 resize-none"
-            defaultValue={link.notes ?? undefined}
-          />
         </div>
       </section>
+
+      <div className="relative grid grid-cols-2 gap-6 pt-6">
+        <LineItem title="Link" Icon={LinkIcon} className="col-span-2">
+          <Typography as="a" link href={link.url}>
+            {link.url}
+          </Typography>
+        </LineItem>
+        <LineItem title="Tag" Icon={TagIcon}>
+          {link.tag ? (
+            <Typography
+              as="link"
+              className="text-foreground no-underline"
+              to={`/tags/${link.tagId}`}
+            >
+              {link.tag?.name}
+            </Typography>
+          ) : (
+            <Typography muted className="font-light">
+              No tag
+            </Typography>
+          )}
+        </LineItem>
+        <LineItem
+          title="Collection"
+          Icon={FolderIcon}
+          iconStyle={{
+            stroke: link.collection?.color ?? undefined,
+            fill: link.collection?.color ?? undefined,
+          }}
+        >
+          {link.collection ? (
+            <Typography
+              as="link"
+              className="text-foreground no-underline"
+              to={`/collections/${link.collectionId}`}
+            >
+              {link.collection?.name}
+            </Typography>
+          ) : (
+            <Typography muted className="font-light">
+              No collection
+            </Typography>
+          )}
+        </LineItem>
+
+        {/* TODO: add rich markdown editor */}
+        <FormField
+          label="Notes"
+          variant="textarea"
+          readOnly
+          fieldClassName="col-span-2"
+          className="min-h-36 resize-none"
+          defaultValue={link.notes ?? undefined}
+        />
+      </div>
     </div>
   );
 }
