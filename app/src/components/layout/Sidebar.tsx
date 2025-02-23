@@ -67,15 +67,13 @@ export function Sidebar() {
   return (
     <aside
       className={clsx(
-        'sticky top-[68px] h-full min-h-[calc(100vh-68px)] w-64',
-        'bg-cpt-mantle z-30 flex gap-4',
-        'border-muted border-r border-solid',
+        'bg-cpt-mantle z-20 flex flex-col gap-4',
+        'sticky top-[63px] h-[calc(100vh-63px)] w-64 p-4',
+        'border-muted overflow-y-auto border-r border-solid',
       )}
     >
-      <div className="flex h-[calc(100vh-75px)] flex-1 flex-col gap-4 overflow-y-auto p-4">
-        <SideNav type="collections" links={data.collections ?? []} />
-        <SideNav type="tags" links={data.tags ?? []} />
-      </div>
+      <SideNav type="collections" links={data.collections ?? []} />
+      <SideNav type="tags" links={data.tags ?? []} />
     </aside>
   );
 }

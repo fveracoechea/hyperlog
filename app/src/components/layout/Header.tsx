@@ -34,8 +34,8 @@ export function Header() {
   return (
     <header
       className={clsx(
-        'bg-cpt-mantle flex items-center justify-between gap-8 px-8 py-4',
-        'border-muted sticky top-0 z-30 border-b border-solid',
+        'bg-cpt-mantle flex items-center justify-between gap-8 px-6 py-3',
+        'border-muted sticky top-0 z-10 border-b border-solid',
       )}
     >
       <div className="flex items-center gap-8">
