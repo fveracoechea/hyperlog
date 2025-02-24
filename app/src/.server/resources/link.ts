@@ -1,8 +1,18 @@
-import { and, asc, eq } from 'drizzle-orm';
+import { SQL, and, asc, desc, eq, ilike, or } from 'drizzle-orm';
 
 import { db } from '../db';
-import { type PaginationSchemaType, pagination } from '../pagination';
+import { type PaginationSchemaType, withPagination } from '../pagination';
 import * as schema from '../schema';
+
+function isKeyOf<R extends Record<PropertyKey, unknown>>(
+  record: R,
+  key: unknown,
+): key is keyof R {
+  return (
+    (typeof key === 'string' || typeof key === 'number' || typeof key === 'symbol') &&
+    Object.prototype.hasOwnProperty.call(record, key)
+  );
+}
 
 export async function getFavorites(userId: string) {
   return await db.query.link.findMany({
@@ -15,18 +25,33 @@ export async function getFavorites(userId: string) {
 }
 
 export async function getAllLinks(userId: string, searchParams: PaginationSchemaType) {
-  return await pagination({
-    table: 'link',
-    where: [eq(schema.link.ownerId, userId)],
-    searchableFields: ['title', 'url'],
+  const search = `%${searchParams.search}%`;
+
+  const filters: (SQL | undefined)[] = [];
+
+  if (searchParams.search)
+    filters.push(or(ilike(schema.link.title, search), ilike(schema.link.url, search)));
+
+  const where = and(eq(schema.link.ownerId, userId), ...filters);
+
+  const totalRecords = await db.$count(schema.link, where);
+
+  const data = await withPagination(
+    'link',
     searchParams,
-    findManyArgs: {
-      with: {
-        tag: true,
-        collection: true,
-      },
-    },
-  });
+    db
+      .select()
+      .from(schema.link)
+      .leftJoin(schema.tag, eq(schema.tag.id, schema.link.tagId))
+      .leftJoin(schema.collection, eq(schema.collection.id, schema.link.collectionId))
+      .where(where)
+      .$dynamic(),
+  );
+
+  return {
+    totalRecords,
+    links: data.map(item => ({ ...item.link, collection: item.collection, tag: item.tag })),
+  };
 }
 
 export async function removeFromFavorites(linkId: string) {

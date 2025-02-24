@@ -38,8 +38,8 @@ export async function loader({ request }: Route.LoaderArgs) {
   } = await getSessionOrRedirect(request);
 
   const params = PaginationSchema.parse(Object.fromEntries(new URL(request.url).searchParams));
-
-  return data({ ...(await getAllLinks(user.id, params)), params }, { headers });
+  const result = await getAllLinks(user.id, params);
+  return data({ ...result, params }, { headers });
 }
 
 function LisPageForm() {
@@ -164,6 +164,7 @@ function LisPageForm() {
 export default function Links({ loaderData }: Route.ComponentProps) {
   const links = loaderData.data;
   const navigation = useNavigation();
+
   return (
     <section className="flex flex-col gap-4">
       <Banner title="Links" Icon={LinkIcon} subtitle="All links from every collection" />
