@@ -1,12 +1,4 @@
-import {
-  Form,
-  Link,
-  data,
-  useLoaderData,
-  useLocation,
-  useNavigation,
-  useSearchParams,
-} from 'react-router';
+import { Form, Link, data, useLoaderData, useNavigation, useSearchParams } from 'react-router';
 
 import { PaginationSchema } from '@/.server/pagination';
 import { getAllLinks } from '@/.server/resources/link';
@@ -162,7 +154,6 @@ function LisPageForm() {
 }
 
 export default function Links({ loaderData }: Route.ComponentProps) {
-  const links = loaderData.data;
   const navigation = useNavigation();
 
   return (
@@ -177,7 +168,7 @@ export default function Links({ loaderData }: Route.ComponentProps) {
           navigation.state !== 'idle' && 'opacity-50',
         )}
       >
-        {links.map(link => (
+        {loaderData.links.map(link => (
           <LinkCard key={link.id} link={link} />
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { type ExtractTablesWithRelations, sql } from 'drizzle-orm';
+import { type AnyColumn, type ExtractTablesWithRelations, asc, desc } from 'drizzle-orm';
 import type { SQLiteSelect } from 'drizzle-orm/sqlite-core';
 import { z } from 'zod';
 
@@ -19,24 +19,12 @@ export async function withPagination<T extends SQLiteSelect>(
   pagination: PaginationSchemaType,
   query: T,
 ) {
-  const field = pagination.sortBy in schema[table] ? pagination.sortBy : 'createdAt';
-
-  if (!(field in schema[table])) throw new Error('INVALID SORT BY');
-
-  console.log(
-    query
-      .orderBy(
-        sql`${sql.identifier(table)}.${sql.identifier(field)} ${sql.raw(pagination.direction)}`,
-      )
-      .limit(pagination.pageSize)
-      .offset((pagination.page - 1) & pagination.pageSize)
-      .toSQL(),
-  );
+  const dbTable = schema[table] as unknown as Record<string, AnyColumn>;
+  const directionFn = pagination.direction === 'asc' ? asc : desc;
+  const sortBy = pagination.sortBy in dbTable ? dbTable[pagination.sortBy] : dbTable.createdAt;
 
   return await query
-    .orderBy(
-      sql`${sql.identifier(table)}.${sql.identifier(field)} ${sql.raw(pagination.direction)}`,
-    )
+    .orderBy(directionFn(sortBy))
     .limit(pagination.pageSize)
-    .offset((pagination.page - 1) & pagination.pageSize);
+    .offset((pagination.page - 1) * pagination.pageSize);
 }
