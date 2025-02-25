@@ -32,7 +32,7 @@ export function LinkCard({ link, hideDetails }: Props) {
           backgroundImage: `url("${link.previewImage}")`,
         }}
       >
-        <div className="bg-cpt-base/90 flex flex-1 flex-col gap-4 rounded-md p-2">
+        <div className="bg-cpt-base/85 flex flex-1 flex-col gap-4 rounded-md p-2 backdrop-blur-sm">
           <div className="flex items-start justify-between">
             {link.favicon && (
               <img
@@ -54,10 +54,15 @@ export function LinkCard({ link, hideDetails }: Props) {
             </div>
           </div>
           <div className="flex flex-1 flex-col justify-between gap-2">
-            <div className="flex flex-1 flex-col gap-1.5">
+            <div
+              className={clsx(
+                hideDetails && 'min-h-10 justify-end',
+                'flex flex-1 flex-col gap-1.5',
+              )}
+            >
               <Typography
                 as="h4"
-                className="group-hover:text-primary max-h-12 overflow-y-hidden text-left leading-tight"
+                className="group-hover:text-primary max-h-10 overflow-y-hidden text-left leading-tight"
               >
                 {link.title}
               </Typography>

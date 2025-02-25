@@ -145,7 +145,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
         className="border-border flex overflow-hidden rounded-md border bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url("${link.previewImage}")` }}
       >
-        <div className="bg-cpt-base/85 flex flex-1 flex-col justify-between gap-8 p-4">
+        <div className="bg-cpt-base/85 flex flex-1 flex-col justify-between gap-8 p-4 backdrop-blur-sm">
           <div className="flex justify-between gap-8">
             {link.favicon ? (
               <img
