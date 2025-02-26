@@ -1,7 +1,17 @@
-import { type AnyColumn, type ExtractTablesWithRelations, asc, desc } from 'drizzle-orm';
+import {
+  type AnyColumn,
+  type ExtractTablesWithRelations,
+  SQL,
+  and,
+  asc,
+  desc,
+  ilike,
+  or,
+} from 'drizzle-orm';
 import type { SQLiteSelect } from 'drizzle-orm/sqlite-core';
 import { z } from 'zod';
 
+import { db } from './db';
 import * as schema from './schema';
 
 export const PaginationSchema = z.object({
@@ -27,4 +37,37 @@ export async function withPagination<T extends SQLiteSelect>(
     .orderBy(directionFn(sortBy))
     .limit(pagination.pageSize)
     .offset((pagination.page - 1) * pagination.pageSize);
+}
+
+export function paginationHelper<
+  K extends keyof typeof db.query,
+  P extends PaginationSchemaType,
+>(config: {
+  table: K;
+  searchableFields: K extends keyof typeof schema ? (keyof (typeof schema)[K])[] : never;
+  searchParams: P;
+  where?: (SQL | undefined)[];
+}) {
+  const { searchParams, searchableFields, where = [], table } = config;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dbTable = schema[table] as Record<string, any>;
+  const directionFn = searchParams.direction === 'asc' ? asc : desc;
+  const sortBy =
+    searchParams.sortBy in dbTable ? dbTable[searchParams.sortBy] : dbTable.createdAt;
+
+  if (searchParams.search) {
+    const search = `%${searchParams.search}%`;
+    where.push(or(...searchableFields.map(f => ilike(dbTable[f], search))));
+  }
+
+  return {
+    where: and(...where),
+    limit: searchParams.pageSize,
+    offset: (searchParams.page - 1) * searchParams.pageSize,
+    orderBy: directionFn(sortBy),
+    extras: {
+      totalRecords: db.$count(schema[table], and(...where)).as('totalRecords'),
+    },
+  };
 }

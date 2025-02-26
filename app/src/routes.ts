@@ -10,6 +10,7 @@ export default [
     index('./routes/Home.tsx'),
     route('links', './routes/Links.tsx'),
     route('links/:linkId', './routes/LinkDetails.tsx'),
+    route('links/:linkId/edit', './routes/LinkEdit.tsx'),
     route('collections', './routes/Collections.tsx'),
     route('collections/:collectionId', './routes/CollectionPage.tsx'),
     route('tags', './routes/Tags.tsx'),

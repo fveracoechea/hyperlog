@@ -32,24 +32,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <section className="flex flex-col gap-4">
-        <form method="GET" action="https://www.google.com/search" target="_blank">
-          <div className="flex w-full max-w-screen-sm gap-2">
-            <Input
-              autoComplete="off"
-              autoFocus
-              id="search-engine"
-              icon={<Search className="stroke-muted-foreground" />}
-              placeholder="Google search"
-              name="q"
-            />
-            <Button type="submit" variant="outline">
-              Search
-            </Button>
-          </div>
-        </form>
-      </section>
-
-      <section className="flex flex-col gap-4">
         <Banner
           Icon={Star}
           title="Favorites"

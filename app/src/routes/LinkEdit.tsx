@@ -20,23 +20,21 @@ import clsx, { type ClassValue } from 'clsx';
 import { formatDate, formatDistanceToNow } from 'date-fns';
 import {
   CalendarClockIcon,
-  DeleteIcon,
   EyeIcon,
   FolderIcon,
   Link2OffIcon,
   LinkIcon,
   LoaderCircle,
   type LucideProps,
-  PencilIcon,
+  PencilOffIcon,
   SaveIcon,
   StarIcon,
-  StarOffIcon,
   TagIcon,
-  TrashIcon,
   Undo2Icon,
 } from 'lucide-react';
 
 import { DeleteLinkDialog } from '@/components/DeleteLinkDialog';
+import { FormField } from '@/components/FormField';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 
@@ -55,16 +53,16 @@ function LineItem(props: LinkItemProps) {
   return (
     <div className={clsx('flex flex-col gap-1', className)}>
       <div className="flex items-center gap-2">
-        <Typography muted>{title}</Typography>
+        <Typography>{title}</Typography>
       </div>
-      <div className="bg-cpt-base border-border flex items-center gap-2 py-2">
+      <div className="bg-cpt-base border-border flex items-center justify-between gap-2 rounded-md border px-4 py-2">
+        {children}
         {Icon && (
           <Icon
-            className={clsx('h-5 w-5', iconClassName ?? 'stroke-muted-foreground')}
+            className={clsx('stroke-muted-foreground h-5 w-5', iconClassName)}
             style={iconStyle}
           />
         )}
-        {children}
       </div>
     </div>
   );
@@ -131,19 +129,6 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
 
   return (
     <div className="mx-auto my-0 flex w-full max-w-[1200px] flex-col gap-2">
-      <div>
-        <Button asChild variant="ghost" size="sm">
-          <Link
-            to="/"
-            onClick={e => {
-              e.preventDefault();
-              navigate(-1);
-            }}
-          >
-            <Undo2Icon /> Go Back
-          </Link>
-        </Button>
-      </div>
       <section
         className="border-border flex overflow-hidden rounded-md border bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url("${link.previewImage}")` }}
@@ -192,45 +177,9 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             </div>
 
             <div className="flex justify-end gap-2">
-              <DeleteLinkDialog
-                link={link}
-                trigger={
-                  <Button size="sm" variant="ghost">
-                    <TrashIcon />
-                    Delete
-                  </Button>
-                }
-              />
-              <Form method="PUT">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  name="toggleFavorite"
-                  value={String(Boolean(link.isPinned))}
-                >
-                  {isTogglingFavorite && (
-                    <>
-                      <LoaderCircle className="stroke-primary h-4 w-4 animate-spin" />
-                      <span>Updating Favories</span>
-                    </>
-                  )}
-
-                  {!isTogglingFavorite &&
-                    (link.isPinned ? (
-                      <>
-                        <StarOffIcon /> Remove from Favorites
-                      </>
-                    ) : (
-                      <>
-                        <StarIcon /> Add to Favorites
-                      </>
-                    ))}
-                </Button>
-              </Form>
-              <Button size="sm" variant="ghost" asChild>
-                <Link to={`/links/${link.id}/edit`} replace>
-                  <PencilIcon />
-                  Edit
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/links/${link.id}`} replace>
+                  <PencilOffIcon /> Cancel Edit
                 </Link>
               </Button>
             </div>
@@ -239,17 +188,12 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
       </section>
 
       <div className="relative grid grid-cols-2 gap-6 pt-6">
-        <LineItem
-          title="Link"
-          Icon={LinkIcon}
-          className="col-span-2"
-          iconClassName="stroke-primary"
-        >
+        <LineItem title="Link" Icon={LinkIcon} className="col-span-2">
           <Typography as="a" link href={link.url}>
             {link.url}
           </Typography>
         </LineItem>
-        <LineItem title="Tag" Icon={TagIcon} iconClassName={link.tag && 'stroke-primary'}>
+        <LineItem title="Tag" Icon={TagIcon}>
           {link.tag ? (
             <Typography
               as="link"
@@ -288,15 +232,17 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
         </LineItem>
 
         {/* TODO: add rich markdown editor */}
-        <LineItem title="Notes" className="col-span-2">
-          {link.notes ? (
-            <pre className="font-sans">{link.notes}</pre>
-          ) : (
-            <Typography muted className="font-light">
-              No notes yet.
-            </Typography>
-          )}
-        </LineItem>
+        <FormField
+          label="Notes"
+          variant="textarea"
+          readOnly
+          fieldClassName="col-span-2"
+          className="min-h-36 resize-none"
+          defaultValue={link.notes ?? undefined}
+        />
+        <div className="col-span-2 flex justify-end">
+          <Button>Save Changes</Button>
+        </div>
       </div>
     </div>
   );

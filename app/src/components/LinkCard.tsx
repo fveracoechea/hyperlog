@@ -1,26 +1,26 @@
-import { useNavigate } from 'react-router';
-
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
-import { EyeIcon, FolderIcon, LinkIcon, TagIcon } from 'lucide-react';
+import { CalendarClockIcon, FolderIcon, LinkIcon, TagIcon } from 'lucide-react';
 
 import type { Route } from '../routes/+types/Home';
 import { Typography } from './ui/typography';
 
 type Props = {
   hideDetails?: boolean;
+  isLoading?: boolean;
   link: Awaited<Route.ComponentProps['loaderData']['recentActivityPromise']>[number];
 };
 
-export function LinkCard({ link, hideDetails }: Props) {
+export function LinkCard({ link, hideDetails, isLoading }: Props) {
   return (
     <a
       href={link.url}
       rel="noreferrer"
       target="_blank"
       className={clsx(
-        'focus-visible:ring-muted-foreground group block rounded-md focus-visible:ring-2',
-        'hover:ring-primary',
+        'focus-visible:ring-muted-foreground group block rounded-md',
+        'hover:ring-primary focus-visible:ring-2',
+        isLoading && 'cursor-wait opacity-50',
       )}
     >
       <article
@@ -45,7 +45,7 @@ export function LinkCard({ link, hideDetails }: Props) {
             )}
 
             <div className="flex items-center gap-1.5" title="Last visit">
-              <EyeIcon className="stroke-muted-foreground h-4 w-4" />
+              <CalendarClockIcon className="stroke-muted-foreground h-4 w-4" />
               <Typography as="span" variant="xsmall" className="whitespace-nowrap">
                 {formatDistanceToNow(link.lastVisit ?? Date.now(), {
                   addSuffix: true,
