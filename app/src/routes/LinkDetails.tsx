@@ -290,7 +290,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
         {/* TODO: add rich markdown editor */}
         <LineItem title="Notes" className="col-span-2">
           {link.notes ? (
-            <pre className="font-sans">{link.notes}</pre>
+            <pre className="whitespace-pre-line font-sans">{link.notes}</pre>
           ) : (
             <Typography muted className="font-light">
               No notes yet.
