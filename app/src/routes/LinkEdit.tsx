@@ -1,72 +1,37 @@
-import type { CSSProperties, PropsWithChildren } from 'react';
-import {
-  Form,
-  Link,
-  data,
-  isRouteErrorResponse,
-  redirect,
-  useNavigate,
-  useNavigation,
-} from 'react-router';
+import { Controller } from 'react-hook-form';
+import { Form, Link, data, isRouteErrorResponse, redirect } from 'react-router';
 
-import {
-  addToFavorites,
-  deleteLink,
-  getLinkDetails,
-  removeFromFavorites,
-} from '@/.server/resources/link';
+import { getCollections } from '@/.server/resources/collection';
+import { getLinkDetails } from '@/.server/resources/link';
+import { getTags } from '@/.server/resources/tag';
 import { getSessionOrRedirect } from '@/.server/session';
-import clsx, { type ClassValue } from 'clsx';
-import { formatDate, formatDistanceToNow } from 'date-fns';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  CalendarClockIcon,
-  EyeIcon,
   FolderIcon,
   Link2OffIcon,
   LinkIcon,
-  LoaderCircle,
-  type LucideProps,
   PencilOffIcon,
   SaveIcon,
-  StarIcon,
-  TagIcon,
+  TypeOutlineIcon,
   Undo2Icon,
+  UndoIcon,
 } from 'lucide-react';
+import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
+import { z } from 'zod';
 
-import { DeleteLinkDialog } from '@/components/DeleteLinkDialog';
 import { FormField } from '@/components/FormField';
+import { LinkHero } from '@/components/LinkHero';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Typography } from '@/components/ui/typography';
 
-import { type Route } from './+types/LinkDetails';
-
-type LinkItemProps = PropsWithChildren<{
-  title: string;
-  Icon?: React.FunctionComponent<LucideProps & React.RefAttributes<SVGSVGElement>>;
-  className?: ClassValue;
-  iconClassName?: ClassValue;
-  iconStyle?: CSSProperties;
-}>;
-
-function LineItem(props: LinkItemProps) {
-  const { className, Icon, iconClassName, iconStyle, title, children } = props;
-  return (
-    <div className={clsx('flex flex-col gap-1', className)}>
-      <div className="flex items-center gap-2">
-        <Typography>{title}</Typography>
-      </div>
-      <div className="bg-cpt-base border-border flex items-center justify-between gap-2 rounded-md border px-4 py-2">
-        {children}
-        {Icon && (
-          <Icon
-            className={clsx('stroke-muted-foreground h-5 w-5', iconClassName)}
-            style={iconStyle}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
+import { type Route } from './+types/LinkEdit';
 
 export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   let headline = 'Oops, an unexpected error occurred';
@@ -96,154 +61,193 @@ export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   );
 }
 
+const EditLinkSchema = z.object({
+  title: z.string().min(1),
+  url: z.string().url(),
+  tag: z.string().uuid().optional().nullable().default(null),
+  collection: z.string().optional().nullable().default(null),
+  notes: z.string().optional(),
+});
+
+const resolver = zodResolver(EditLinkSchema);
+type EditLinkFormFields = z.infer<typeof EditLinkSchema>;
+
 export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
-  const formData = await request.formData();
+  const {
+    errors,
+    data,
+    receivedValues: defaultValues,
+  } = await getValidatedFormData<EditLinkFormFields>(request, resolver);
 
-  if (request.method === 'DELETE') {
-    await deleteLink(linkId);
-    return redirect('/links');
-  }
+  console.log(data, errors);
 
-  if (request.method === 'PUT') {
-    const value = String(formData.get('toggleFavorite'));
-    if (value === 'true') await removeFromFavorites(linkId);
-    if (value === 'false') await addToFavorites(linkId);
-  }
+  if (errors) return { errors, defaultValues };
 
   return null;
 }
 
 export async function loader({ request, params: { linkId } }: Route.LoaderArgs) {
-  const { headers } = await getSessionOrRedirect(request);
+  const {
+    headers,
+    data: { user },
+  } = await getSessionOrRedirect(request);
+
   const link = await getLinkDetails(linkId);
   if (!link) throw data(null, { status: 404 });
-  return data({ link }, { headers });
+
+  const [tags, collections] = await Promise.all([getTags(user.id), getCollections(user.id)]);
+
+  return data({ link, tags, collections, user }, { headers });
 }
 
-export default function LinkDetailsPage({ loaderData: { link } }: Route.ComponentProps) {
-  const navigate = useNavigate();
-  const navigation = useNavigation();
+export default function LinkEditPage(props: Route.ComponentProps) {
+  const {
+    loaderData: { link, tags, collections, user },
+  } = props;
 
-  const isTogglingFavorite =
-    navigation.state !== 'idle' && Boolean(navigation.formData?.has('toggleFavorite'));
+  const form = useRemixForm({
+    resolver,
+    defaultValues: {
+      title: link.title,
+      url: link.url,
+      notes: link.notes,
+      tag: link.tagId ?? undefined,
+      collection: link.collectionId ?? undefined,
+    },
+  });
 
   return (
     <div className="mx-auto my-0 flex w-full max-w-[1200px] flex-col gap-2">
-      <section
-        className="border-border flex overflow-hidden rounded-md border bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url("${link.previewImage}")` }}
+      <div>
+        <Button asChild variant="ghost" size="sm">
+          <Link to={`/links/${link.id}`} replace>
+            <UndoIcon /> Go Back
+          </Link>
+        </Button>
+      </div>
+
+      <LinkHero isEditMode link={link} />
+
+      <Form
+        method="POST"
+        onSubmit={form.handleSubmit}
+        className="relative grid grid-cols-2 gap-6 pt-6"
       >
-        <div className="bg-cpt-base/85 flex flex-1 flex-col justify-between gap-8 p-4 backdrop-blur-sm">
-          <div className="flex justify-between gap-8">
-            {link.favicon ? (
-              <img
-                src={link.favicon}
-                width="32"
-                height="32"
-                alt="favicon"
-                className="z-[1] h-8 w-8 rounded"
-              />
-            ) : (
-              <div role="presentation" />
-            )}
-            {link.isPinned ? (
-              <StarIcon className="fill-primary stroke-primary h-6 w-6" />
-            ) : (
-              <div role="presentation" />
-            )}
-          </div>
+        <FormField
+          {...form.register('title')}
+          label="Title"
+          fieldClassName="col-span-2"
+          rightBtn={
+            <Button variant="ghost" disabled aria-hidden="true">
+              <TypeOutlineIcon className="min-h-5 min-w-5" />
+            </Button>
+          }
+        />
+        <FormField
+          {...form.register('url')}
+          label="URL"
+          fieldClassName="col-span-2"
+          rightBtn={
+            <Button variant="ghost" disabled aria-hidden="true">
+              <LinkIcon className="min-h-5 min-w-5" />
+            </Button>
+          }
+        />
 
-          <div className="z-[1] flex flex-col gap-2 text-left">
-            <Typography as="h2" variant="lead">
-              {link.title}
-            </Typography>
-            <Typography as="p">{link.description}</Typography>
-
-            <div className="flex gap-2" title="Last Saved">
-              <SaveIcon className="h-5 w-5" />
-              <Typography muted>{formatDate(link.updatedAt ?? new Date(), 'PPPp')}</Typography>
-            </div>
-
-            <div className="flex gap-2" title="Last Visit">
-              <CalendarClockIcon className="h-5 w-5" />
-              <Typography muted>
-                {formatDistanceToNow(link.lastVisit ?? new Date(), { addSuffix: true })}
-              </Typography>
-            </div>
-
-            <div className="flex gap-2" title="Views">
-              <EyeIcon className="h-5 w-5" />
-              <Typography muted>{link.views}</Typography>
-            </div>
-
-            <div className="flex justify-end gap-2">
-              <Button asChild variant="outline" size="sm">
-                <Link to={`/links/${link.id}`} replace>
-                  <PencilOffIcon /> Cancel Edit
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="relative grid grid-cols-2 gap-6 pt-6">
-        <LineItem title="Link" Icon={LinkIcon} className="col-span-2">
-          <Typography as="a" link href={link.url}>
-            {link.url}
+        <div className="flex flex-col gap-1">
+          <Typography as="label" htmlFor="tag-select">
+            Tag
           </Typography>
-        </LineItem>
-        <LineItem title="Tag" Icon={TagIcon}>
-          {link.tag ? (
-            <Typography
-              as="link"
-              className="text-foreground no-underline"
-              to={`/tags/${link.tagId}`}
-            >
-              {link.tag?.name}
-            </Typography>
-          ) : (
-            <Typography muted className="font-light">
-              No tag
-            </Typography>
-          )}
-        </LineItem>
-        <LineItem
-          title="Collection"
-          Icon={FolderIcon}
-          iconStyle={{
-            stroke: link.collection?.color ?? undefined,
-            fill: link.collection?.color ?? undefined,
-          }}
-        >
-          {link.collection ? (
-            <Typography
-              as="link"
-              className="text-foreground no-underline"
-              to={`/collections/${link.collectionId}`}
-            >
-              {link.collection?.name}
-            </Typography>
-          ) : (
-            <Typography muted className="font-light">
-              No collection
-            </Typography>
-          )}
-        </LineItem>
+          <Controller
+            control={form.control}
+            name="tag"
+            render={({ field: { value, name, onChange, ...selectProps } }) => (
+              <Select value={value} onValueChange={onChange} name={name}>
+                <SelectTrigger {...selectProps}>
+                  <SelectValue placeholder="Select a tag" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tags.map(tag => (
+                    <SelectItem key={tag.id} value={tag.id}>
+                      <Typography>{tag.name}</Typography>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <Typography as="label" htmlFor="tag-select">
+            Collection
+          </Typography>
+          <Controller
+            control={form.control}
+            name="collection"
+            render={({ field: { value, name, onChange, ...selectProps } }) => (
+              <Select value={value} onValueChange={onChange} name={name}>
+                <SelectTrigger {...selectProps}>
+                  <SelectValue placeholder="Select a collection" />
+                </SelectTrigger>
+                <SelectContent>
+                  {collections.map(collection => (
+                    <SelectItem key={collection.id} value={collection.id}>
+                      <div className="flex items-center gap-2">
+                        <FolderIcon
+                          className="h-5 w-5"
+                          style={{
+                            stroke: collection?.color ?? undefined,
+                            fill: collection?.color ?? undefined,
+                          }}
+                        />
+                        <Typography>{collection.name}</Typography>
+                        {collection.ownerId !== user.id && (
+                          <Typography variant="small">
+                            (shared by {collection.owner.name})
+                          </Typography>
+                        )}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
 
         {/* TODO: add rich markdown editor */}
         <FormField
+          {...form.register('notes')}
           label="Notes"
           variant="textarea"
-          readOnly
           fieldClassName="col-span-2"
           className="min-h-36 resize-none"
-          defaultValue={link.notes ?? undefined}
         />
-        <div className="col-span-2 flex justify-end">
-          <Button>Save Changes</Button>
+
+        <div className="col-span-2 flex justify-end gap-4">
+          <Button asChild variant="outline" size="lg">
+            <Link to={`/links/${link.id}`} replace>
+              <PencilOffIcon /> <span>Cancel Edit</span>
+            </Link>
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            type="reset"
+            onClick={e => {
+              e.preventDefault();
+              form.reset();
+            }}
+          >
+            <Undo2Icon className="min-h-5 min-w-5" /> <span>Revert Changes</span>
+          </Button>
+          <Button size="lg" type="submit">
+            <SaveIcon className="min-h-5 min-w-5" />
+            <span>Save Changes</span>
+          </Button>
         </div>
-      </div>
+      </Form>
     </div>
   );
 }

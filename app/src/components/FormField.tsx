@@ -1,6 +1,7 @@
-import { type ComponentPropsWithRef, useId } from 'react';
+import { type ComponentPropsWithRef, type ReactNode, useId } from 'react';
 
 import { cn } from '@/lib/utils';
+import type { LucideProps } from 'lucide-react';
 
 import { Input, type InputProps } from './ui/input';
 import { Textarea, type TextareaProps } from './ui/textarea';
@@ -18,10 +19,18 @@ type Props = {
   label: string;
   fieldClassName?: string;
   errorMessage?: string;
+  rightBtn?: ReactNode;
 } & (FieldInpuProps | FieldTextareaProps);
 
 export function FormField(props: Props) {
-  const { variant = 'input', label, fieldClassName, errorMessage, ...inputProps } = props;
+  const {
+    variant = 'input',
+    label,
+    fieldClassName,
+    errorMessage,
+    rightBtn,
+    ...inputProps
+  } = props;
   const id = useId();
 
   return (
@@ -41,6 +50,7 @@ export function FormField(props: Props) {
         <Input
           id={id}
           error={Boolean(errorMessage)}
+          rightBtn={rightBtn}
           {...(inputProps as ComponentPropsWithRef<'input'>)}
         />
       )}

@@ -49,7 +49,7 @@ const typography = cva({
   variants: {
     variant: {
       title: 'text-primary text-xl font-medium leading-none',
-      lead: 'text-3xl font-light leading-none capitalize',
+      lead: 'text-3xl font-light leading-none',
       large: 'text-xl font-normal leading-loose',
       base: 'text-base font-normal leading-normal',
       small: 'text-sm font-normal leading-tight',

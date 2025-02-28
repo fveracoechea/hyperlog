@@ -15,6 +15,7 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
   return (
     <a
       href={link.url}
+      title={link.notes ?? ''}
       rel="noreferrer"
       target="_blank"
       className={clsx(

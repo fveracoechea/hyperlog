@@ -20,7 +20,6 @@ import clsx, { type ClassValue } from 'clsx';
 import { formatDate, formatDistanceToNow } from 'date-fns';
 import {
   CalendarClockIcon,
-  DeleteIcon,
   EyeIcon,
   FolderIcon,
   Link2OffIcon,
@@ -34,9 +33,11 @@ import {
   TagIcon,
   TrashIcon,
   Undo2Icon,
+  UndoIcon,
 } from 'lucide-react';
 
 import { DeleteLinkDialog } from '@/components/DeleteLinkDialog';
+import { LinkHero } from '@/components/LinkHero';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 
@@ -57,7 +58,7 @@ function LineItem(props: LinkItemProps) {
       <div className="flex items-center gap-2">
         <Typography muted>{title}</Typography>
       </div>
-      <div className="bg-cpt-base border-border flex items-center gap-2 py-2">
+      <div className="flex items-center gap-2 p-2">
         {Icon && (
           <Icon
             className={clsx('h-5 w-5', iconClassName ?? 'stroke-muted-foreground')}
@@ -140,103 +141,59 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
               navigate(-1);
             }}
           >
-            <Undo2Icon /> Go Back
+            <UndoIcon /> Go Back
           </Link>
         </Button>
       </div>
-      <section
-        className="border-border flex overflow-hidden rounded-md border bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url("${link.previewImage}")` }}
-      >
-        <div className="bg-cpt-base/85 flex flex-1 flex-col justify-between gap-8 p-4 backdrop-blur-sm">
-          <div className="flex justify-between gap-8">
-            {link.favicon ? (
-              <img
-                src={link.favicon}
-                width="32"
-                height="32"
-                alt="favicon"
-                className="z-[1] h-8 w-8 rounded"
-              />
-            ) : (
-              <div role="presentation" />
-            )}
-            {link.isPinned ? (
-              <StarIcon className="fill-primary stroke-primary h-6 w-6" />
-            ) : (
-              <div role="presentation" />
-            )}
-          </div>
 
-          <div className="z-[1] flex flex-col gap-2 text-left">
-            <Typography as="h2" variant="lead">
-              {link.title}
-            </Typography>
-            <Typography as="p">{link.description}</Typography>
-
-            <div className="flex gap-2" title="Last Saved">
-              <SaveIcon className="h-5 w-5" />
-              <Typography muted>{formatDate(link.updatedAt ?? new Date(), 'PPPp')}</Typography>
-            </div>
-
-            <div className="flex gap-2" title="Last Visit">
-              <CalendarClockIcon className="h-5 w-5" />
-              <Typography muted>
-                {formatDistanceToNow(link.lastVisit ?? new Date(), { addSuffix: true })}
-              </Typography>
-            </div>
-
-            <div className="flex gap-2" title="Views">
-              <EyeIcon className="h-5 w-5" />
-              <Typography muted>{link.views}</Typography>
-            </div>
-
-            <div className="flex justify-end gap-2">
-              <DeleteLinkDialog
-                link={link}
-                trigger={
-                  <Button size="sm" variant="ghost">
-                    <TrashIcon />
-                    Delete
-                  </Button>
-                }
-              />
-              <Form method="PUT">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  name="toggleFavorite"
-                  value={String(Boolean(link.isPinned))}
-                >
-                  {isTogglingFavorite && (
-                    <>
-                      <LoaderCircle className="stroke-primary h-4 w-4 animate-spin" />
-                      <span>Updating Favories</span>
-                    </>
-                  )}
-
-                  {!isTogglingFavorite &&
-                    (link.isPinned ? (
-                      <>
-                        <StarOffIcon /> Remove from Favorites
-                      </>
-                    ) : (
-                      <>
-                        <StarIcon /> Add to Favorites
-                      </>
-                    ))}
+      <LinkHero
+        link={link}
+        actions={
+          <>
+            <DeleteLinkDialog
+              link={link}
+              trigger={
+                <Button size="sm" variant="ghost">
+                  <TrashIcon />
+                  Delete
                 </Button>
-              </Form>
-              <Button size="sm" variant="ghost" asChild>
-                <Link to={`/links/${link.id}/edit`} replace>
-                  <PencilIcon />
-                  Edit
-                </Link>
+              }
+            />
+            <Form method="PUT">
+              <Button
+                size="sm"
+                variant="ghost"
+                name="toggleFavorite"
+                value={String(Boolean(link.isPinned))}
+              >
+                {isTogglingFavorite && (
+                  <>
+                    <LoaderCircle className="stroke-primary h-4 w-4 animate-spin" />
+                    <span>Updating Favories</span>
+                  </>
+                )}
+
+                {!isTogglingFavorite &&
+                  (link.isPinned ? (
+                    <>
+                      <StarOffIcon /> Remove from Favorites
+                    </>
+                  ) : (
+                    <>
+                      <StarIcon /> Add to Favorites
+                    </>
+                  ))}
               </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+            </Form>
+            <Button size="sm" variant="ghost" asChild>
+              <Link to={`/links/${link.id}/edit`} replace>
+                <PencilIcon />
+                Edit
+              </Link>
+            </Button>
+          </>
+        }
+      />
 
       <div className="relative grid grid-cols-2 gap-6 pt-6">
         <LineItem
@@ -249,6 +206,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             {link.url}
           </Typography>
         </LineItem>
+
         <LineItem title="Tag" Icon={TagIcon} iconClassName={link.tag && 'stroke-primary'}>
           {link.tag ? (
             <Typography
@@ -264,6 +222,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             </Typography>
           )}
         </LineItem>
+
         <LineItem
           title="Collection"
           Icon={FolderIcon}
