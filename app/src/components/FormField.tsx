@@ -55,7 +55,7 @@ export function FormField(props: Props) {
         />
       )}
       {errorMessage && (
-        <Typography variant="small" className="text-destructive">
+        <Typography variant="small" className="text-destructive pt-1">
           {errorMessage}
         </Typography>
       )}

@@ -30,19 +30,3 @@ export const SignupSchema = z
   });
 
 export type SignupSchemaType = z.infer<typeof SignupSchema>;
-
-export const SessionPayloadSchema = z.object({
-  user: z.object({
-    id: zPrimaryKeyId,
-    firstName: z.string(),
-    lastName: z.string().optional().nullable(),
-    email: z.string().email(),
-    isActive: z.boolean().nullable().default(true),
-    locale: z.string().nullable(),
-    createdAt: z.string(),
-  }),
-  exp: z.number(),
-  iat: z.number(),
-});
-
-export type SessionPayloadSchemaType = z.infer<typeof SessionPayloadSchema>;

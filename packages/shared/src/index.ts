@@ -4,3 +4,4 @@ export * from './helpers/validation.ts';
 export * from './schemas/user.ts';
 export * from './schemas/generic.ts';
 export * from './schemas/json.ts';
+export * from './schemas/link.ts';

@@ -1,3 +1,4 @@
+import type { EditLinkFormFields } from '@hyperlog/shared';
 import { SQL, and, asc, eq, or, sql } from 'drizzle-orm';
 
 import { db } from '../db';
@@ -92,4 +93,14 @@ export async function addLinkToCollection(linkId: string, collectionId: string) 
 
 export async function deleteLink(linkId: string) {
   return await db.delete(schema.link).where(eq(schema.link.id, linkId));
+}
+
+export async function updateLink(linkId: string, data: EditLinkFormFields) {
+  const result = await db
+    .update(schema.link)
+    .set(data)
+    .where(eq(schema.link.id, linkId))
+    .returning();
+
+  return result[0];
 }

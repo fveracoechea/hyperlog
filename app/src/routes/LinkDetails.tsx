@@ -252,7 +252,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             <pre className="whitespace-pre-line font-sans">{link.notes}</pre>
           ) : (
             <Typography muted className="font-light">
-              No notes yet.
+              Add any relevant details or thoughts about this link here.
             </Typography>
           )}
         </LineItem>

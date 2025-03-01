@@ -2,22 +2,25 @@ import { Controller } from 'react-hook-form';
 import { Form, Link, data, isRouteErrorResponse, redirect } from 'react-router';
 
 import { getCollections } from '@/.server/resources/collection';
-import { getLinkDetails } from '@/.server/resources/link';
+import { getLinkDetails, updateLink } from '@/.server/resources/link';
 import { getTags } from '@/.server/resources/tag';
 import { getSessionOrRedirect } from '@/.server/session';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type EditLinkFormFields, EditLinkSchema } from '@hyperlog/shared';
 import {
+  CircleXIcon,
   FolderIcon,
   Link2OffIcon,
   LinkIcon,
+  LoaderCircleIcon,
   PencilOffIcon,
   SaveIcon,
+  TagIcon,
   TypeOutlineIcon,
   Undo2Icon,
   UndoIcon,
 } from 'lucide-react';
 import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
-import { z } from 'zod';
 
 import { FormField } from '@/components/FormField';
 import { LinkHero } from '@/components/LinkHero';
@@ -61,16 +64,7 @@ export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   );
 }
 
-const EditLinkSchema = z.object({
-  title: z.string().min(1),
-  url: z.string().url(),
-  tag: z.string().uuid().optional().nullable().default(null),
-  collection: z.string().optional().nullable().default(null),
-  notes: z.string().optional(),
-});
-
 const resolver = zodResolver(EditLinkSchema);
-type EditLinkFormFields = z.infer<typeof EditLinkSchema>;
 
 export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
   const {
@@ -79,11 +73,10 @@ export async function action({ request, params: { linkId } }: Route.LoaderArgs) 
     receivedValues: defaultValues,
   } = await getValidatedFormData<EditLinkFormFields>(request, resolver);
 
-  console.log(data, errors);
-
   if (errors) return { errors, defaultValues };
 
-  return null;
+  await updateLink(linkId, data);
+  return redirect(`/links/${linkId}`);
 }
 
 export async function loader({ request, params: { linkId } }: Route.LoaderArgs) {
@@ -111,8 +104,8 @@ export default function LinkEditPage(props: Route.ComponentProps) {
       title: link.title,
       url: link.url,
       notes: link.notes,
-      tag: link.tagId ?? undefined,
-      collection: link.collectionId ?? undefined,
+      tagId: link.tagId ?? undefined,
+      collectionId: link.collectionId ?? undefined,
     },
   });
 
@@ -134,8 +127,9 @@ export default function LinkEditPage(props: Route.ComponentProps) {
         className="relative grid grid-cols-2 gap-6 pt-6"
       >
         <FormField
-          {...form.register('title')}
           label="Title"
+          {...form.register('title')}
+          errorMessage={form.formState.errors.title?.message}
           fieldClassName="col-span-2"
           rightBtn={
             <Button variant="ghost" disabled aria-hidden="true">
@@ -144,8 +138,9 @@ export default function LinkEditPage(props: Route.ComponentProps) {
           }
         />
         <FormField
-          {...form.register('url')}
           label="URL"
+          {...form.register('url')}
+          errorMessage={form.formState.errors.url?.message}
           fieldClassName="col-span-2"
           rightBtn={
             <Button variant="ghost" disabled aria-hidden="true">
@@ -160,16 +155,35 @@ export default function LinkEditPage(props: Route.ComponentProps) {
           </Typography>
           <Controller
             control={form.control}
-            name="tag"
+            name="tagId"
             render={({ field: { value, name, onChange, ...selectProps } }) => (
-              <Select value={value} onValueChange={onChange} name={name}>
+              <Select
+                key={value}
+                name={name}
+                value={value}
+                onValueChange={selected => {
+                  if (selected === 'NO-TAG') onChange('');
+                  else onChange(selected);
+                }}
+              >
                 <SelectTrigger {...selectProps}>
                   <SelectValue placeholder="Select a tag" />
                 </SelectTrigger>
                 <SelectContent>
+                  {value && (
+                    <SelectItem value="NO-TAG">
+                      <div className="flex items-center gap-2">
+                        <CircleXIcon className="h-5 w-5" />
+                        <Typography>No Tag</Typography>
+                      </div>
+                    </SelectItem>
+                  )}
                   {tags.map(tag => (
                     <SelectItem key={tag.id} value={tag.id}>
-                      <Typography>{tag.name}</Typography>
+                      <div className="flex items-center gap-2">
+                        <TagIcon className="h-5 w-5" />
+                        <Typography>{tag.name}</Typography>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -184,13 +198,29 @@ export default function LinkEditPage(props: Route.ComponentProps) {
           </Typography>
           <Controller
             control={form.control}
-            name="collection"
+            name="collectionId"
             render={({ field: { value, name, onChange, ...selectProps } }) => (
-              <Select value={value} onValueChange={onChange} name={name}>
+              <Select
+                key={value}
+                name={name}
+                value={value}
+                onValueChange={selected => {
+                  if (selected === 'NO-COLLECTION') onChange('');
+                  else onChange(selected);
+                }}
+              >
                 <SelectTrigger {...selectProps}>
                   <SelectValue placeholder="Select a collection" />
                 </SelectTrigger>
                 <SelectContent>
+                  {value && (
+                    <SelectItem value="NO-COLLECTION">
+                      <div className="flex items-center gap-2">
+                        <CircleXIcon className="h-5 w-5" />
+                        <Typography>No Collection</Typography>
+                      </div>
+                    </SelectItem>
+                  )}
                   {collections.map(collection => (
                     <SelectItem key={collection.id} value={collection.id}>
                       <div className="flex items-center gap-2">
@@ -220,6 +250,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
         <FormField
           {...form.register('notes')}
           label="Notes"
+          placeholder="Add any relevant details or thoughts about this link here."
           variant="textarea"
           fieldClassName="col-span-2"
           className="min-h-36 resize-none"
@@ -234,16 +265,18 @@ export default function LinkEditPage(props: Route.ComponentProps) {
           <Button
             variant="outline"
             size="lg"
-            type="reset"
-            onClick={e => {
-              e.preventDefault();
-              form.reset();
-            }}
+            type="button"
+            disabled={!form.formState.isDirty}
+            onClick={() => form.reset()}
           >
             <Undo2Icon className="min-h-5 min-w-5" /> <span>Revert Changes</span>
           </Button>
-          <Button size="lg" type="submit">
-            <SaveIcon className="min-h-5 min-w-5" />
+          <Button size="lg" type="submit" disabled={!form.formState.isDirty}>
+            {form.formState.isSubmitting ? (
+              <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
+            ) : (
+              <SaveIcon className="min-h-5 min-w-5" />
+            )}
             <span>Save Changes</span>
           </Button>
         </div>
