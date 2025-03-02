@@ -1,11 +1,13 @@
 import { useRef } from 'react';
-import { useFetcher } from 'react-router';
+import { useFetcher, useNavigate } from 'react-router';
 
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
 import { CalendarClockIcon, FolderIcon, LinkIcon, TagIcon } from 'lucide-react';
 
 import type { Route } from '../routes/+types/Home';
+import { LazyFavicon } from './LazyFavicon';
+import { Button } from './ui/button';
 import { Typography } from './ui/typography';
 
 type Props = {
@@ -15,8 +17,9 @@ type Props = {
 };
 
 export function LinkCard({ link, hideDetails, isLoading }: Props) {
-  const formRef = useRef<HTMLFormElement | null>(null);
   const fetcher = useFetcher();
+  const navigate = useNavigate();
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   return (
     <a
@@ -48,15 +51,7 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
       >
         <div className="bg-cpt-base/85 flex flex-1 flex-col gap-4 rounded-md p-2 backdrop-blur-sm">
           <div className="flex items-start justify-between">
-            {link.favicon && (
-              <img
-                src={link.favicon}
-                width="26"
-                height="26"
-                role="presentation"
-                className="rounded"
-              />
-            )}
+            <LazyFavicon src={link.favicon ?? undefined} width="26px" height="26px" />
 
             <div className="flex items-center gap-1.5" title="Last visit">
               <CalendarClockIcon className="stroke-muted-foreground h-4 w-4" />
@@ -125,15 +120,19 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
 
             {!hideDetails && (
               <div className="flex w-full items-center justify-end gap-4">
-                <Typography
-                  as="link"
-                  variant="small"
-                  to={`/links/${link.id}`}
-                  onClick={e => e.stopPropagation()}
-                  className="!text-foreground px-2 py-1 no-underline hover:underline focus:underline"
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7"
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    navigate(`/links/${link.id}`);
+                  }}
                 >
                   View Details
-                </Typography>
+                </Button>
               </div>
             )}
           </div>

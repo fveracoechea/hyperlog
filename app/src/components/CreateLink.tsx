@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import type { FieldErrors } from 'react-hook-form';
 import { useFetcher } from 'react-router';
 
@@ -22,17 +22,42 @@ import {
 
 const resolver = zodResolver(CreateLinkSchema);
 
-export function CreateLinkForm() {
+export function CreateLinkForm(props: { onClose(): void }) {
+  const { onClose } = props;
   const fetcher = useFetcher<{ errors: FieldErrors<CreateLinkFormFields> }>();
-  const form = useRemixForm<CreateLinkFormFields>({ resolver, fetcher });
+  const form = useRemixForm<CreateLinkFormFields>({
+    resolver,
+    fetcher,
+    submitConfig: {
+      method: 'POST',
+      action: '/api/link',
+    },
+  });
 
   const errors = form.formState.errors;
+
+  // if (
+  //   fetcher.state === 'idle' &&
+  //   fetcher.data &&
+  //   form.formState.isSubmitted &&
+  //   !errors.title &&
+  //   !errors.url
+  // ) {
+  //   onClose();
+  // }
 
   return (
     <fetcher.Form
       method="POST"
       action="/api/link"
-      onSubmit={form.handleSubmit}
+      onSubmit={event => {
+        const url = form.getValues('url');
+        if (!/^https?:\/\//.test(url)) {
+          form.setValue('url', `https://${url}`);
+        }
+
+        return form.handleSubmit(event);
+      }}
       className="flex flex-col gap-4"
     >
       <div className="grid grid-cols-2 gap-4">
@@ -46,7 +71,7 @@ export function CreateLinkForm() {
         />
         <FormField
           label="Title"
-          placeholder="Auto-generate if left blank"
+          placeholder="Auto-generated if left blank"
           fieldClassName="col-span-2"
           {...form.register('title')}
           errorMessage={errors.title?.message}
@@ -68,7 +93,7 @@ export function CreateLinkForm() {
         </DialogClose>
 
         {form.formState.isSubmitting ? (
-          <Button disabled type="submit" className="min-w-24">
+          <Button disabled type="button" className="min-w-24">
             <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
           </Button>
         ) : (
@@ -85,16 +110,16 @@ type Props = {
 
 export function CreateLinkDialog(props: Props) {
   const { trigger } = props;
-
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Link</DialogTitle>
           <DialogDescription>Use this dialog to add a new link</DialogDescription>
         </DialogHeader>
-        <CreateLinkForm />
+        <CreateLinkForm onClose={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

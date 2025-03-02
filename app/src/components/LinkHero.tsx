@@ -4,6 +4,7 @@ import { formatDate, formatDistanceToNow } from 'date-fns';
 import { CalendarClockIcon, EyeIcon, PencilIcon, SaveIcon, StarIcon } from 'lucide-react';
 
 import type { Route } from '../routes/+types/LinkDetails';
+import { LazyFavicon } from './LazyFavicon';
 import { Typography } from './ui/typography';
 
 export type LinkData = Route.ComponentProps['loaderData']['link'];
@@ -21,17 +22,7 @@ export function LinkHero(props: {
     >
       <div className="bg-cpt-base/85 flex flex-1 flex-col justify-between gap-8 p-4 backdrop-blur-sm">
         <div className="flex justify-between gap-8">
-          {link.favicon ? (
-            <img
-              src={link.favicon}
-              width="32"
-              height="32"
-              alt="favicon"
-              className="z-[1] h-8 w-8 rounded"
-            />
-          ) : (
-            <div role="presentation" />
-          )}
+          <LazyFavicon src={link.favicon ?? undefined} width="32px" height="32px" />
           {link.isPinned ? (
             <StarIcon className="fill-primary stroke-primary h-6 w-6" />
           ) : (

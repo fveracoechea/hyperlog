@@ -1,11 +1,9 @@
 import { Form, redirect, useNavigation } from 'react-router';
 
 import { authClient } from '@/lib/authClient.client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { SignupSchema, type SignupSchemaType } from '@hyperlog/shared';
+import { SignupSchema } from '@hyperlog/shared';
 import clsx from 'clsx';
 import { LoaderCircleIcon, Unlink, UserRoundPlus } from 'lucide-react';
-import { useRemixForm } from 'remix-hook-form';
 
 import { FormField } from '@/components/FormField';
 import { Alert } from '@/components/ui/alert';
@@ -15,8 +13,6 @@ import { Typography } from '@/components/ui/typography';
 
 import type { Route } from './+types/SignUp';
 
-const resolver = zodResolver(SignupSchema);
-
 export async function clientAction({ request }: Route.ActionArgs) {
   const formData = await request.formData();
 
@@ -25,8 +21,6 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
   const { error } = await authClient.signUp.email(validation.data);
   if (!error) return redirect('/');
-
-  console.log(error);
 
   return { message: error.message };
 }
