@@ -17,22 +17,17 @@ import {
 } from '@/.server/resources/link';
 import { getSessionOrRedirect } from '@/.server/session';
 import clsx, { type ClassValue } from 'clsx';
-import { formatDate, formatDistanceToNow } from 'date-fns';
 import {
-  CalendarClockIcon,
-  EyeIcon,
   FolderIcon,
   Link2OffIcon,
   LinkIcon,
   LoaderCircle,
   type LucideProps,
   PencilIcon,
-  SaveIcon,
   StarIcon,
   StarOffIcon,
   TagIcon,
   TrashIcon,
-  Undo2Icon,
   UndoIcon,
 } from 'lucide-react';
 
@@ -252,7 +247,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             <pre className="whitespace-pre-line font-sans">{link.notes}</pre>
           ) : (
             <Typography muted className="font-light">
-              Add any relevant details or thoughts about this link here.
+              No notes yet
             </Typography>
           )}
         </LineItem>

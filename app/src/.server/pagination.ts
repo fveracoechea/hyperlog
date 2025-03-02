@@ -15,8 +15,8 @@ import { db } from './db';
 import * as schema from './schema';
 
 export const PaginationSchema = z.object({
-  direction: z.enum(['asc', 'desc']).default('asc').catch('asc'),
-  sortBy: z.string().default('createdAt'),
+  direction: z.enum(['asc', 'desc']).default('desc').catch('desc'),
+  sortBy: z.string().default('updatedAt'),
   search: z.string().optional(),
   page: z.coerce.number().int().default(1).catch(1),
   pageSize: z.coerce.number().int().default(24).catch(24),
@@ -54,7 +54,7 @@ export function paginationHelper<
   const dbTable = schema[table] as Record<string, any>;
   const directionFn = searchParams.direction === 'asc' ? asc : desc;
   const sortBy =
-    searchParams.sortBy in dbTable ? dbTable[searchParams.sortBy] : dbTable.createdAt;
+    searchParams.sortBy in dbTable ? dbTable[searchParams.sortBy] : dbTable.updatedAt;
 
   if (searchParams.search) {
     const search = `%${searchParams.search}%`;

@@ -2,7 +2,7 @@ import { type RouteConfig, index, layout, prefix, route } from '@react-router/de
 
 export default [
   ...prefix('api', [
-    route('link/:linkId', './routes/api/link.ts'),
+    route('link/:linkId?', './routes/api/link.ts'),
     route('auth/*', './routes/api/auth.ts'),
   ]),
 

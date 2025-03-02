@@ -37,7 +37,7 @@ export function DeleteLinkDialog(props: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Link</DialogTitle>
           <DialogDescription>Are you sure you want to delete this link?</DialogDescription>

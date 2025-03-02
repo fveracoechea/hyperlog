@@ -33,7 +33,7 @@ export const link = t.sqliteTable('link', {
   description: t.text(),
   previewImage: t.text(),
   favicon: t.text(),
-  views: t.integer().default(0),
+  views: t.integer().default(1),
   lastVisit: t.integer({ mode: 'timestamp' }).default(sql`(unixepoch())`),
   isPinned: t.integer({ mode: 'boolean' }).default(false),
   collectionId: t.text().references(() => collection.id),

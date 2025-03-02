@@ -1,25 +1,9 @@
-import { Link, NavLink } from 'react-router';
+import { NavLink } from 'react-router';
 
+import { PopoverClose, PopoverContent } from '@radix-ui/react-popover';
 import clsx from 'clsx';
-import {
-  ChevronDown,
-  PaletteIcon,
-  PlusIcon,
-  Search,
-  Unlink,
-  UserCircleIcon,
-} from 'lucide-react';
+import { PlusIcon, Unlink, UserCircleIcon } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -29,6 +13,16 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { Typography } from '@/components/ui/typography';
+
+import { CreateLinkDialog } from '../CreateLink';
+import { Button } from '../ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { Popover, PopoverTrigger } from '../ui/popover';
 
 export function Header() {
   return (
@@ -76,32 +70,14 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-4">
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Create New</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink>Link</NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Theme</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink>Theme</NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>
-                <UserCircleIcon className="min-h-6 min-w-6" />
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <NavigationMenuLink>Profile</NavigationMenuLink>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+        <CreateLinkDialog
+          trigger={
+            <Button size="sm">
+              <PlusIcon />
+              <span>New Link</span>
+            </Button>
+          }
+        />
       </div>
     </header>
   );

@@ -37,7 +37,7 @@ export function FormField(props: Props) {
     <div className={cn('flex flex-col gap-1', fieldClassName)}>
       <Typography as="label" htmlFor={id}>
         {label}
-        {inputProps.required && <span className="text-cpt-red ml-2">*</span>}
+        {inputProps.required && <span className="text-cpt-red ml-1">*</span>}
       </Typography>
       {variant === 'textarea' && (
         <Textarea

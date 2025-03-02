@@ -1,3 +1,6 @@
+import { useRef } from 'react';
+import { useFetcher } from 'react-router';
+
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
 import { CalendarClockIcon, FolderIcon, LinkIcon, TagIcon } from 'lucide-react';
@@ -12,18 +15,28 @@ type Props = {
 };
 
 export function LinkCard({ link, hideDetails, isLoading }: Props) {
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const fetcher = useFetcher();
+
   return (
     <a
       href={link.url}
       title={link.notes ?? ''}
       rel="noreferrer"
       target="_blank"
+      onClick={() => formRef.current?.requestSubmit()}
       className={clsx(
         'focus-visible:ring-muted-foreground group block rounded-md',
         'hover:ring-primary focus-visible:ring-2',
         isLoading && 'cursor-wait opacity-50',
       )}
     >
+      <fetcher.Form
+        method="PUT"
+        action={`/api/link/${link.id}`}
+        ref={formRef}
+        className="hidden"
+      />
       <article
         className={clsx(
           'border-border group-hover:border-primary h-full rounded-md border transition-colors',

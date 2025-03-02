@@ -1,28 +1,90 @@
-import { data, redirect } from 'react-router';
+import type { FieldErrors } from 'react-hook-form';
+import { redirect } from 'react-router';
 
-import { env } from '@/.server/env';
-import { deleteLink, getLinkDetails } from '@/.server/resources/link';
+import { createLink, increateViewCount } from '@/.server/resources/link';
+import { getSessionOrRedirect } from '@/.server/session';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { type CreateLinkFormFields, CreateLinkSchema } from '@hyperlog/shared';
+import * as cheerio from 'cheerio';
+import { getValidatedFormData } from 'remix-hook-form';
 
 import type { Route } from './+types/link';
 
-const maxAge = 3600 * 24;
+const resolver = zodResolver(CreateLinkSchema);
 
-export async function loader({ params: { linkId } }: Route.LoaderArgs) {
-  const link = await getLinkDetails(linkId);
+async function fetchLinkData(url: string) {
+  const { origin } = new URL(url);
+  try {
+    const $ = await cheerio.fromURL(url);
 
-  const headers = new Headers();
-  if (env.isProd) headers.append('Cache-Control', `private, max-age=${maxAge}`);
+    const title = $('meta[property="og:title"]').attr('content') || $('title').text() || null;
 
-  return data(link ?? null, { headers });
+    const descriptionNode =
+      $('head meta[property="og:description"]') || $('head meta[name="description"]');
+
+    const image =
+      $('head meta[property="og:image"]').attr('content') ||
+      $('head meta[property="twitter:image"]').attr('content');
+
+    // Look for favicon link tags
+    let faviconUrl =
+      $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href');
+
+    // Ensure the URL is absolute
+    if (faviconUrl && !faviconUrl.startsWith('http'))
+      faviconUrl = new URL(faviconUrl, origin).href;
+
+    return {
+      title,
+      favicon: faviconUrl || `${origin}/favicon.ico`,
+      previewImage: image ? (image.startsWith('http') ? image : `${origin}${image}`) : null,
+      description: descriptionNode.attr('content') ?? null,
+    };
+  } catch (error) {
+    console.log('  ERROR LOADING LINK DATA  ', url);
+    console.log(error);
+    return {
+      title: null,
+      favicon: `${origin}/favicon.ico`,
+      previewImage: null,
+      description: null,
+    };
+  }
 }
 
 export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
-  const formData = await request.formData();
-  const redirectTo = String(formData.get('redirect'));
+  const {
+    headers,
+    data: { user },
+  } = await getSessionOrRedirect(request);
 
-  if (request.method === 'DELETE') {
-    await deleteLink(linkId);
-    return redirect(redirectTo);
+  if (request.method === 'PUT' && linkId) {
+    await increateViewCount(linkId);
+  }
+
+  if (request.method === 'POST') {
+    const {
+      errors,
+      data,
+      receivedValues: defaultValues,
+    } = await getValidatedFormData<CreateLinkFormFields>(request, resolver);
+
+    if (errors) return { errors, defaultValues };
+
+    const linkData = await fetchLinkData(data.url);
+
+    const title = data.title || linkData.title;
+
+    if (!title)
+      return {
+        defaultValues,
+        errors: {
+          title: { type: 'required', message: 'No page Title found. Please provide one.' },
+        } satisfies FieldErrors<CreateLinkFormFields>,
+      };
+
+    const link = await createLink({ ...data, ...linkData, title, ownerId: user.id });
+    return redirect(`/links/${link.id}`, { headers });
   }
 
   return null;

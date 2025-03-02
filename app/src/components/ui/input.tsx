@@ -3,7 +3,6 @@ import * as React from 'react';
 import { cva } from '@/lib/cva';
 import { cn } from '@/lib/utils';
 import clsx from 'clsx';
-import type { LucideProps } from 'lucide-react';
 
 const wrapper = cva({
   base: [

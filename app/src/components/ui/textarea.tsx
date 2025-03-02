@@ -11,8 +11,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         className={cn(
           'bg-background placeholder:text-muted-foreground transition-shadow',
           'border-input border outline-none',
-          'flex min-h-[80px] w-full rounded-md px-2 py-2 text-base',
+          'flex min-h-28 w-full rounded-md px-2 py-2 text-base',
           'disabled:cursor-not-allowed disabled:opacity-50',
+          'placeholder:text-muted-foreground placeholder:font-light',
           error
             ? 'ring-destructive/60 focus-visible:!ring-destructive'
             : readOnly

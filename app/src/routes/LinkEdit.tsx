@@ -99,6 +99,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
   } = props;
 
   const form = useRemixForm({
+    submitConfig: { replace: true },
     resolver,
     defaultValues: {
       title: link.title,
@@ -122,6 +123,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
       <LinkHero isEditMode link={link} />
 
       <Form
+        replace
         method="POST"
         onSubmit={form.handleSubmit}
         className="relative grid grid-cols-2 gap-6 pt-6"
@@ -250,7 +252,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
         <FormField
           {...form.register('notes')}
           label="Notes"
-          placeholder="Add any relevant details or thoughts about this link here."
+          placeholder="Relevant details or thoughts"
           variant="textarea"
           fieldClassName="col-span-2"
           className="min-h-36 resize-none"
