@@ -4,7 +4,7 @@ import { useFetcher } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type CreateLinkFormFields, CreateLinkSchema } from '@hyperlog/shared';
-import { LoaderCircleIcon } from 'lucide-react';
+import { LoaderCircleIcon, PlusIcon } from 'lucide-react';
 import { useRemixForm } from 'remix-hook-form';
 
 import { FormField } from './FormField';
@@ -87,7 +87,10 @@ export function CreateLinkForm() {
             <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
           </Button>
         ) : (
-          <Button type="submit">Create Link</Button>
+          <Button type="submit">
+            <PlusIcon />
+            Create Link
+          </Button>
         )}
       </DialogFooter>
     </fetcher.Form>
@@ -96,10 +99,11 @@ export function CreateLinkForm() {
 
 type Props = {
   trigger: ReactNode;
+  tab?: 'link' | 'collection' | 'tag';
 };
 
 export function CreateLinkDialog(props: Props) {
-  const { trigger } = props;
+  const { trigger, tab = 'link' } = props;
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -110,7 +114,7 @@ export function CreateLinkDialog(props: Props) {
             Use this dialog to add a new link, collection, or tag
           </DialogDescription>
         </DialogHeader>
-        <Tabs defaultValue="link" className="flex flex-col gap-4">
+        <Tabs defaultValue={tab} className="flex flex-col gap-4">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="link">Link</TabsTrigger>
             <TabsTrigger value="collection">Collection</TabsTrigger>
