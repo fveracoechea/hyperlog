@@ -16,11 +16,15 @@ export function LinkHero(props: {
 }) {
   const { link, actions, isEditMode } = props;
   return (
-    <section
-      className="border-border flex overflow-hidden rounded-md border bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url("${link.previewImage}")` }}
-    >
-      <div className="bg-cpt-base/85 flex flex-1 flex-col justify-between gap-8 p-4 backdrop-blur-sm">
+    <section className="border-border relative flex min-h-[30vh] overflow-hidden rounded-md border">
+      <img
+        role="presentation"
+        height="630"
+        width="1200"
+        className="absolute inset-0 object-cover object-center blur-sm"
+        src={link.previewImage ?? undefined}
+      />
+      <div className="bg-cpt-mantle/85 relative flex flex-1 flex-col justify-between gap-8 p-4">
         <div className="flex justify-between gap-8">
           <LazyFavicon src={link.favicon ?? undefined} width="32px" height="32px" />
           {link.isPinned ? (

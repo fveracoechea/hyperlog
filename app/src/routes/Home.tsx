@@ -2,13 +2,11 @@ import { Await, data } from 'react-router';
 
 import { getFavorites, getRecentActivity } from '@/.server/resources/link';
 import { getSessionOrRedirect } from '@/.server/session';
-import { HistoryIcon, Search, Star } from 'lucide-react';
+import { HistoryIcon, StarIcon } from 'lucide-react';
 import { promiseHash } from 'remix-utils/promise';
 
 import { Banner } from '@/components/Banner';
 import { LinkCard } from '@/components/LinkCard';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
 import type { Route } from './+types/Home';
 
@@ -33,7 +31,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <>
       <section className="flex flex-col gap-4">
         <Banner
-          Icon={Star}
+          Icon={StarIcon}
           title="Favorites"
           subtitle="Your personal collection of go-to links, saved for quick access"
         />

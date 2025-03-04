@@ -43,13 +43,18 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
       <article
         className={clsx(
           'border-border group-hover:border-primary h-full rounded-md border transition-colors',
-          'flex flex-col bg-cover bg-center bg-no-repeat',
+          'relative flex flex-col overflow-hidden',
         )}
-        style={{
-          backgroundImage: `url("${link.previewImage}")`,
-        }}
       >
-        <div className="bg-cpt-base/85 flex flex-1 flex-col gap-4 rounded-md p-2 backdrop-blur-sm">
+        <img
+          role="presentation"
+          height="630"
+          width="1200"
+          loading="lazy"
+          className="absolute inset-0 aspect-[1.91/1] object-cover object-center blur-sm"
+          src={link.previewImage ?? undefined}
+        />
+        <div className="bg-cpt-mantle/85 relative flex flex-1 flex-col gap-4 rounded-md p-2">
           <div className="flex items-start justify-between">
             <LazyFavicon src={link.favicon ?? undefined} width="26px" height="26px" />
 

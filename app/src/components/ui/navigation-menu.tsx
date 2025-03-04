@@ -45,7 +45,7 @@ const navigationMenuTriggerStyle = cva([
   'text-sm font-medium transition-colors leading-[initial]',
   'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none',
   'disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50',
-  'text-muted-foreground [&.active]:text-foregroun',
+  'text-muted-foreground [&.active]:text-primary',
 ]);
 
 const NavigationMenuTrigger = React.forwardRef<

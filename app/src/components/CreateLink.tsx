@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode } from 'react';
 import type { FieldErrors } from 'react-hook-form';
 import { useFetcher } from 'react-router';
 
@@ -19,11 +19,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 const resolver = zodResolver(CreateLinkSchema);
 
-export function CreateLinkForm(props: { onClose(): void }) {
-  const { onClose } = props;
+export function CreateLinkForm() {
   const fetcher = useFetcher<{ errors: FieldErrors<CreateLinkFormFields> }>();
   const form = useRemixForm<CreateLinkFormFields>({
     resolver,
@@ -35,16 +35,6 @@ export function CreateLinkForm(props: { onClose(): void }) {
   });
 
   const errors = form.formState.errors;
-
-  // if (
-  //   fetcher.state === 'idle' &&
-  //   fetcher.data &&
-  //   form.formState.isSubmitted &&
-  //   !errors.title &&
-  //   !errors.url
-  // ) {
-  //   onClose();
-  // }
 
   return (
     <fetcher.Form
@@ -110,16 +100,28 @@ type Props = {
 
 export function CreateLinkDialog(props: Props) {
   const { trigger } = props;
-  const [open, setOpen] = useState(false);
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Link</DialogTitle>
-          <DialogDescription>Use this dialog to add a new link</DialogDescription>
+          <DialogTitle>Create New</DialogTitle>
+          <DialogDescription>
+            Use this dialog to add a new link, collection, or tag
+          </DialogDescription>
         </DialogHeader>
-        <CreateLinkForm onClose={() => setOpen(false)} />
+        <Tabs defaultValue="link" className="flex flex-col gap-4">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="link">Link</TabsTrigger>
+            <TabsTrigger value="collection">Collection</TabsTrigger>
+            <TabsTrigger value="tag">Tag</TabsTrigger>
+          </TabsList>
+          <TabsContent value="link">
+            <CreateLinkForm />
+          </TabsContent>
+          <TabsContent value="collection">new collection</TabsContent>
+          <TabsContent value="tag">new tag</TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

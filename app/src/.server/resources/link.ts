@@ -103,7 +103,7 @@ export async function deleteLink(linkId: string) {
 export async function increateViewCount(linkId: string) {
   await db
     .update(schema.link)
-    .set({ views: sql`${schema.link.views} + 1` })
+    .set({ views: sql`${schema.link.views} + 1`, lastVisit: sql`(unixepoch())` })
     .where(eq(schema.link.id, linkId));
 }
 

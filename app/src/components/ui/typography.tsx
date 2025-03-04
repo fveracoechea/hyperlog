@@ -48,7 +48,7 @@ const typography = cva({
   base: 'transition-colors',
   variants: {
     variant: {
-      title: 'text-primary text-xl font-medium leading-none',
+      title: 'text-foreground text-xl font-medium leading-none',
       lead: 'text-3xl font-light leading-none',
       large: 'text-xl font-normal leading-loose',
       base: 'text-base font-normal leading-normal',

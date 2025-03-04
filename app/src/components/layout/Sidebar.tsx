@@ -1,8 +1,9 @@
 import { NavLink, useLoaderData } from 'react-router';
 
 import clsx from 'clsx';
-import { Folder, Tag } from 'lucide-react';
+import { FolderIcon, PlusIcon, TagIcon } from 'lucide-react';
 
+import { Button } from '../ui/button';
 import { Typography } from '../ui/typography';
 import type { Route } from './../../routes/+types/Layout';
 
@@ -19,42 +20,60 @@ function SideNav(props: SideNavProps) {
         {type === 'collections' && 'Collections'}
         {type === 'tags' && 'Tags'}
       </Typography>
-      <ul className="flex flex-col gap-1">
+      <ul className="flex flex-col gap-0">
+        {links.length < 1 && (
+          <li>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="[&.active]:text-primary text-muted-foreground w-full justify-start"
+            >
+              <PlusIcon
+                className={clsx(
+                  'h-4 min-h-4 w-4 min-w-4',
+                  'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
+                )}
+              />
+              <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
+                New {type === 'tags' ? 'Tag' : 'Collection'}
+              </span>
+            </Button>
+          </li>
+        )}
         {links.map(link => (
           <li key={link.id}>
-            <NavLink
-              className={clsx(
-                'hover:bg-cpt-surface0 group flex items-center gap-1.5',
-                'w-full overflow-hidden rounded p-1 transition-colors',
-                'text-muted-foreground hover:text-foreground text-sm',
-                '[&.active]:bg-primary/20 [&.active]:text-primary',
-              )}
-              to={`/${type}/${link.id}`}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="[&.active]:text-primary text-muted-foreground w-full justify-start"
+              asChild
             >
-              {type === 'collections' && (
-                <Folder
-                  className={clsx(
-                    'h-4 min-h-4 w-4 min-w-4',
-                    'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
-                  )}
-                  style={{
-                    stroke: link.color ?? undefined,
-                    fill: link.color ?? undefined,
-                  }}
-                />
-              )}
-              {type === 'tags' && (
-                <Tag
-                  className={clsx(
-                    'stroke-muted-foreground h-4 w-4 transition-colors',
-                    'group-hover:stroke-foreground group-[.active]:stroke-primary',
-                  )}
-                />
-              )}
-              <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
-                {link.name}
-              </span>
-            </NavLink>
+              <NavLink to={`/${type}/${link.id}`}>
+                {type === 'collections' && (
+                  <FolderIcon
+                    className={clsx(
+                      'h-4 min-h-4 w-4 min-w-4',
+                      'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
+                    )}
+                    style={{
+                      stroke: link.color ?? undefined,
+                      fill: link.color ?? undefined,
+                    }}
+                  />
+                )}
+                {type === 'tags' && (
+                  <TagIcon
+                    className={clsx(
+                      'stroke-muted-foreground h-4 w-4 transition-colors',
+                      'group-hover:stroke-foreground group-[.active]:stroke-primary',
+                    )}
+                  />
+                )}
+                <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
+                  {link.name}
+                </span>
+              </NavLink>
+            </Button>
           </li>
         ))}
       </ul>

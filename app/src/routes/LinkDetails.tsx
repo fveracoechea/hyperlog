@@ -1,10 +1,11 @@
-import type { CSSProperties, PropsWithChildren } from 'react';
+import { type CSSProperties, type PropsWithChildren, useRef } from 'react';
 import {
   Form,
   Link,
   data,
   isRouteErrorResponse,
   redirect,
+  useFetcher,
   useNavigate,
   useNavigation,
 } from 'react-router';
@@ -122,6 +123,9 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
   const navigate = useNavigate();
   const navigation = useNavigation();
 
+  const fetcher = useFetcher();
+  const formRef = useRef<HTMLFormElement | null>(null);
+
   const isTogglingFavorite =
     navigation.state !== 'idle' && Boolean(navigation.formData?.has('toggleFavorite'));
 
@@ -191,13 +195,26 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
       />
 
       <div className="relative grid grid-cols-2 gap-6 pt-6">
+        <fetcher.Form
+          method="PUT"
+          action={`/api/link/${link.id}`}
+          ref={formRef}
+          className="hidden"
+        />
         <LineItem
           title="Link"
           Icon={LinkIcon}
           className="col-span-2"
           iconClassName="stroke-primary"
         >
-          <Typography as="a" link href={link.url}>
+          <Typography
+            as="a"
+            link
+            rel="noreferrer"
+            target="_blank"
+            href={link.url}
+            onClick={() => formRef.current?.requestSubmit()}
+          >
             {link.url}
           </Typography>
         </LineItem>

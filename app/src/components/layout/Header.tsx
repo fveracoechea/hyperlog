@@ -1,30 +1,21 @@
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 
-import { PopoverClose, PopoverContent } from '@radix-ui/react-popover';
 import clsx from 'clsx';
-import { PlusIcon, Unlink, UserCircleIcon } from 'lucide-react';
+import { PaletteIcon, PlusIcon, Unlink, UserCircleIcon } from 'lucide-react';
 
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { Typography } from '@/components/ui/typography';
 
 import { CreateLinkDialog } from '../CreateLink';
 import { Button } from '../ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { Popover, PopoverTrigger } from '../ui/popover';
 
 export function Header() {
+  const { pathname } = useLocation();
   return (
     <header
       className={clsx(
@@ -69,15 +60,23 @@ export function Header() {
         </NavigationMenu>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-1">
         <CreateLinkDialog
+          key={pathname}
           trigger={
-            <Button size="sm">
-              <PlusIcon />
-              <span>New Link</span>
+            <Button size="sm" variant="ghost">
+              <PlusIcon className="min-h-5 min-w-5" />
+              <span>Create New</span>
             </Button>
           }
         />
+        <Button variant="ghost" size="sm">
+          <PaletteIcon className="min-h-5 min-w-5" />
+          <span>Theme</span>
+        </Button>
+        <Button variant="ghost" size="sm">
+          <UserCircleIcon className="min-h-7 min-w-7" />
+        </Button>
       </div>
     </header>
   );
