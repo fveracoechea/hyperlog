@@ -29,8 +29,7 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
       target="_blank"
       onClick={() => formRef.current?.requestSubmit()}
       className={clsx(
-        'focus-visible:ring-muted-foreground group block rounded-md',
-        'hover:ring-primary focus-visible:ring-2',
+        'focus-visible:ring-muted-foreground group block rounded-md focus-visible:ring-2',
         isLoading && 'cursor-wait opacity-50',
       )}
     >
@@ -51,10 +50,10 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
           height="630"
           width="1200"
           loading="lazy"
-          className="absolute inset-0 aspect-[1.91/1] object-cover object-center blur-sm"
+          className="absolute inset-0 object-cover object-center blur"
           src={link.previewImage ?? undefined}
         />
-        <div className="bg-cpt-mantle/85 relative flex flex-1 flex-col gap-4 rounded-md p-2">
+        <div className="bg-cpt-base/85 relative flex flex-1 flex-col gap-4 rounded-md p-2">
           <div className="flex items-start justify-between">
             <LazyFavicon src={link.favicon ?? undefined} width="26px" height="26px" />
 

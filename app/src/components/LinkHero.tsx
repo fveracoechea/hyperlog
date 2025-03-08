@@ -21,10 +21,10 @@ export function LinkHero(props: {
         role="presentation"
         height="630"
         width="1200"
-        className="absolute inset-0 object-cover object-center blur-sm"
+        className="absolute inset-0 object-cover blur-[5px]"
         src={link.previewImage ?? undefined}
       />
-      <div className="bg-cpt-mantle/85 relative flex flex-1 flex-col justify-between gap-8 p-4">
+      <div className="bg-cpt-mantle/90 relative flex flex-1 flex-col justify-between gap-8 p-4">
         <div className="flex justify-between gap-8">
           <LazyFavicon src={link.favicon ?? undefined} width="32px" height="32px" />
           {link.isPinned ? (

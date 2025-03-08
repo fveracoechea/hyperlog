@@ -3,7 +3,6 @@ import { Link, data, isRouteErrorResponse, useNavigation } from 'react-router';
 import { PaginationSchema } from '@/.server/pagination';
 import { getAllLinks } from '@/.server/resources/link';
 import { getSessionOrRedirect } from '@/.server/session';
-import clsx from 'clsx';
 import { Link2OffIcon, LinkIcon } from 'lucide-react';
 
 import { Banner } from '@/components/Banner';
@@ -62,11 +61,7 @@ export default function Links({ loaderData }: Route.ComponentProps) {
 
       <PaginationForm {...loaderData} />
 
-      <div
-        className={clsx(
-          'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4',
-        )}
-      >
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
         {loaderData.links.map(link => (
           <LinkCard isLoading={navigation.state === 'loading'} key={link.id} link={link} />
         ))}
