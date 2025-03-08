@@ -70,6 +70,25 @@ async function seedCollections(user: SelectUser) {
   const result = await db.insert(schema.collection).values(collections).returning();
 
   for (const collection of result) {
+    const subcollections: InsertCollection[] = [];
+    // Add sub collections
+    if (faker.datatype.boolean()) {
+      const submax = faker.number.int({ min: 1, max: 8 });
+
+      for (const sub of collectionGenerator(user)) {
+        if (subcollections.length > submax) break;
+        subcollections.push({ ...sub, parentId: collection.id });
+      }
+    }
+
+    if (subcollections.length > 0) {
+      const subResult = await db.insert(schema.collection).values(subcollections).returning();
+
+      for (const subcollection of subResult) {
+        usersToCollections.push({ userId: user.id, collectionId: subcollection.id });
+      }
+    }
+
     usersToCollections.push({ userId: user.id, collectionId: collection.id });
   }
 

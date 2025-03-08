@@ -1,6 +1,7 @@
 import { Outlet, data } from 'react-router';
 
-import { getSidebarData } from '@/.server/resources/dashboard';
+import { getMyCollections } from '@/.server/resources/collection';
+import { getMyTags } from '@/.server/resources/tag';
 import { getSessionOrRedirect } from '@/.server/session';
 
 import { Footer } from '@/components/layout/Footer';
@@ -15,7 +16,18 @@ export async function loader({ request }: Route.LoaderArgs) {
     headers,
   } = await getSessionOrRedirect(request);
 
-  return data(await getSidebarData(user.id), { headers });
+  const [tags, collections] = await Promise.all([
+    getMyTags(user.id),
+    getMyCollections(user.id),
+  ]);
+
+  return data(
+    {
+      tags,
+      collections,
+    },
+    { headers },
+  );
 }
 
 export default function Layout() {
@@ -25,7 +37,7 @@ export default function Layout() {
       <div className="flex">
         <Sidebar />
         <div className="flex flex-1 flex-col justify-between">
-          <main className="bg-background flex flex-1 flex-col gap-6 p-6">
+          <main className="bg-background flex flex-1 flex-col gap-10 p-8">
             <Outlet />
           </main>
           <Footer />

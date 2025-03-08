@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-import { zPrimaryKeyId } from './generic.ts';
-
 export const zEmail = z
   .string({ required_error: 'Email is required.' })
   .email('Invalid email address.');

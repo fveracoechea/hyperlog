@@ -19,7 +19,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   return data(
     await promiseHash({
       favorites: getFavorites(user.id),
-      recentActivityPromise: getRecentActivity(user.id),
+      recentActivity: getRecentActivity(user.id),
     }),
     { headers },
   );
@@ -41,14 +41,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           ))}
         </div>
       </section>
-      <section className="flex flex-col gap-4 pt-6">
+      <section className="flex flex-col gap-4">
         <Banner
           Icon={HistoryIcon}
           title="Recent Activity"
           subtitle="Revisit your latest discoveries, recently visited links appear here"
         />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
-          <Await resolve={loaderData.recentActivityPromise}>
+          <Await resolve={loaderData.recentActivity}>
             {recents => recents.map(link => <LinkCard key={link.id} link={link} />)}
           </Await>
         </div>

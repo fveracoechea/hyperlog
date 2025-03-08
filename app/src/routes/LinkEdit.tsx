@@ -1,16 +1,14 @@
 import { Controller } from 'react-hook-form';
-import { Form, Link, data, isRouteErrorResponse, redirect } from 'react-router';
+import { Form, Link, data, redirect } from 'react-router';
 
-import { getCollections } from '@/.server/resources/collection';
+import { getMyCollections } from '@/.server/resources/collection';
 import { getLinkDetails, updateLink } from '@/.server/resources/link';
-import { getTags } from '@/.server/resources/tag';
+import { getMyTags } from '@/.server/resources/tag';
 import { getSessionOrRedirect } from '@/.server/session';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type EditLinkFormFields, EditLinkSchema } from '@hyperlog/shared';
 import {
   CircleXIcon,
   FolderIcon,
-  Link2OffIcon,
   LinkIcon,
   LoaderCircleIcon,
   PencilOffIcon,
@@ -21,9 +19,11 @@ import {
   UndoIcon,
 } from 'lucide-react';
 import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
+import { z } from 'zod';
 
 import { FormField } from '@/components/FormField';
 import { LinkHero } from '@/components/LinkHero';
+import { PageErrorBoundary } from '@/components/PageErrorBoundary';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -36,33 +36,15 @@ import { Typography } from '@/components/ui/typography';
 
 import { type Route } from './+types/LinkEdit';
 
-export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
-  let headline = 'Oops, an unexpected error occurred';
-  let message =
-    'We apologize for the inconvenience. Please try again later. If the issue persists, contact support.';
+export const ErrorBoundary = PageErrorBoundary;
 
-  if (isRouteErrorResponse(props.error) && props.error.status === 404) {
-    headline = 'Link Not Found';
-    message = 'The requested page could not be found';
-  }
-
-  return (
-    <section className="mx-auto flex max-w-96 flex-1 items-center pb-10">
-      <div className="flex flex-col items-center gap-4">
-        <Link2OffIcon className="stroke-cpt-surface1 h-24 w-24" />
-        <div className="flex flex-col justify-center gap-0 text-center">
-          <Typography variant="large">{headline}</Typography>
-          <Typography muted>{message}</Typography>
-        </div>
-        <Button asChild>
-          <Link to="/" replace>
-            Go to Homepage
-          </Link>
-        </Button>
-      </div>
-    </section>
-  );
-}
+const EditLinkSchema = z.object({
+  title: z.string().min(1),
+  url: z.string().url(),
+  tagId: z.string().uuid().nullable().default(null).catch(null),
+  collectionId: z.string().uuid().nullable().default(null).catch(null),
+  notes: z.string().optional().nullable().default(null),
+});
 
 const resolver = zodResolver(EditLinkSchema);
 
@@ -71,7 +53,7 @@ export async function action({ request, params: { linkId } }: Route.LoaderArgs) 
     errors,
     data,
     receivedValues: defaultValues,
-  } = await getValidatedFormData<EditLinkFormFields>(request, resolver);
+  } = await getValidatedFormData<typeof EditLinkSchema>(request, resolver);
 
   if (errors) return { errors, defaultValues };
 
@@ -88,7 +70,10 @@ export async function loader({ request, params: { linkId } }: Route.LoaderArgs) 
   const link = await getLinkDetails(linkId);
   if (!link) throw data(null, { status: 404 });
 
-  const [tags, collections] = await Promise.all([getTags(user.id), getCollections(user.id)]);
+  const [tags, collections] = await Promise.all([
+    getMyTags(user.id),
+    getMyCollections(user.id),
+  ]);
 
   return data({ link, tags, collections, user }, { headers });
 }
@@ -112,13 +97,11 @@ export default function LinkEditPage(props: Route.ComponentProps) {
 
   return (
     <div className="mx-auto my-0 flex w-full max-w-[1200px] flex-col gap-2">
-      <div>
-        <Button asChild variant="ghost" size="sm">
-          <Link to={`/links/${link.id}`} replace>
-            <UndoIcon /> Go Back
-          </Link>
-        </Button>
-      </div>
+      <Button asChild variant="ghost" size="sm" className="w-fit">
+        <Link to={`/links/${link.id}`} replace>
+          <UndoIcon /> Go Back
+        </Link>
+      </Button>
 
       <LinkHero isEditMode link={link} />
 

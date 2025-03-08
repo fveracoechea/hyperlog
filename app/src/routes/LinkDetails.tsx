@@ -1,14 +1,5 @@
 import { type CSSProperties, type PropsWithChildren, useRef } from 'react';
-import {
-  Form,
-  Link,
-  data,
-  isRouteErrorResponse,
-  redirect,
-  useFetcher,
-  useNavigate,
-  useNavigation,
-} from 'react-router';
+import { Form, Link, data, redirect, useFetcher, useNavigation } from 'react-router';
 
 import {
   addToFavorites,
@@ -20,7 +11,6 @@ import { getSessionOrRedirect } from '@/.server/session';
 import clsx, { type ClassValue } from 'clsx';
 import {
   FolderIcon,
-  Link2OffIcon,
   LinkIcon,
   LoaderCircle,
   type LucideProps,
@@ -29,11 +19,12 @@ import {
   StarOffIcon,
   TagIcon,
   TrashIcon,
-  UndoIcon,
 } from 'lucide-react';
 
 import { DeleteLinkDialog } from '@/components/DeleteLinkDialog';
+import { GoBackButton } from '@/components/GoBackButton';
 import { LinkHero } from '@/components/LinkHero';
+import { PageErrorBoundary } from '@/components/PageErrorBoundary';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 
@@ -67,33 +58,7 @@ function LineItem(props: LinkItemProps) {
   );
 }
 
-export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
-  let headline = 'Oops, an unexpected error occurred';
-  let message =
-    'We apologize for the inconvenience. Please try again later. If the issue persists, contact support.';
-
-  if (isRouteErrorResponse(props.error) && props.error.status === 404) {
-    headline = 'Link Not Found';
-    message = 'The requested page could not be found';
-  }
-
-  return (
-    <section className="mx-auto flex max-w-96 flex-1 items-center pb-10">
-      <div className="flex flex-col items-center gap-4">
-        <Link2OffIcon className="stroke-cpt-surface1 h-24 w-24" />
-        <div className="flex flex-col justify-center gap-0 text-center">
-          <Typography variant="large">{headline}</Typography>
-          <Typography muted>{message}</Typography>
-        </div>
-        <Button asChild>
-          <Link to="/" replace>
-            Go to Homepage
-          </Link>
-        </Button>
-      </div>
-    </section>
-  );
-}
+export const ErrorBoundary = PageErrorBoundary;
 
 export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
   const formData = await request.formData();
@@ -120,7 +85,6 @@ export async function loader({ request, params: { linkId } }: Route.LoaderArgs) 
 }
 
 export default function LinkDetailsPage({ loaderData: { link } }: Route.ComponentProps) {
-  const navigate = useNavigate();
   const navigation = useNavigation();
 
   const fetcher = useFetcher();
@@ -131,19 +95,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
 
   return (
     <div className="mx-auto my-0 flex w-full max-w-[1200px] flex-col gap-2">
-      <div>
-        <Button asChild variant="ghost" size="sm">
-          <Link
-            to="/"
-            onClick={e => {
-              e.preventDefault();
-              navigate(-1);
-            }}
-          >
-            <UndoIcon /> Go Back
-          </Link>
-        </Button>
-      </div>
+      <GoBackButton />
 
       <LinkHero
         link={link}

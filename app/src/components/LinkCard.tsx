@@ -10,10 +10,14 @@ import { LazyFavicon } from './LazyFavicon';
 import { Button } from './ui/button';
 import { Typography } from './ui/typography';
 
+type LinkData = Route.ComponentProps['loaderData']['recentActivity'][number];
+type LinkType = Omit<LinkData, 'tag' | 'collection'> &
+  Partial<Pick<LinkData, 'tag' | 'collection'>>;
+
 type Props = {
   hideDetails?: boolean;
   isLoading?: boolean;
-  link: Awaited<Route.ComponentProps['loaderData']['recentActivityPromise']>[number];
+  link: LinkType;
 };
 
 export function LinkCard({ link, hideDetails, isLoading }: Props) {

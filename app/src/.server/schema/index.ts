@@ -77,9 +77,6 @@ export const collectionsRelations = relations(collection, ({ one, many }) => ({
   owner: one(user, { fields: [collection.ownerId], references: [user.id] }),
   users: many(userToCollection),
   links: many(link),
-  // childCollections: many(collections, {
-  //   relationName: 'parent_id',
-  // }),
   parentCollection: one(collection, {
     fields: [collection.parentId],
     references: [collection.id],
