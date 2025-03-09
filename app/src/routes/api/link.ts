@@ -3,8 +3,8 @@ import { redirect } from 'react-router';
 
 import { createLink, increateViewCount } from '@/.server/resources/link';
 import { getSessionOrRedirect } from '@/.server/session';
+import { type CreateLinkFormFields, CreateLinkSchema } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type CreateLinkFormFields, CreateLinkSchema } from '@hyperlog/shared';
 import * as cheerio from 'cheerio';
 import { getValidatedFormData } from 'remix-hook-form';
 
@@ -41,8 +41,8 @@ async function fetchLinkData(url: string) {
       description: descriptionNode.attr('content') ?? null,
     };
   } catch (error) {
-    console.log('  ERROR LOADING LINK DATA  ', url);
-    console.log(error);
+    console.warn('  ERROR LOADING LINK DATA  ', url);
+    console.error(error);
     return {
       title: null,
       favicon: `${origin}/favicon.ico`,

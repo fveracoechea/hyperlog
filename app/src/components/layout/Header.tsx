@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Typography } from '@/components/ui/typography';
 
-import { CreateLinkDialog } from '../CreateLink';
+import { CreateNewDialog } from '../CreateNew';
 import { Button } from '../ui/button';
 
 export function Header() {
@@ -61,7 +61,7 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-1">
-        <CreateLinkDialog
+        <CreateNewDialog
           key={pathname}
           trigger={
             <Button size="sm" variant="ghost">

@@ -1,7 +1,7 @@
 import { Form, redirect, useNavigation } from 'react-router';
 
 import { authClient } from '@/lib/authClient.client';
-import { SignupSchema } from '@hyperlog/shared';
+import { SignupSchema } from '@/lib/zod';
 import clsx from 'clsx';
 import { LoaderCircleIcon, Unlink, UserRoundPlus } from 'lucide-react';
 

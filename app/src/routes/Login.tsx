@@ -2,7 +2,7 @@ import { Form, redirect, useNavigation } from 'react-router';
 
 import { cookies } from '@/.server/cookies';
 import { authClient } from '@/lib/authClient.client';
-import { LoginSchema } from '@hyperlog/shared';
+import { LoginSchema } from '@/lib/zod';
 import clsx from 'clsx';
 import { LoaderCircleIcon, LogIn, Unlink } from 'lucide-react';
 

@@ -53,7 +53,7 @@ export async function action({ request, params: { linkId } }: Route.LoaderArgs) 
     errors,
     data,
     receivedValues: defaultValues,
-  } = await getValidatedFormData<typeof EditLinkSchema>(request, resolver);
+  } = await getValidatedFormData(request, resolver);
 
   if (errors) return { errors, defaultValues };
 
@@ -72,7 +72,7 @@ export async function loader({ request, params: { linkId } }: Route.LoaderArgs) 
 
   const [tags, collections] = await Promise.all([
     getMyTags(user.id),
-    getMyCollections(user.id),
+    getMyCollections(user.id, true),
   ]);
 
   return data({ link, tags, collections, user }, { headers });
@@ -145,7 +145,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
               <Select
                 key={value}
                 name={name}
-                value={value}
+                value={value ?? undefined}
                 onValueChange={selected => {
                   if (selected === 'NO-TAG') onChange('');
                   else onChange(selected);
@@ -188,7 +188,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
               <Select
                 key={value}
                 name={name}
-                value={value}
+                value={value ?? undefined}
                 onValueChange={selected => {
                   if (selected === 'NO-COLLECTION') onChange('');
                   else onChange(selected);
@@ -217,11 +217,6 @@ export default function LinkEditPage(props: Route.ComponentProps) {
                           }}
                         />
                         <Typography>{collection.name}</Typography>
-                        {collection.ownerId !== user.id && (
-                          <Typography variant="small">
-                            (shared by {collection.owner.name})
-                          </Typography>
-                        )}
                       </div>
                     </SelectItem>
                   ))}

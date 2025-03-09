@@ -4,6 +4,7 @@ export default [
   ...prefix('api', [
     route('link/:linkId?', './routes/api/link.ts'),
     route('auth/*', './routes/api/auth.ts'),
+    route('collections', './routes/api/collections.ts'),
   ]),
 
   layout('./routes/Layout.tsx', { id: 'layout' }, [

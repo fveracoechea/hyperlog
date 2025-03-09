@@ -2,13 +2,14 @@ import { data } from 'react-router';
 
 import { db } from '../db';
 
-export async function getMyCollections(userId: string) {
+export async function getMyCollections(userId: string, allowSubCollections = false) {
   const result = await db.query.collection.findMany({
     with: { links: true, users: { with: { user: true } } },
     orderBy(fields, { desc }) {
       return desc(fields.createdAt);
     },
     where(fields, { eq, and, isNull }) {
+      if (allowSubCollections) return eq(fields.ownerId, userId);
       return and(eq(fields.ownerId, userId), isNull(fields.parentId));
     },
   });
