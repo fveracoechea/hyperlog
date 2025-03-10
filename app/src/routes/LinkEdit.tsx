@@ -5,6 +5,7 @@ import { getMyCollections } from '@/.server/resources/collection';
 import { getLinkDetails, updateLink } from '@/.server/resources/link';
 import { getMyTags } from '@/.server/resources/tag';
 import { getSessionOrRedirect } from '@/.server/session';
+import { EditLinkSchema } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CircleXIcon,
@@ -18,7 +19,6 @@ import {
   Undo2Icon,
 } from 'lucide-react';
 import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
-import { z } from 'zod';
 
 import { FormField } from '@/components/FormField';
 import { GoBackButton } from '@/components/GoBackButton';
@@ -37,14 +37,6 @@ import { Typography } from '@/components/ui/typography';
 import { type Route } from './+types/LinkEdit';
 
 export const ErrorBoundary = PageErrorBoundary;
-
-const EditLinkSchema = z.object({
-  title: z.string().min(1),
-  url: z.string().url(),
-  tagId: z.string().uuid().nullable().default(null).catch(null),
-  collectionId: z.string().uuid().nullable().default(null).catch(null),
-  notes: z.string().optional().nullable().default(null),
-});
 
 const resolver = zodResolver(EditLinkSchema);
 
