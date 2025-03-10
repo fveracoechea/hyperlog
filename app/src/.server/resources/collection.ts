@@ -1,16 +1,18 @@
 import { data } from 'react-router';
 
+import type { CreateCollectionFormFields } from '@/lib/zod';
+import { and, desc, eq, isNull } from 'drizzle-orm';
+
 import { db } from '../db';
+import * as schema from '../schema';
 
 export async function getMyCollections(userId: string, allowSubCollections = false) {
   const result = await db.query.collection.findMany({
     with: { links: true, users: { with: { user: true } } },
-    orderBy(fields, { desc }) {
-      return desc(fields.createdAt);
-    },
-    where(fields, { eq, and, isNull }) {
-      if (allowSubCollections) return eq(fields.ownerId, userId);
-      return and(eq(fields.ownerId, userId), isNull(fields.parentId));
+    orderBy: desc(schema.collection.createdAt),
+    where() {
+      if (allowSubCollections) return eq(schema.collection.ownerId, userId);
+      return and(eq(schema.collection.ownerId, userId), isNull(schema.collection.parentId));
     },
   });
 
@@ -20,30 +22,27 @@ export async function getMyCollections(userId: string, allowSubCollections = fal
 export async function getCollectionDetails(userId: string, collectionId: string) {
   const collection = await db.query.collection.findFirst({
     with: { owner: true, users: { with: { user: true } } },
-    where(fields, { eq }) {
-      return eq(fields.id, collectionId);
-    },
+    where: eq(schema.collection.id, collectionId),
   });
 
   if (!collection) throw data(null, { status: 404 });
 
   const [sharedRelation, subCollections, links] = await Promise.all([
     db.query.userToCollection.findFirst({
-      where(fields, { eq, and }) {
-        return and(eq(fields.userId, userId), eq(fields.collectionId, collectionId));
-      },
+      where: and(
+        eq(schema.userToCollection.userId, userId),
+        eq(schema.userToCollection.collectionId, collectionId),
+      ),
     }),
     db.query.collection.findMany({
-      with: { owner: true, users: { with: { user: true } } },
-      where(fields, { eq, and }) {
-        return and(eq(fields.parentId, collectionId));
-      },
+      with: { owner: true, links: true, users: { with: { user: true } } },
+      orderBy: desc(schema.collection.createdAt),
+      where: and(eq(schema.collection.parentId, collectionId)),
     }),
     db.query.link.findMany({
       with: { tag: true },
-      where(fields, { eq }) {
-        return eq(fields.collectionId, collectionId);
-      },
+      orderBy: desc(schema.link.createdAt),
+      where: eq(schema.link.collectionId, collectionId),
     }),
   ]);
 
@@ -76,4 +75,25 @@ export async function getAllCollections(userId: string) {
       .filter(c => typeof c.collection.parentId !== 'string')
       .map(c => c.collection),
   };
+}
+
+export async function createCollection(ownerId: string, data: CreateCollectionFormFields) {
+  const collection = (
+    await db
+      .insert(schema.collection)
+      .values({ ...data, ownerId })
+      .returning()
+  )[0];
+
+  return collection;
+}
+
+export async function deleteCollection(userId: string, collectionId: string) {
+  const collection = await db.query.collection.findFirst({
+    where: eq(schema.collection.id, collectionId),
+  });
+
+  if (collection?.ownerId === userId) {
+    await db.delete(schema.collection).where(eq(schema.collection.id, collectionId));
+  }
 }

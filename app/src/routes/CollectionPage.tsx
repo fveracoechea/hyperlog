@@ -1,14 +1,16 @@
-import { data } from 'react-router';
+import { data, redirect } from 'react-router';
 
-import { getCollectionDetails } from '@/.server/resources/collection';
+import { deleteCollection, getCollectionDetails } from '@/.server/resources/collection';
 import { getSessionOrRedirect } from '@/.server/session';
-import { FolderIcon, FoldersIcon, LinkIcon } from 'lucide-react';
+import { FolderIcon, FoldersIcon, LinkIcon, TrashIcon } from 'lucide-react';
 
 import { Banner, SubBanner } from '@/components/Banner';
 import { CollectionCard } from '@/components/CollectionCard';
+import { DeleteCollectionDialog } from '@/components/DeleteCollectionDialog';
 import { GoBackButton } from '@/components/GoBackButton';
 import { LinkCard } from '@/components/LinkCard';
 import { PageErrorBoundary } from '@/components/PageErrorBoundary';
+import { Button } from '@/components/ui/button';
 
 import type { Route } from './+types/CollectionPage';
 
@@ -22,32 +24,61 @@ export async function loader({ params: { collectionId }, request }: Route.Loader
 
   return data(await getCollectionDetails(user.id, collectionId), { headers });
 }
+export async function action({ request, params: { collectionId } }: Route.ActionArgs) {
+  const {
+    headers,
+    data: { user },
+  } = await getSessionOrRedirect(request);
+
+  if (request.method === 'DELETE') {
+    await deleteCollection(user.id, collectionId);
+    return redirect(`/collections`, { headers });
+  }
+}
 
 export default function CollectionPage({
   loaderData: { collection, subCollections, links },
 }: Route.ComponentProps) {
   return (
     <>
-      <Banner
-        title={collection.name}
-        subtitle={collection.description}
-        iconNode={
-          <FolderIcon
-            className="h-7 w-7"
-            style={{
-              stroke: collection?.color ?? undefined,
-              fill: collection?.color ?? undefined,
-            }}
+      <div className="flex flex-col gap-2">
+        <Banner
+          title={collection.name}
+          subtitle={collection.description}
+          iconNode={
+            <FolderIcon
+              className="h-7 w-7"
+              style={{
+                stroke: collection?.color ?? undefined,
+                fill: collection?.color ?? undefined,
+              }}
+            />
+          }
+        />
+        <div className="flex gap-2">
+          <GoBackButton />
+          <DeleteCollectionDialog
+            collection={collection}
+            trigger={
+              <Button variant="outline" size="sm">
+                <TrashIcon />
+                <span>Delete Collection</span>
+              </Button>
+            }
           />
-        }
-      />
+        </div>
+      </div>
 
       {subCollections.length > 0 && (
         <div className="flex flex-col gap-4">
           <SubBanner title="Sub-Collections" Icon={FoldersIcon} />
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
             {subCollections.map(collection => (
-              <CollectionCard key={collection.id} collection={collection} />
+              <CollectionCard
+                key={collection.id}
+                collection={collection}
+                linkCount={collection.links.length}
+              />
             ))}
           </div>
         </div>

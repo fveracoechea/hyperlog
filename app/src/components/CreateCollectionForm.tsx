@@ -36,7 +36,7 @@ export function CreateCollectionForm(props: { open: boolean }) {
     <fetcher.Form
       noValidate
       method="post"
-      action="/api/link"
+      action="/api/collections"
       onSubmit={handleSubmit}
       className="flex flex-col gap-4"
     >
@@ -115,7 +115,7 @@ export function CreateCollectionForm(props: { open: boolean }) {
         </DialogClose>
 
         {formState.isSubmitting ? (
-          <Button disabled type="button" className="min-w-24">
+          <Button disabled type="button" className="min-w-28">
             <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
           </Button>
         ) : (

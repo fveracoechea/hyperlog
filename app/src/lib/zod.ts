@@ -9,6 +9,16 @@ export const CreateLinkSchema = z.object({
 
 export type CreateLinkFormFields = z.infer<typeof CreateLinkSchema>;
 
+export const EditLinkSchema = z.object({
+  title: z.string().min(1),
+  url: z.string().url(),
+  tagId: z.string().uuid().nullable().default(null).catch(null),
+  collectionId: z.string().uuid().nullable().default(null).catch(null),
+  notes: z.string().optional().nullable().default(null),
+});
+
+export type EditLinkSchemaType = z.infer<typeof EditLinkSchema>;
+
 export const CreateCollectionSchema = z.object({
   name: z
     .string()
@@ -22,7 +32,12 @@ export const CreateCollectionSchema = z.object({
     .default(null),
   parentId: z.string().uuid().nullable().default(null),
 });
+
 export type CreateCollectionFormFields = z.infer<typeof CreateCollectionSchema>;
+
+export const DeleteCollectionSchema = z.object({
+  collectionId: z.string().uuid(),
+});
 
 export const zEmail = z
   .string({ required_error: 'Email is required.' })

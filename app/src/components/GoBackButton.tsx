@@ -1,18 +1,21 @@
-import { Link, useNavigate } from 'react-router';
+import { Link, type To, useNavigate } from 'react-router';
 
 import { UndoIcon } from 'lucide-react';
 
 import { Button } from './ui/button';
 
-export function GoBackButton() {
+export function GoBackButton(props: { replace?: boolean; to?: To }) {
   const navigate = useNavigate();
   return (
-    <Button asChild variant="ghost" size="sm" className="w-fit">
+    <Button asChild variant="outline" size="sm" className="w-fit">
       <Link
-        to="/"
+        to={props.to ?? '/'}
+        replace={props.replace}
         onClick={e => {
-          e.preventDefault();
-          navigate(-1);
+          if (!props.to) {
+            e.preventDefault();
+            navigate(-1);
+          }
         }}
       >
         <UndoIcon /> Go Back

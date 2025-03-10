@@ -1,4 +1,4 @@
-import type { EditLinkFormFields } from '@hyperlog/shared';
+import type { EditLinkSchemaType } from '@/lib/zod';
 import { SQL, and, desc, eq, or, sql } from 'drizzle-orm';
 
 import { db } from '../db';
@@ -107,7 +107,7 @@ export async function increateViewCount(linkId: string) {
     .where(eq(schema.link.id, linkId));
 }
 
-export async function updateLink(linkId: string, data: EditLinkFormFields) {
+export async function updateLink(linkId: string, data: EditLinkSchemaType) {
   const result = await db
     .update(schema.link)
     .set(data)

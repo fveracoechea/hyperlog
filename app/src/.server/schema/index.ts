@@ -42,7 +42,7 @@ export const link = t.sqliteTable('link', {
   ownerId: t
     .text()
     .notNull()
-    .references(() => user.id),
+    .references(() => user.id, { onDelete: 'cascade' }),
   ...timestamps,
 });
 
@@ -61,11 +61,13 @@ export const collection = t.sqliteTable(
     color: t.text(),
     icon: t.text(),
     order: t.integer().default(1),
-    parentId: t.text('parent_id').references((): t.AnySQLiteColumn => collection.id),
+    parentId: t
+      .text('parent_id')
+      .references((): t.AnySQLiteColumn => collection.id, { onDelete: 'cascade' }),
     ownerId: t
       .text()
       .notNull()
-      .references(() => user.id),
+      .references(() => user.id, { onDelete: 'cascade' }),
     ...timestamps,
   },
   table => ({
@@ -118,7 +120,7 @@ export const tag = t.sqliteTable(
     ownerId: t
       .text()
       .notNull()
-      .references(() => user.id),
+      .references(() => user.id, { onDelete: 'cascade' }),
     ...timestamps,
   },
   table => ({

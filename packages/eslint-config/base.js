@@ -1,3 +1,4 @@
+// @ts-check
 import js from '@eslint/js';
 import onlyWarn from 'eslint-plugin-only-warn';
 import turboPlugin from 'eslint-plugin-turbo';

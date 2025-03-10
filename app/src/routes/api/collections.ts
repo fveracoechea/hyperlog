@@ -1,7 +1,10 @@
-import { data } from 'react-router';
+import { data, redirect } from 'react-router';
 
-import { getMyCollections } from '@/.server/resources/collection';
+import { createCollection, getMyCollections } from '@/.server/resources/collection';
 import { getSessionOrRedirect } from '@/.server/session';
+import { CreateCollectionSchema } from '@/lib/zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { getValidatedFormData } from 'remix-hook-form';
 
 import type { Route } from './+types/collections';
 
@@ -19,6 +22,24 @@ export async function loader({ request }: Route.LoaderArgs) {
   return data({ collections }, { headers });
 }
 
+const createResolver = zodResolver(CreateCollectionSchema);
+
 export async function action({ request }: Route.ActionArgs) {
-  return null;
+  const {
+    headers,
+    data: { user },
+  } = await getSessionOrRedirect(request);
+
+  if (request.method === 'POST') {
+    const {
+      errors,
+      data,
+      receivedValues: defaultValues,
+    } = await getValidatedFormData(request, createResolver);
+
+    if (errors) return { errors, defaultValues };
+
+    const collection = await createCollection(user.id, data);
+    return redirect(`/collections/${collection.id}`, { headers });
+  }
 }

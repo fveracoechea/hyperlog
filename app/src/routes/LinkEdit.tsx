@@ -16,12 +16,12 @@ import {
   TagIcon,
   TypeOutlineIcon,
   Undo2Icon,
-  UndoIcon,
 } from 'lucide-react';
 import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
 import { z } from 'zod';
 
 import { FormField } from '@/components/FormField';
+import { GoBackButton } from '@/components/GoBackButton';
 import { LinkHero } from '@/components/LinkHero';
 import { PageErrorBoundary } from '@/components/PageErrorBoundary';
 import { Button } from '@/components/ui/button';
@@ -80,7 +80,7 @@ export async function loader({ request, params: { linkId } }: Route.LoaderArgs) 
 
 export default function LinkEditPage(props: Route.ComponentProps) {
   const {
-    loaderData: { link, tags, collections, user },
+    loaderData: { link, tags, collections },
   } = props;
 
   const form = useRemixForm({
@@ -97,11 +97,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
 
   return (
     <div className="mx-auto my-0 flex w-full max-w-[1200px] flex-col gap-2">
-      <Button asChild variant="ghost" size="sm" className="w-fit">
-        <Link to={`/links/${link.id}`} replace>
-          <UndoIcon /> Go Back
-        </Link>
-      </Button>
+      <GoBackButton to={`/links/${link.id}`} replace />
 
       <LinkHero isEditMode link={link} />
 
