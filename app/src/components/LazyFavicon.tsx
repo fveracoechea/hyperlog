@@ -1,5 +1,6 @@
 import { type ComponentPropsWithRef, useEffect, useRef, useState } from 'react';
 
+import clsx from 'clsx';
 import { Link2OffIcon } from 'lucide-react';
 
 type Status = 'error' | 'success';
@@ -32,9 +33,9 @@ export function LazyFavicon(props: ComponentPropsWithRef<'img'>) {
           alt="Favicon"
           role="presentation"
           loading="lazy"
-          className="rounded"
           src={src}
           {...imageProps}
+          className={clsx('rounded', imageProps.className)}
         />
       )}
     </div>
