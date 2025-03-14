@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite';
 
 import { reactRouter } from '@react-router/dev/vite';
+import tailwindcss from '@tailwindcss/vite';
 import autoprefixer from 'autoprefixer';
-import path from 'node:path';
-import tailwindcss from 'tailwindcss';
 import babel from 'vite-plugin-babel';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -14,6 +13,8 @@ export default defineConfig({
     },
   },
   plugins: [
+    tailwindcss(),
+    reactRouter(),
     babel({
       filter: /\.tsx?$/,
       babelConfig: {
@@ -23,15 +24,9 @@ export default defineConfig({
         plugins: ['babel-plugin-react-compiler'],
       },
     }),
-    reactRouter(),
     tsconfigPaths(),
   ],
   server: {
     port: 3000,
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
   },
 });
