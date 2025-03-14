@@ -1,15 +1,15 @@
-import catppuccin from '@catppuccin/tailwindcss';
+// import catppuccin from '@catppuccin/tailwindcss';
 import type { Config } from 'tailwindcss';
-import AnimatePlugin from 'tailwindcss-animate';
+// import AnimatePlugin from 'tailwindcss-animate';
 import defaultTheme from 'tailwindcss/defaultTheme';
 
-const CatppuccinPlugin = catppuccin({
-  // prefix to use, e.g. `text-pink` becomes `text-ctp-pink`.
-  // default is `false`, which means no prefix
-  prefix: 'cpt',
-  // which flavour of colours to use by default, in the `:root`
-  defaultFlavour: 'mocha',
-});
+// const CatppuccinPlugin = catppuccin({
+//   // prefix to use, e.g. `text-pink` becomes `text-ctp-pink`.
+//   // default is `false`, which means no prefix
+//   prefix: 'cpt',
+//   // which flavour of colours to use by default, in the `:root`
+//   defaultFlavour: 'mocha',
+// });
 
 export default {
   darkMode: ['class'],
@@ -68,5 +68,5 @@ export default {
       },
     },
   },
-  plugins: [AnimatePlugin, CatppuccinPlugin],
+  // plugins: [AnimatePlugin, CatppuccinPlugin],
 } satisfies Config;
