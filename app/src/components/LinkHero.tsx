@@ -34,7 +34,7 @@ export function LinkHero(props: {
           )}
         </div>
 
-        <div className="z-[1] flex flex-col gap-2 text-left">
+        <div className="z-1 flex flex-col gap-2 text-left">
           {isEditMode ? (
             <div className="flex items-center gap-2 pb-4">
               <PencilIcon />

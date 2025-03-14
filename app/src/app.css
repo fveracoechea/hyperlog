@@ -1,50 +1,70 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@font-face {
-  font-family: 'Fira Sans';
-  font-display: swap;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
-  src: url(/fonts/FiraSans-Light.woff2) format('woff2');
+@config './tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
-@font-face {
-  font-family: 'Fira Sans';
-  font-display: swap;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  src: url(/fonts/FiraSans-Regular.woff2) format('woff2');
-}
+@layer utilities {
+  @font-face {
+    font-family: 'Fira Sans';
+    font-display: swap;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    src: url(/fonts/FiraSans-Light.woff2) format('woff2');
+  }
 
-@font-face {
-  font-family: 'Fira Sans';
-  font-display: swap;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-  src: url(/fonts/FiraSans-Medium.woff2) format('woff2');
-}
+  @font-face {
+    font-family: 'Fira Sans';
+    font-display: swap;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    src: url(/fonts/FiraSans-Regular.woff2) format('woff2');
+  }
 
-@font-face {
-  font-family: 'Fira Sans';
-  font-display: swap;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
-  src: url(/fonts/FiraSans-SemiBold.woff2) format('woff2');
-}
+  @font-face {
+    font-family: 'Fira Sans';
+    font-display: swap;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    src: url(/fonts/FiraSans-Medium.woff2) format('woff2');
+  }
 
-@font-face {
-  font-family: 'Fira Sans';
-  font-display: swap;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: italic;
-  src: url('/fonts/FiraSans-MediumItalic.woff2') format('woff2');
+  @font-face {
+    font-family: 'Fira Sans';
+    font-display: swap;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    src: url(/fonts/FiraSans-SemiBold.woff2) format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Fira Sans';
+    font-display: swap;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    src: url('/fonts/FiraSans-MediumItalic.woff2') format('woff2');
+  }
 }
 
 @layer base {

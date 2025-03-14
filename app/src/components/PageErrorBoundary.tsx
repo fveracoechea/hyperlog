@@ -31,7 +31,7 @@ export function PageErrorBoundary({ error }: { error: unknown }) {
     <section className="mx-auto flex flex-1 items-center pb-10">
       <div className="flex flex-col items-center gap-4">
         <Link2OffIcon className="stroke-cpt-surface1 h-24 w-24" />
-        <div className="flex max-w-screen-sm flex-col justify-center gap-0 text-center">
+        <div className="flex max-w-(--breakpoint-sm) flex-col justify-center gap-0 text-center">
           <Typography variant="large">{headline}</Typography>
           <Typography muted>{message}</Typography>
         </div>
@@ -43,7 +43,7 @@ export function PageErrorBoundary({ error }: { error: unknown }) {
 
         {stack && (
           <div className="border-border max-w-full rounded-md border p-2 text-sm">
-            <pre className="max-w-screen-2xl overflow-x-auto p-4">
+            <pre className="max-w-(--breakpoint-2xl) overflow-x-auto p-4">
               <code>{stack}</code>
             </pre>
           </div>

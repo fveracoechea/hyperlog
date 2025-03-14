@@ -74,7 +74,7 @@ export function PaginationForm(props: { params: PaginationSchemaType; totalRecor
   return (
     <div className="flex gap-5">
       <Form className="flex flex-1 gap-4">
-        <div className="w-1/2 min-w-80 max-w-screen-sm">
+        <div className="w-1/2 min-w-80 max-w-(--breakpoint-sm)">
           <Input
             key={params.search}
             autoFocus

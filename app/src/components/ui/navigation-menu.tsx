@@ -43,8 +43,8 @@ const NavigationMenuItem = NavigationMenuPrimitive.Item;
 const navigationMenuTriggerStyle = cva([
   'group inline-flex h-9 w-max items-center justify-center rounded-md bg-cpt-mantle px-3 py-2',
   'text-sm font-medium transition-colors leading-[initial]',
-  'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none',
-  'disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50',
+  'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden',
+  'disabled:pointer-events-none disabled:opacity-50 data-active:bg-accent/50 data-[state=open]:bg-accent/50',
   'text-muted-foreground [&.active]:text-primary',
 ]);
 
@@ -113,7 +113,7 @@ const NavigationMenuIndicator = React.forwardRef<
   <NavigationMenuPrimitive.Indicator
     ref={ref}
     className={cn(
-      'data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden',
+      'data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in top-full z-1 flex h-1.5 items-end justify-center overflow-hidden',
       className,
     )}
     {...props}

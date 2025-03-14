@@ -10,17 +10,17 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         className={cn(
           'bg-background placeholder:text-muted-foreground transition-shadow',
-          'border-input border outline-none',
+          'border-input border outline-hidden',
           'flex min-h-28 w-full rounded-md px-2 py-2 text-base',
           'disabled:cursor-not-allowed disabled:opacity-50',
           'placeholder:text-muted-foreground placeholder:font-light',
           error
-            ? 'ring-destructive/60 focus-visible:!ring-destructive'
+            ? 'ring-destructive/60 focus-visible:ring-destructive!'
             : readOnly
               ? 'ring-input'
               : [
                   'hover:ring-1 focus-visible:ring-1',
-                  'ring-input hover:ring-ring/40 focus-visible:!ring-ring',
+                  'ring-input hover:ring-ring/40 focus-visible:ring-ring!',
                 ],
           className,
         )}

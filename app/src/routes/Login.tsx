@@ -38,7 +38,7 @@ export default function Login({ actionData, loaderData }: Route.ComponentProps) 
     <main
       className={clsx(
         'flex min-h-svh flex-col items-center justify-center gap-8 px-6 py-10',
-        'from-cpt-crust to-cpt-base bg-gradient-to-b',
+        'from-cpt-crust to-cpt-base bg-linear-to-b',
       )}
     >
       <div className="flex gap-2">

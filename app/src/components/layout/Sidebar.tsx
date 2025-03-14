@@ -31,10 +31,10 @@ function SideNav(props: SideNavProps) {
               <PlusIcon
                 className={clsx(
                   'h-4 min-h-4 w-4 min-w-4',
-                  'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
+                  'group-hover:stroke-foreground! group-[.active]:stroke-foreground!',
                 )}
               />
-              <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
+              <span className="overflow-hidden text-ellipsis whitespace-pre text-inherit">
                 New {type === 'tags' ? 'Tag' : 'Collection'}
               </span>
             </Button>
@@ -53,7 +53,7 @@ function SideNav(props: SideNavProps) {
                   <FolderIcon
                     className={clsx(
                       'h-4 min-h-4 w-4 min-w-4',
-                      'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
+                      'group-hover:stroke-foreground! group-[.active]:stroke-foreground!',
                     )}
                     style={{
                       stroke: link.color ?? undefined,
@@ -69,7 +69,7 @@ function SideNav(props: SideNavProps) {
                     )}
                   />
                 )}
-                <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
+                <span className="overflow-hidden text-ellipsis whitespace-pre text-inherit">
                   {link.name}
                 </span>
               </NavLink>

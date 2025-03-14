@@ -54,7 +54,7 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
           height="630"
           width="1200"
           loading="lazy"
-          className="absolute inset-0 object-cover object-center blur"
+          className="absolute inset-0 object-cover object-center blur-sm"
           src={link.previewImage ?? undefined}
         />
         <div className="bg-cpt-base/85 relative flex flex-1 flex-col gap-4 rounded-md p-2">
@@ -118,7 +118,7 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
                     as="span"
                     variant="small"
                     muted
-                    className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
+                    className="overflow-x-hidden text-ellipsis whitespace-nowrap"
                   >
                     {link.collection.name}
                   </Typography>

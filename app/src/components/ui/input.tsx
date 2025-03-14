@@ -9,7 +9,7 @@ const wrapper = cva({
     'flex w-full justify-center items-center transition-shadow',
     'ring-offset-0 rounded-md text-foreground',
     'border hover:ring-1 focus-within:ring-1',
-    'outline-none',
+    'outline-hidden',
   ],
   variants: {
     disabled: {
@@ -17,8 +17,8 @@ const wrapper = cva({
       false: '',
     },
     error: {
-      true: ['ring-destructive/60', 'border-destructive', 'focus-within:!ring-destructive'],
-      false: ['ring-input', 'border-border', 'hover:ring-ring/40', 'focus-within:!ring-ring'],
+      true: ['ring-destructive/60', 'border-destructive', 'focus-within:ring-destructive!'],
+      false: ['ring-input', 'border-border', 'hover:ring-ring/40', 'focus-within:ring-ring!'],
     },
   },
   defaultVariants: {
@@ -33,7 +33,7 @@ const input = clsx([
   'placeholder:text-muted-foreground placeholder:font-light',
   'text-sm md:text-base',
   'disabled:cursor-not-allowed disabled:opacity-50',
-  'autofill:!bg-background autofill:!text-foreground autofill:appearance-none',
+  'autofill:bg-background! autofill:text-foreground! autofill:appearance-none',
 ]);
 
 export type InputProps = React.ComponentProps<'input'> & {

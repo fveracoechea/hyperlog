@@ -155,7 +155,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
       </div>
 
       <div className="flex gap-4">
-        <div className="border-border relative flex h-fit flex-[2] flex-col gap-4 rounded-md border p-4">
+        <div className="border-border relative flex h-fit flex-2 flex-col gap-4 rounded-md border p-4">
           <fetcher.Form
             method="PUT"
             action={`/api/link/${link.id}`}
