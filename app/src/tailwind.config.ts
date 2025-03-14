@@ -13,7 +13,7 @@ const CatppuccinPlugin = catppuccin({
 
 export default {
   darkMode: ['class'],
-  content: ['./src/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}'],
+  content: ['./**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       fontFamily: {
