@@ -30,7 +30,7 @@ export function CreateNewDialog(props: Props) {
             Use this dialog to add a new link, collection, or tag
           </DialogDescription>
         </DialogHeader>
-        <Tabs defaultValue={tab} className="flex flex-col gap-4">
+        <Tabs defaultValue={tab} className="flex flex-col gap-2">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="link">Link</TabsTrigger>
             <TabsTrigger value="collection">Collection</TabsTrigger>

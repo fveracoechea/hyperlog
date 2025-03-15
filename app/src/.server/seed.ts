@@ -2,6 +2,8 @@ import 'dotenv/config';
 
 import { faker } from '@faker-js/faker';
 
+import { Colors } from '@/components/ColorPicker';
+
 import { db } from './db';
 import * as schema from './schema';
 
@@ -22,7 +24,7 @@ function* collectionGenerator(user: SelectUser) {
     yield {
       name: `${faker.hacker.adjective()} ${faker.hacker.noun()} ${faker.hacker.verb()}`,
       description: faker.lorem.sentence({ max: 8, min: 4 }),
-      color: faker.internet.color(),
+      color: faker.helpers.arrayElement(Colors.map(c => String(c[1]))),
       ownerId: user.id,
     } satisfies InsertCollection;
   }

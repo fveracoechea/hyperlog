@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleXIcon, FolderIcon, LoaderCircleIcon, PlusIcon } from 'lucide-react';
 import { useRemixForm } from 'remix-hook-form';
 
+import { ColorPicker } from './ColorPicker';
 import { FormField } from './FormField';
 import { Button } from './ui/button';
 import { DialogClose, DialogFooter } from './ui/dialog';
@@ -41,14 +42,20 @@ export function CreateCollectionForm(props: { open: boolean }) {
       className="flex flex-col gap-4"
     >
       <div className="flex flex-col gap-4">
-        <Typography muted>TODO: color picker</Typography>
-
         <FormField
           label="Name"
           required
           placeholder="e.g. Recipes"
           {...register('name')}
           errorMessage={errors.name?.message}
+        />
+
+        <Controller
+          control={control}
+          name="color"
+          render={({ field }) => (
+            <ColorPicker onColorChange={value => field.onChange(value.at(1))} />
+          )}
         />
 
         <div className="flex flex-col gap-1">

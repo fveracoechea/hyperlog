@@ -1,4 +1,4 @@
-import { type CSSProperties, type PropsWithChildren, useRef } from 'react';
+import { useRef } from 'react';
 import { Form, Link, data, redirect, useFetcher, useNavigation } from 'react-router';
 
 import {
@@ -8,7 +8,6 @@ import {
   removeFromFavorites,
 } from '@/.server/resources/link';
 import { getSessionOrRedirect } from '@/.server/session';
-import clsx, { type ClassValue } from 'clsx';
 import { formatDate, formatDistanceToNow } from 'date-fns';
 import {
   CalendarClockIcon,
@@ -16,7 +15,6 @@ import {
   FolderIcon,
   LinkIcon,
   LoaderCircle,
-  type LucideProps,
   PencilIcon,
   SaveIcon,
   StarIcon,
@@ -29,40 +27,12 @@ import { Banner } from '@/components/Banner';
 import { DeleteLinkDialog } from '@/components/DeleteLinkDialog';
 import { GoBackButton } from '@/components/GoBackButton';
 import { LazyFavicon } from '@/components/LazyFavicon';
-import { LinkHero } from '@/components/LinkHero';
 import { PageErrorBoundary } from '@/components/PageErrorBoundary';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 
+import { LineItem } from '../components/LineItem';
 import { type Route } from './+types/LinkDetails';
-
-type LinkItemProps = PropsWithChildren<{
-  title: string;
-  Icon?: React.FunctionComponent<LucideProps & React.RefAttributes<SVGSVGElement>>;
-  className?: ClassValue;
-  iconClassName?: ClassValue;
-  iconStyle?: CSSProperties;
-}>;
-
-function LineItem(props: LinkItemProps) {
-  const { className, Icon, iconClassName, iconStyle, title, children } = props;
-  return (
-    <div className={clsx('flex flex-col gap-1', className)}>
-      <div className="flex items-center gap-2">
-        <Typography muted>{title}</Typography>
-      </div>
-      <div className="flex items-center gap-2 rounded-md p-2">
-        {Icon && (
-          <Icon
-            className={clsx('h-5 w-5', iconClassName ?? 'stroke-muted-foreground')}
-            style={iconStyle}
-          />
-        )}
-        {children}
-      </div>
-    </div>
-  );
-}
 
 export const ErrorBoundary = PageErrorBoundary;
 
@@ -121,10 +91,16 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             trigger={
               <Button size="sm" variant="outline">
                 <TrashIcon />
-                Delete Link
+                <span>Delete Link</span>
               </Button>
             }
           />
+          <Button size="sm" variant="outline" asChild>
+            <Link to={`/links/${link.id}/edit`} replace>
+              <PencilIcon />
+              <span>Edit Link</span>
+            </Link>
+          </Button>
           <Form method="PUT">
             <Button
               size="sm"
@@ -231,7 +207,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
           </LineItem>
         </div>
 
-        <div className="border-border relative flex h-fit flex-1 flex-col gap-4 rounded-md border p-4">
+        <div className="border-border relative flex h-fit max-w-lg flex-1 flex-col gap-4 rounded-md border p-4">
           <LineItem title="Last Saved" Icon={SaveIcon}>
             <Typography className="leading-none">
               {formatDate(link.updatedAt ?? new Date(), 'PPPp')}
@@ -259,51 +235,5 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
         </div>
       </div>
     </>
-  );
-
-  return (
-    <div className="mx-auto my-0 flex w-full max-w-[1200px] flex-col gap-2">
-      <GoBackButton />
-
-      <LinkHero
-        link={link}
-        actions={
-          <>
-            <Form method="PUT">
-              <Button
-                size="sm"
-                variant="ghost"
-                name="toggleFavorite"
-                value={String(Boolean(link.isPinned))}
-              >
-                {isTogglingFavorite && (
-                  <>
-                    <LoaderCircle className="stroke-primary h-4 w-4 animate-spin" />
-                    <span>Updating Favories</span>
-                  </>
-                )}
-
-                {!isTogglingFavorite &&
-                  (link.isPinned ? (
-                    <>
-                      <StarOffIcon /> Remove from Favorites
-                    </>
-                  ) : (
-                    <>
-                      <StarIcon /> Add to Favorites
-                    </>
-                  ))}
-              </Button>
-            </Form>
-            <Button size="sm" variant="ghost" asChild>
-              <Link to={`/links/${link.id}/edit`} replace>
-                <PencilIcon />
-                Edit
-              </Link>
-            </Button>
-          </>
-        }
-      />
-    </div>
   );
 }

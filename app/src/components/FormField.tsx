@@ -1,7 +1,6 @@
 import { type ComponentPropsWithRef, type ReactNode, useId } from 'react';
 
 import { cn } from '@/lib/utils';
-import type { LucideProps } from 'lucide-react';
 
 import { Input, type InputProps } from './ui/input';
 import { Textarea, type TextareaProps } from './ui/textarea';

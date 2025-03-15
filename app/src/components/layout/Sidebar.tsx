@@ -45,7 +45,7 @@ function SideNav(props: SideNavProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="[&.active]:text-primary text-muted-foreground w-full justify-start"
+              className="[&.active]:text-primary text-muted-foreground w-full justify-start px-1.5 text-base"
               asChild
             >
               <NavLink to={`/${type}/${link.id}`}>
@@ -87,7 +87,7 @@ export function Sidebar() {
     <aside
       className={clsx(
         'bg-cpt-mantle z-20 flex flex-col gap-4',
-        'sticky top-[63px] h-[calc(100vh-63px)] w-64 p-4',
+        'sticky top-[62px] h-[calc(100vh-62px)] w-72 p-4',
         'border-muted overflow-y-auto border-r border-solid',
       )}
     >
