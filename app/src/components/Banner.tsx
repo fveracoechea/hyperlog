@@ -18,7 +18,7 @@ export function Banner(props: Props) {
       <div className="flex items-start gap-2">
         {Icon && <Icon className="stroke-primary h-7 w-7" />}
         {iconNode}
-        <Typography as="h2" variant="lead">
+        <Typography as="h2" variant="lead" className="text-balance">
           {title}
         </Typography>
       </div>

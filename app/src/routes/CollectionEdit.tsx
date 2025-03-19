@@ -116,7 +116,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
 
       <Form
         id="collection-edit"
-        className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(520px,2fr)_minmax(502px,1fr)]"
+        className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(502px,1fr)] 2xl:gap-6"
         replace
         method="POST"
         onSubmit={handleSubmit}

@@ -133,7 +133,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[minmax(500px,2fr)_minmax(520px,1fr)]">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(400px,1fr)] 2xl:gap-6">
         <Form
           id="link-edit"
           replace

@@ -130,8 +130,8 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <div className="border-border relative flex h-fit flex-[2] flex-col gap-4 rounded-md border p-4">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(400px,1fr)] 2xl:gap-6">
+        <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4">
           <fetcher.Form
             method="PUT"
             action={`/api/link/${link.id}`}
@@ -207,7 +207,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
           </LineItem>
         </div>
 
-        <div className="border-border relative flex h-fit max-w-lg flex-1 flex-col gap-4 rounded-md border p-4">
+        <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4">
           <LineItem title="Last Saved" Icon={SaveIcon}>
             <Typography className="leading-none">
               {formatDate(link.updatedAt ?? new Date(), 'PPPp')}
