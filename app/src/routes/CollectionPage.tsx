@@ -1,8 +1,8 @@
-import { data, redirect } from 'react-router';
+import { Link, data, redirect } from 'react-router';
 
 import { deleteCollection, getCollectionDetails } from '@/.server/resources/collection';
 import { getSessionOrRedirect } from '@/.server/session';
-import { FolderIcon, FoldersIcon, LinkIcon, TrashIcon } from 'lucide-react';
+import { FolderIcon, FoldersIcon, LinkIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
 import { Banner, SubBanner } from '@/components/Banner';
 import { CollectionCard } from '@/components/CollectionCard';
@@ -41,7 +41,7 @@ export default function CollectionPage({
 }: Route.ComponentProps) {
   return (
     <>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         <Banner
           title={collection.name}
           subtitle={collection.description}
@@ -57,6 +57,7 @@ export default function CollectionPage({
         />
         <div className="flex gap-2">
           <GoBackButton />
+
           <DeleteCollectionDialog
             collection={collection}
             trigger={
@@ -66,6 +67,13 @@ export default function CollectionPage({
               </Button>
             }
           />
+
+          <Button size="sm" variant="outline" asChild>
+            <Link to={`/collections/${collection.id}/edit`} replace>
+              <PencilIcon />
+              <span>Edit Collection</span>
+            </Link>
+          </Button>
         </div>
       </div>
 

@@ -104,7 +104,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
           <Form method="PUT">
             <Button
               size="sm"
-              variant={link.isPinned ? 'outline' : 'default'}
+              variant={link.isPinned ? 'secondary' : 'default'}
               name="toggleFavorite"
               value={String(Boolean(link.isPinned))}
             >

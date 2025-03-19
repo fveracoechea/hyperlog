@@ -14,6 +14,7 @@ export default [
     route('links/:linkId/edit', './routes/LinkEdit.tsx'),
     route('collections', './routes/Collections.tsx'),
     route('collections/:collectionId', './routes/CollectionPage.tsx'),
+    route('collections/:collectionId/edit', './routes/CollectionEdit.tsx'),
     route('tags', './routes/Tags.tsx'),
     route('tags/:tagId', './routes/TagPage.tsx'),
   ]),

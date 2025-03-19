@@ -28,11 +28,15 @@ export const Colors = [
 export type ColorTuple = (typeof Colors)[number];
 
 type Props = {
+  value?: string | null;
   onColorChange(color: ColorTuple): void;
 };
 
-export function ColorPicker({ onColorChange }: Props) {
-  const [color, setColor] = useState<ColorTuple>();
+export function ColorPicker({ onColorChange, value }: Props) {
+  const [color, setColor] = useState<ColorTuple | undefined>(() =>
+    Colors.find(c => c.at(1) === value),
+  );
+
   const [activeLabel] = color ?? [];
 
   return (

@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    reactRouter(),
     babel({
       filter: /\.tsx?$/,
       babelConfig: {
@@ -23,7 +24,6 @@ export default defineConfig({
         plugins: ['babel-plugin-react-compiler'],
       },
     }),
-    reactRouter(),
     tsconfigPaths(),
   ],
   server: {

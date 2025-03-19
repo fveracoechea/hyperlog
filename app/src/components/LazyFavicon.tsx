@@ -5,7 +5,7 @@ import { Link2OffIcon } from 'lucide-react';
 
 type Status = 'error' | 'success';
 
-export function LazyFavicon(props: ComponentPropsWithRef<'img'>) {
+export function LazyFavicon(props: { src: string | null } & ComponentPropsWithRef<'img'>) {
   const { src, ...imageProps } = props;
 
   const [status, setStatus] = useState<Status>('success');
