@@ -21,31 +21,12 @@ function SideNav(props: SideNavProps) {
         {type === 'tags' && 'Tags'}
       </Typography>
       <ul className="flex flex-col gap-0">
-        {links.length < 1 && (
-          <li>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="[&.active]:text-primary w-full justify-start"
-            >
-              <PlusIcon
-                className={clsx(
-                  'h-4 min-h-4 w-4 min-w-4',
-                  'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
-                )}
-              />
-              <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
-                New {type === 'tags' ? 'Tag' : 'Collection'}
-              </span>
-            </Button>
-          </li>
-        )}
         {links.map(link => (
           <li key={link.id}>
             <Button
               variant="ghost"
               size="sm"
-              className="[&.active]:text-primary w-full justify-start text-sm 2xl:text-base"
+              className="[&.active]:text-primary text-muted-foreground w-full justify-start text-sm 2xl:text-base"
               asChild
             >
               <NavLink to={`/${type}/${link.id}`}>
