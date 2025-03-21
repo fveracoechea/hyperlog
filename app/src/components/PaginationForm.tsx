@@ -13,6 +13,7 @@ import {
   XIcon,
 } from 'lucide-react';
 
+import { SearchInput } from './SearchInput';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Typography } from './ui/typography';
@@ -75,32 +76,12 @@ export function PaginationForm(props: { params: PaginationSchemaType; totalRecor
     <div className="flex gap-5">
       <Form className="flex flex-1 gap-4">
         <div className="w-1/2 min-w-80 max-w-screen-sm">
-          <Input
+          <SearchInput
             key={params.search}
-            autoFocus
-            name="search"
+            loading={isSearching}
             defaultValue={params.search || ''}
-            icon={
-              isSearching ? (
-                <LoaderCircleIcon className="text-primary animate-spin" />
-              ) : (
-                <SearchIcon className="text-muted-foreground" />
-              )
-            }
             placeholder="Search by Title or URL"
-            rightBtn={
-              params.search && (
-                <Button
-                  variant="ghost"
-                  title="Clear search"
-                  size="sm"
-                  type="button"
-                  onClick={onClearSearch}
-                >
-                  <XIcon className="text-destructive" />
-                </Button>
-              )
-            }
+            onClearSearch={onClearSearch}
           />
         </div>
       </Form>

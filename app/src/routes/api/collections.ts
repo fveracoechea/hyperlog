@@ -17,7 +17,13 @@ export async function loader({ request }: Route.LoaderArgs) {
     data: { user },
   } = await getSessionOrRedirect(request);
 
-  const collections = await getMyCollections(user.id, searchParams.has('allowSubCollections'));
+  // await new Promise(r => setTimeout(r, 5000));
+  console.log(searchParams);
+
+  const collections = await getMyCollections(user.id, {
+    allowSubCollections: searchParams.has('allowSubCollections'),
+    noParentCollections: searchParams.has('noParentCollections'),
+  });
 
   return data({ collections }, { headers });
 }

@@ -8,7 +8,6 @@ import {
   FolderPenIcon,
   FolderXIcon,
   Link2OffIcon,
-  LinkIcon,
   LoaderCircleIcon,
   PencilOffIcon,
   PlusIcon,
@@ -18,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useRemixForm } from 'remix-hook-form';
 
+import { AddSubCollectionDialog } from '@/components/AddSubCollectionDialog';
 import { Banner } from '@/components/Banner';
 import { ColorPicker } from '@/components/ColorPicker';
 import { FormField } from '@/components/FormField';
@@ -38,6 +38,7 @@ export async function loader({ params: { collectionId }, request }: Route.Loader
 
   return data(await getCollectionDetails(user.id, collectionId), { headers });
 }
+
 export async function action({ request, params: { collectionId } }: Route.ActionArgs) {
   const {
     headers,
@@ -240,11 +241,17 @@ export default function CollectionPage(props: Route.ComponentProps) {
               ))}
             </ul>
 
-            <div className="flex justify-end pt-1">
-              <Button variant="outline" size="sm" type="button">
-                <PlusIcon />
-                <span>Add Sub-Collection</span>
-              </Button>
+            <div className="flex justify-end pt-4">
+              {/* <Controller */}
+              {/*   control={control} */}
+              {/*   name="subCollections" */}
+              {/*   render={({ field }) => ( */}
+              <AddSubCollectionDialog
+                subCollections={subCollectionsField.fields}
+                onSelect={value => subCollectionsField.append(value)}
+              />
+              {/* )} */}
+              {/* /> */}
             </div>
           </div>
         </div>

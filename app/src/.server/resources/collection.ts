@@ -1,17 +1,33 @@
 import { data } from 'react-router';
 
 import type { CreateCollectionFormFields } from '@/lib/zod';
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNotNull, isNull } from 'drizzle-orm';
 
 import { db } from '../db';
 import * as schema from '../schema';
 
-export async function getMyCollections(userId: string, allowSubCollections = false) {
+export type CollectionSelectType = typeof schema.collection.$inferSelect;
+
+export async function getMyCollections(
+  userId: string,
+  options?: { allowSubCollections?: boolean; noParentCollections?: boolean },
+) {
+  const { allowSubCollections, noParentCollections } = options ?? {};
   const result = await db.query.collection.findMany({
     with: { links: true, users: { with: { user: true } } },
     orderBy: desc(schema.collection.createdAt),
     where() {
+      // both parent and child collections
       if (allowSubCollections) return eq(schema.collection.ownerId, userId);
+
+      // only child collections
+      if (noParentCollections)
+        return and(
+          eq(schema.collection.ownerId, userId),
+          isNotNull(schema.collection.parentId),
+        );
+
+      // only parent collections
       return and(eq(schema.collection.ownerId, userId), isNull(schema.collection.parentId));
     },
   });
@@ -35,7 +51,7 @@ export async function getCollectionDetails(userId: string, collectionId: string)
       ),
     }),
     db.query.collection.findMany({
-      with: { owner: true, links: true, users: { with: { user: true } } },
+      with: { owner: true, links: true },
       orderBy: desc(schema.collection.createdAt),
       where: and(eq(schema.collection.parentId, collectionId)),
     }),
