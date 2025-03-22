@@ -36,8 +36,26 @@ export async function loader({ params: { collectionId }, request }: Route.Loader
     data: { user },
   } = await getSessionOrRedirect(request);
 
-  return data(await getCollectionDetails(user.id, collectionId), { headers });
+  const { collection, subCollections, links } = await getCollectionDetails(
+    user.id,
+    collectionId,
+  );
+
+  return data(
+    {
+      collection,
+      subCollections: subCollections.map(({ links: _l, owner: _o, id, ...data }) => ({
+        id,
+        databaseId: id,
+        ...data,
+      })),
+      links,
+    },
+    { headers },
+  );
 }
+
+export type SubCollectionItem = Route.ComponentProps['loaderData']['subCollections'][number];
 
 export async function action({ request, params: { collectionId } }: Route.ActionArgs) {
   const {
@@ -56,7 +74,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
     loaderData: { collection, subCollections, links },
   } = props;
 
-  const { control, register, formState, handleSubmit, reset } = useRemixForm({
+  const { control, register, formState, handleSubmit, reset, getValues } = useRemixForm({
     defaultValues: {
       name: collection.name,
       description: collection.description,
@@ -249,6 +267,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
               <AddSubCollectionDialog
                 subCollections={subCollectionsField.fields}
                 onSelect={value => subCollectionsField.append(value)}
+                getValues={getValues}
               />
               {/* )} */}
               {/* /> */}

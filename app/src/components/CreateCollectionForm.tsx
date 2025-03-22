@@ -28,7 +28,7 @@ export function CreateCollectionForm(props: { open: boolean }) {
 
   // Fetch data only when the modal opens
   if (open && collections.state === 'idle' && !collections.data) {
-    collections.load('/api/collections?onlySubCollections');
+    collections.load('/api/collections?onlyParentCollections');
   }
 
   const errors = formState.errors;

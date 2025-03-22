@@ -37,8 +37,6 @@ export async function getMyCollections(
       if (exclude && exclude.length > 0)
         filters.push(notInArray(schema.collection.id, exclude));
 
-      console.log(filters);
-
       return and(...filters);
     },
   });
@@ -79,7 +77,7 @@ export async function getCollectionDetails(userId: string, collectionId: string)
 }
 
 export async function getAllCollections(userId: string) {
-  const myCollections = await getMyCollections(userId);
+  const myCollections = await getMyCollections(userId, { onlyParentCollections: true });
 
   const sharedCollections = await db.query.userToCollection.findMany({
     with: {

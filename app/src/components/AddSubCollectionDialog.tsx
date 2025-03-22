@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useFetcher } from 'react-router';
 
-import type { CollectionSelectType } from '@/.server/resources/collection';
 import { debounce } from '@/lib/time';
 import type { CollectionApiData } from '@/routes/api/collections';
 import clsx from 'clsx';
 import { FolderIcon, FolderXIcon, PlusIcon } from 'lucide-react';
 
+import type { Route as CollectionEditRoute } from '../routes/+types/CollectionEdit';
 import { SearchInput } from './SearchInput';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
@@ -22,19 +22,25 @@ import {
 } from './ui/dialog';
 import { Typography } from './ui/typography';
 
+export type SubCollectionItem =
+  CollectionEditRoute.ComponentProps['loaderData']['subCollections'][number];
+
 type Props = {
-  subCollections: CollectionSelectType[];
-  onSelect(subCollection: CollectionSelectType): void;
+  subCollections: SubCollectionItem[];
+  onSelect(subCollection: SubCollectionItem): void;
 };
 
 export function AddSubCollectionDialog(props: Props) {
   const { subCollections, onSelect } = props;
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState<CollectionSelectType[]>([]);
+  const [selected, setSelected] = useState<SubCollectionItem[]>([]);
   const fetcher = useFetcher<CollectionApiData>();
 
   const params = new URLSearchParams({ onlySubCollections: 'true' });
-  if (subCollections.length > 0) subCollections.forEach(c => params.append('exclude', c.id));
+
+  if (subCollections.length > 0)
+    subCollections.forEach(c => params.append('exclude', c.databaseId));
+
   const url = `/api/collections?${params}`;
 
   const debouncedLoad = debounce(300, (value: string) => {
@@ -122,7 +128,10 @@ export function AddSubCollectionDialog(props: Props) {
                     checked={selected.some(s => s.id === subCollection.id)}
                     onCheckedChange={state => {
                       if (state) {
-                        setSelected([...selected, subCollection]);
+                        setSelected([
+                          ...selected,
+                          { ...subCollection, databaseId: subCollection.id },
+                        ]);
                       } else {
                         setSelected(selected.filter(s => s.id !== subCollection.id));
                       }
@@ -147,7 +156,7 @@ export function AddSubCollectionDialog(props: Props) {
                 setSearch('');
               }}
             >
-              Save
+              Apply
             </Button>
           </DialogClose>
         </DialogFooter>
