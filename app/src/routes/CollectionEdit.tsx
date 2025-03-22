@@ -198,7 +198,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
 
           <div className="flex flex-col gap-1">
             <Typography>Sub-Collections</Typography>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-1">
               {subCollectionsField.fields.length < 1 && (
                 <li className="flex items-center gap-2 px-4 py-2">
                   <FolderXIcon className="stroke-cpt-overlay0" />

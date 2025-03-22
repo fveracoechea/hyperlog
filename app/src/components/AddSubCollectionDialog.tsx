@@ -4,7 +4,8 @@ import { useFetcher } from 'react-router';
 import type { CollectionSelectType } from '@/.server/resources/collection';
 import { debounce } from '@/lib/time';
 import type { CollectionApiData } from '@/routes/api/collections';
-import { FolderIcon, FolderXIcon, LoaderCircleIcon, PlusIcon } from 'lucide-react';
+import clsx from 'clsx';
+import { FolderIcon, FolderXIcon, PlusIcon } from 'lucide-react';
 
 import { SearchInput } from './SearchInput';
 import { Button } from './ui/button';
@@ -32,14 +33,15 @@ export function AddSubCollectionDialog(props: Props) {
   const [selected, setSelected] = useState<CollectionSelectType[]>([]);
   const fetcher = useFetcher<CollectionApiData>();
 
-  const params = new URLSearchParams({ noParentCollections: 'true' });
-  if (search) params.set('search', search);
-  if (selected.length > 0) selected.forEach(c => params.append('exclude', c.id));
+  const params = new URLSearchParams({ onlySubCollections: 'true' });
+  if (subCollections.length > 0) subCollections.forEach(c => params.append('exclude', c.id));
   const url = `/api/collections?${params}`;
 
-  const debouncedLoad = debounce(350, (searchParams: URLSearchParams) =>
-    fetcher.load(`/api/collections?${searchParams}`),
-  );
+  const debouncedLoad = debounce(300, (value: string) => {
+    const searchParams = new URLSearchParams(params);
+    if (value) searchParams.set('search', value);
+    fetcher.load(`/api/collections?${searchParams}`);
+  });
 
   return (
     <Dialog
@@ -61,13 +63,12 @@ export function AddSubCollectionDialog(props: Props) {
         <div className="flex flex-col gap-4 py-2">
           <SearchInput
             value={search}
-            loading={fetcher.state === 'loading'}
+            placeholder="Search by name"
+            loading={fetcher.state !== 'idle'}
             onChange={e => {
               const value = e.target.value;
               setSearch(value);
-              const searchParams = new URLSearchParams(params);
-              if (value) searchParams.set('search', value);
-              debouncedLoad(searchParams);
+              debouncedLoad(value);
             }}
             onClearSearch={() => {
               setSearch('');
@@ -75,7 +76,12 @@ export function AddSubCollectionDialog(props: Props) {
             }}
           />
 
-          <ul className="border-border flex max-h-96 flex-col gap-1 overflow-y-auto rounded-md border p-1">
+          <ul
+            className={clsx(
+              'border-border flex h-96 flex-col gap-1 overflow-y-auto rounded-md border p-1',
+              fetcher.state === 'loading' && 'cursor-wait opacity-50',
+            )}
+          >
             {subCollections.length < 1 && (
               <li className="flex items-center gap-2 px-4 py-2">
                 <FolderXIcon className="stroke-cpt-overlay0" />
@@ -85,23 +91,11 @@ export function AddSubCollectionDialog(props: Props) {
               </li>
             )}
 
-            {fetcher.state === 'loading' &&
-              new Array(8)
-                .fill(1)
-                .map((n, i) => (
-                  <li
-                    key={n + i}
-                    aria-busy="true"
-                    className="bg-cpt-surface0 mb-2 flex min-h-8 flex-1 animate-pulse cursor-wait rounded-md"
-                  />
-                ))}
-
-            {fetcher.state === 'idle' &&
-              fetcher.data &&
+            {fetcher.data &&
               fetcher.data.collections.map(subCollection => (
                 <li
                   key={subCollection.id}
-                  className="even:bg-cpt-mantle flex flex-1 items-center gap-2 rounded-md p-2"
+                  className="even:bg-cpt-mantle flex w-full items-center gap-2 rounded-md p-2"
                 >
                   <FolderIcon
                     className="h-5 min-h-5 w-5 min-w-5"
@@ -115,7 +109,10 @@ export function AddSubCollectionDialog(props: Props) {
                     as="label"
                     htmlFor={subCollection.id}
                     muted
-                    className="hover:text-foreground flex-1 cursor-pointer select-none overflow-hidden overflow-ellipsis whitespace-nowrap"
+                    className={clsx(
+                      'hover:text-foreground flex-1 cursor-pointer select-none overflow-hidden overflow-ellipsis whitespace-nowrap',
+                      fetcher.state === 'loading' && 'cursor-wait',
+                    )}
                   >
                     {subCollection.name}
                   </Typography>

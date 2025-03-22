@@ -18,7 +18,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const [tags, collections] = await Promise.all([
     getMyTags(user.id),
-    getMyCollections(user.id),
+    getMyCollections(user.id, { onlyParentCollections: true }),
   ]);
 
   return data(

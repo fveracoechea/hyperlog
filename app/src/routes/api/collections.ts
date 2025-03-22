@@ -17,12 +17,11 @@ export async function loader({ request }: Route.LoaderArgs) {
     data: { user },
   } = await getSessionOrRedirect(request);
 
-  // await new Promise(r => setTimeout(r, 5000));
-  console.log(searchParams);
-
   const collections = await getMyCollections(user.id, {
-    allowSubCollections: searchParams.has('allowSubCollections'),
-    noParentCollections: searchParams.has('noParentCollections'),
+    onlySubCollections: searchParams.has('onlySubCollections'),
+    onlyParentCollections: searchParams.has('onlyParentCollections'),
+    search: searchParams.get('search'),
+    exclude: searchParams.getAll('exclude') ?? [],
   });
 
   return data({ collections }, { headers });

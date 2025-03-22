@@ -1,7 +1,7 @@
 import { data } from 'react-router';
 
 import type { CreateCollectionFormFields } from '@/lib/zod';
-import { and, desc, eq, isNotNull, isNull } from 'drizzle-orm';
+import { SQL, and, desc, eq, isNotNull, isNull, notInArray, sql } from 'drizzle-orm';
 
 import { db } from '../db';
 import * as schema from '../schema';
@@ -10,25 +10,36 @@ export type CollectionSelectType = typeof schema.collection.$inferSelect;
 
 export async function getMyCollections(
   userId: string,
-  options?: { allowSubCollections?: boolean; noParentCollections?: boolean },
+  options?: {
+    onlySubCollections?: boolean;
+    onlyParentCollections?: boolean;
+    search?: string | null;
+    exclude?: string[];
+  },
 ) {
-  const { allowSubCollections, noParentCollections } = options ?? {};
+  const { onlySubCollections, onlyParentCollections, search, exclude } = options ?? {};
   const result = await db.query.collection.findMany({
     with: { links: true, users: { with: { user: true } } },
     orderBy: desc(schema.collection.createdAt),
     where() {
-      // both parent and child collections
-      if (allowSubCollections) return eq(schema.collection.ownerId, userId);
+      const filters: (SQL | undefined)[] = [];
 
-      // only child collections
-      if (noParentCollections)
-        return and(
-          eq(schema.collection.ownerId, userId),
-          isNotNull(schema.collection.parentId),
-        );
+      filters.push(eq(schema.collection.ownerId, userId));
 
-      // only parent collections
-      return and(eq(schema.collection.ownerId, userId), isNull(schema.collection.parentId));
+      if (search) {
+        const searchValue = `%${search}%`.toLowerCase();
+        filters.push(sql`LOWER(${schema.collection.name}) LIKE ${searchValue}`);
+      }
+
+      if (onlySubCollections) filters.push(isNotNull(schema.collection.parentId));
+      if (onlyParentCollections) filters.push(isNull(schema.collection.parentId));
+
+      if (exclude && exclude.length > 0)
+        filters.push(notInArray(schema.collection.id, exclude));
+
+      console.log(filters);
+
+      return and(...filters);
     },
   });
 
