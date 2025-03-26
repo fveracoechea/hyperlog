@@ -3,6 +3,8 @@ import { Form, Link, data, redirect } from 'react-router';
 
 import { deleteCollection, getCollectionDetails } from '@/.server/resources/collection';
 import { getSessionOrRedirect } from '@/.server/session';
+import { type EditCollectionFormFields, EditCollectionSchema } from '@/lib/zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   FolderIcon,
   FolderPenIcon,
@@ -10,13 +12,13 @@ import {
   Link2OffIcon,
   LoaderCircleIcon,
   PencilOffIcon,
-  PlusIcon,
   SaveIcon,
   TrashIcon,
   Undo2Icon,
 } from 'lucide-react';
-import { useRemixForm } from 'remix-hook-form';
+import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
 
+import { AddLinkToCollectionDialog } from '@/components/AddLinkToCollectionDialog';
 import { AddSubCollectionDialog } from '@/components/AddSubCollectionDialog';
 import { Banner } from '@/components/Banner';
 import { ColorPicker } from '@/components/ColorPicker';
@@ -26,9 +28,11 @@ import { PageErrorBoundary } from '@/components/PageErrorBoundary';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 
-import type { Route } from './+types/CollectionPage';
+import type { Route } from './+types/CollectionEdit';
 
 export const ErrorBoundary = PageErrorBoundary;
+
+const resolver = zodResolver(EditCollectionSchema);
 
 export async function loader({ params: { collectionId }, request }: Route.LoaderArgs) {
   const {
@@ -36,32 +40,43 @@ export async function loader({ params: { collectionId }, request }: Route.Loader
     data: { user },
   } = await getSessionOrRedirect(request);
 
-  const { collection, subCollections, links } = await getCollectionDetails(
-    user.id,
-    collectionId,
+  const results = await getCollectionDetails(user.id, collectionId);
+  const links = results.links.map(({ tag: _, ...link }) => ({ ...link, databaseId: link.id }));
+  const subCollections = results.subCollections.map(
+    ({ links: _l, owner: _o, id, ...data }) => ({
+      id,
+      databaseId: id,
+      ...data,
+    }),
   );
 
   return data(
     {
-      collection,
-      subCollections: subCollections.map(({ links: _l, owner: _o, id, ...data }) => ({
-        id,
-        databaseId: id,
-        ...data,
-      })),
+      collection: results.collection,
+      subCollections,
       links,
     },
     { headers },
   );
 }
 
-export type SubCollectionItem = Route.ComponentProps['loaderData']['subCollections'][number];
+export type SubCollectionItem = EditCollectionFormFields['subCollections'][number];
+export type LinkItem = EditCollectionFormFields['links'][number];
 
 export async function action({ request, params: { collectionId } }: Route.ActionArgs) {
   const {
     headers,
     data: { user },
   } = await getSessionOrRedirect(request);
+
+  if (request.method === 'POST') {
+    const {
+      errors,
+      data: formData,
+      receivedValues: defaultValues,
+    } = await getValidatedFormData(request, resolver);
+    if (errors) return data({ errors, defaultValues }, { headers });
+  }
 
   if (request.method === 'DELETE') {
     await deleteCollection(user.id, collectionId);
@@ -74,7 +89,8 @@ export default function CollectionPage(props: Route.ComponentProps) {
     loaderData: { collection, subCollections, links },
   } = props;
 
-  const { control, register, formState, handleSubmit, reset, getValues } = useRemixForm({
+  const { control, register, formState, handleSubmit, reset } = useRemixForm({
+    resolver,
     defaultValues: {
       name: collection.name,
       description: collection.description,
@@ -136,7 +152,6 @@ export default function CollectionPage(props: Route.ComponentProps) {
       <Form
         id="collection-edit"
         className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(502px,1fr)] 2xl:gap-6"
-        replace
         method="POST"
         onSubmit={handleSubmit}
       >
@@ -197,10 +212,10 @@ export default function CollectionPage(props: Route.ComponentProps) {
               ))}
             </ul>
             <div className="flex justify-end pt-4">
-              <Button variant="outline" size="sm" type="button">
-                <PlusIcon />
-                <span>Add Link</span>
-              </Button>
+              <AddLinkToCollectionDialog
+                links={linksField.fields}
+                onSelect={value => linksField.append(value)}
+              />
             </div>
           </div>
         </div>
@@ -260,17 +275,10 @@ export default function CollectionPage(props: Route.ComponentProps) {
             </ul>
 
             <div className="flex justify-end pt-4">
-              {/* <Controller */}
-              {/*   control={control} */}
-              {/*   name="subCollections" */}
-              {/*   render={({ field }) => ( */}
               <AddSubCollectionDialog
                 subCollections={subCollectionsField.fields}
                 onSelect={value => subCollectionsField.append(value)}
-                getValues={getValues}
               />
-              {/* )} */}
-              {/* /> */}
             </div>
           </div>
         </div>

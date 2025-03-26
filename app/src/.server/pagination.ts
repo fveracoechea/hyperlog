@@ -1,18 +1,31 @@
-import {
-  type AnyColumn,
-  type ExtractTablesWithRelations,
-  SQL,
-  and,
-  asc,
-  desc,
-  ilike,
-  or,
-} from 'drizzle-orm';
-import type { SQLiteSelect } from 'drizzle-orm/sqlite-core';
+import { SQL, and, asc, desc, ilike, or } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { db } from './db';
 import * as schema from './schema';
+
+export const zStringArray = z
+  .string()
+  .array()
+  .or(z.string())
+  .transform(v => (typeof v === 'string' ? [v] : v))
+  .optional();
+
+/**
+ * Search params to JS Object
+ * Object.fromEntries does not account for params with multiple values
+ * */
+export function searchParamsToJson(params: URLSearchParams) {
+  const data: Record<string, string[] | string> = {};
+
+  for (const key of params.keys()) {
+    const value = params.getAll(key).filter(v => v !== 'undefined' && v !== 'null');
+    if (value.length > 1) data[key] = value;
+    else data[key] = value[0];
+  }
+
+  return data;
+}
 
 export const PaginationSchema = z.object({
   direction: z.enum(['asc', 'desc']).default('desc').catch('desc'),
@@ -20,24 +33,10 @@ export const PaginationSchema = z.object({
   search: z.string().optional(),
   page: z.coerce.number().int().default(1).catch(1),
   pageSize: z.coerce.number().int().default(24).catch(24),
+  exclude: zStringArray,
 });
 
 export type PaginationSchemaType = z.infer<typeof PaginationSchema>;
-
-export async function withPagination<T extends SQLiteSelect>(
-  table: keyof ExtractTablesWithRelations<typeof schema>,
-  pagination: PaginationSchemaType,
-  query: T,
-) {
-  const dbTable = schema[table] as unknown as Record<string, AnyColumn>;
-  const directionFn = pagination.direction === 'asc' ? asc : desc;
-  const sortBy = pagination.sortBy in dbTable ? dbTable[pagination.sortBy] : dbTable.createdAt;
-
-  return await query
-    .orderBy(directionFn(sortBy))
-    .limit(pagination.pageSize)
-    .offset((pagination.page - 1) * pagination.pageSize);
-}
 
 export function paginationHelper<
   K extends keyof typeof db.query,

@@ -1,6 +1,6 @@
 import { data } from 'react-router';
 
-import type { CreateCollectionFormFields } from '@/lib/zod';
+import type { CreateCollectionFormFields, EditCollectionFormFields } from '@/lib/zod';
 import { SQL, and, desc, eq, isNotNull, isNull, notInArray, sql } from 'drizzle-orm';
 
 import { db } from '../db';
@@ -121,4 +121,21 @@ export async function deleteCollection(userId: string, collectionId: string) {
   if (collection?.ownerId === userId) {
     await db.delete(schema.collection).where(eq(schema.collection.id, collectionId));
   }
+}
+
+export async function editCollection(
+  userId: string,
+  collectionId: string,
+  data: EditCollectionFormFields,
+) {
+  const collection = await db.query.collection.findFirst({
+    where: eq(schema.collection.id, collectionId),
+  });
+
+  if (collection?.ownerId !== userId) {
+    throw new Error('Not allowed to edit this collection');
+  }
+  const { subCollections, links, ...edit } = data;
+
+  await db.update(schema.collection).set(edit).where(eq(schema.collection.id, collectionId));
 }

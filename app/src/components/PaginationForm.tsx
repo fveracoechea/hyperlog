@@ -1,3 +1,4 @@
+import type { ComponentProps, FC } from 'react';
 import { Form, Link, type To, useNavigation, useSearchParams } from 'react-router';
 
 import type { PaginationSchemaType } from '@/.server/pagination';
@@ -7,40 +8,50 @@ import {
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  LoaderCircleIcon,
   type LucideProps,
-  SearchIcon,
-  XIcon,
 } from 'lucide-react';
 
 import { SearchInput } from './SearchInput';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { Typography } from './ui/typography';
 
-function PaginationButton(props: {
-  title: string;
-  disabled?: boolean;
-  to: To;
-  Icon: React.FunctionComponent<LucideProps & React.RefAttributes<SVGSVGElement>>;
-}) {
-  const navigation = useNavigation();
+type BtnPaginationVariant = 'first' | 'previous' | 'next' | 'last';
+
+const PaginationProps: Record<
+  BtnPaginationVariant,
+  { Icon: FC<LucideProps & React.RefAttributes<SVGSVGElement>>; title: string }
+> = {
+  first: { Icon: ChevronFirstIcon, title: 'First Page' },
+  previous: { Icon: ChevronLeftIcon, title: 'Previous Page' },
+  next: { Icon: ChevronRightIcon, title: 'Next Page' },
+  last: { Icon: ChevronLastIcon, title: 'Last Page' },
+};
+
+export function PaginationButton(
+  props: {
+    to?: To;
+    variant: BtnPaginationVariant;
+    loading?: boolean;
+  } & ComponentProps<'button'>,
+) {
+  const { disabled, to, loading, variant, ...btnProps } = props;
+  const { title, Icon } = PaginationProps[variant];
   return (
     <Button
       variant="ghost"
       size="sm"
-      disabled={props.disabled}
-      title={props.title}
-      className={clsx('px-1.5', navigation.state === 'loading' && 'cursor-wait')}
+      disabled={disabled}
+      title={title}
+      className={clsx('px-1.5', loading && 'cursor-wait')}
       asChild
     >
-      {props.disabled ? (
-        <button>
-          <props.Icon className="min-h-5 min-w-5" />
+      {disabled || !to ? (
+        <button {...btnProps}>
+          <Icon className="min-h-5 min-w-5" />
         </button>
       ) : (
-        <Link to={props.to}>
-          <props.Icon className="min-h-5 min-w-5" />
+        <Link to={to}>
+          <Icon className="min-h-5 min-w-5" />
         </Link>
       )}
     </Button>
@@ -53,6 +64,7 @@ export function PaginationForm(props: { params: PaginationSchemaType; totalRecor
   const [searchParams, setSearchParams] = useSearchParams();
   const navigation = useNavigation();
 
+  const loading = navigation.state === 'loading';
   const lastPage = Math.ceil(totalRecords / params.pageSize);
 
   const isSearching =
@@ -87,31 +99,31 @@ export function PaginationForm(props: { params: PaginationSchemaType; totalRecor
       </Form>
       <div className="flex items-center gap-0">
         <PaginationButton
-          title="First Page"
+          variant="first"
           disabled={params.page === 1}
           to={getPaginationLink(1)}
-          Icon={ChevronFirstIcon}
+          loading={loading}
         />
         <PaginationButton
-          title="Previous Page"
+          variant="previous"
           disabled={params.page === 1}
           to={getPaginationLink(Math.max(1, params.page - 1))}
-          Icon={ChevronLeftIcon}
+          loading={loading}
         />
         <Typography muted variant="small" className="px-2">
           Page {params.page} of {lastPage}
         </Typography>
         <PaginationButton
-          title="Next Page"
+          variant="next"
           disabled={params.page === lastPage}
           to={getPaginationLink(Math.min(lastPage, params.page + 1))}
-          Icon={ChevronRightIcon}
+          loading={loading}
         />
         <PaginationButton
-          title="Last Page"
+          variant="last"
           disabled={params.page === lastPage}
           to={getPaginationLink(lastPage)}
-          Icon={ChevronLastIcon}
+          loading={loading}
         />
       </div>
     </div>

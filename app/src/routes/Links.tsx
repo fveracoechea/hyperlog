@@ -20,7 +20,8 @@ export async function loader({ request }: Route.LoaderArgs) {
     headers,
   } = await getSessionOrRedirect(request);
 
-  const params = PaginationSchema.parse(Object.fromEntries(new URL(request.url).searchParams));
+  const { searchParams } = new URL(request.url);
+  const params = PaginationSchema.parse(Object.fromEntries(searchParams));
   const result = await getAllLinks(user.id, params);
   return data({ ...result, params }, { headers });
 }

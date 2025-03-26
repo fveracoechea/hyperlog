@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useFetcher } from 'react-router';
 
 import { debounce } from '@/lib/time';
-import type { SubCollectionItem } from '@/routes/CollectionEdit';
-import type { CollectionApiData } from '@/routes/api/collections';
+import type { LinkItem } from '@/routes/CollectionEdit';
+import type { LinkApiData } from '@/routes/api/link';
 import clsx from 'clsx';
-import { FolderIcon, FolderXIcon, PlusIcon } from 'lucide-react';
+import { Link2OffIcon, PlusIcon } from 'lucide-react';
 
+import { LazyFavicon } from './LazyFavicon';
+import { PaginationButton } from './PaginationForm';
 import { SearchInput } from './SearchInput';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
@@ -23,27 +25,43 @@ import {
 import { Typography } from './ui/typography';
 
 type Props = {
-  subCollections: SubCollectionItem[];
-  onSelect(subCollection: SubCollectionItem): void;
+  links: LinkItem[];
+  onSelect(link: LinkItem): void;
 };
 
-export function AddSubCollectionDialog(props: Props) {
-  const { subCollections, onSelect } = props;
+export function AddLinkToCollectionDialog(props: Props) {
+  const { links, onSelect } = props;
+
+  const fetcher = useFetcher<LinkApiData>();
+
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState<SubCollectionItem[]>([]);
-  const fetcher = useFetcher<CollectionApiData>();
+  const [selected, setSelected] = useState<LinkItem[]>([]);
+  const [page, setPage] = useState(1);
 
-  const params = new URLSearchParams({ onlySubCollections: 'true' });
+  const totalRecords = fetcher.data?.totalRecords ?? 1;
+  const loading = fetcher.state === 'loading';
+  const pageSize = 12;
+  const lastPage = Math.ceil(totalRecords / pageSize);
 
-  if (subCollections.length > 0)
-    subCollections.forEach(c => params.append('exclude', c.databaseId));
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+  });
 
-  const url = `/api/collections?${params}`;
+  if (links.length > 0) links.forEach(l => params.append('exclude', l.databaseId));
+  const url = `/api/link?${params}`;
+
+  function fetchPaginatedLinks(page: number) {
+    const searchParams = new URLSearchParams(params);
+    searchParams.set('page', String(page));
+    setPage(page);
+    fetcher.load(`/api/link?${searchParams}`);
+  }
 
   const debouncedLoad = debounce(300, (value: string) => {
     const searchParams = new URLSearchParams(params);
     if (value) searchParams.set('search', value);
-    fetcher.load(`/api/collections?${searchParams}`);
+    fetcher.load(`/api/link?${searchParams}`);
   });
 
   return (
@@ -55,15 +73,15 @@ export function AddSubCollectionDialog(props: Props) {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" type="button">
           <PlusIcon />
-          <span>Add Sub-Collection</span>
+          <span>Add Link</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Sub-Collections</DialogTitle>
-          <DialogDescription>Create nested groups within a collection</DialogDescription>
+          <DialogTitle>Add Links</DialogTitle>
+          <DialogDescription>Organize groups of links with a collection</DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-4 py-2">
+        <div className="flex min-w-full max-w-min flex-col gap-4 py-2">
           <SearchInput
             value={search}
             placeholder="Search by name"
@@ -81,13 +99,13 @@ export function AddSubCollectionDialog(props: Props) {
 
           <ul
             className={clsx(
-              'border-border flex h-96 flex-col gap-1 overflow-y-auto rounded-md border p-1',
+              'border-border w-ful flex h-96 flex-col gap-1 overflow-y-auto rounded-md border p-1',
               fetcher.state === 'loading' && 'cursor-wait opacity-50',
             )}
           >
-            {subCollections.length < 1 && (
+            {links.length < 1 && (
               <li className="flex items-center gap-2 px-4 py-2">
-                <FolderXIcon className="stroke-cpt-overlay0" />
+                <Link2OffIcon className="stroke-cpt-overlay0" />
                 <Typography variant="small" muted>
                   No sub-collections available.
                 </Typography>
@@ -95,48 +113,67 @@ export function AddSubCollectionDialog(props: Props) {
             )}
 
             {fetcher.data &&
-              fetcher.data.collections.map(subCollection => (
+              fetcher.data.links.map(link => (
                 <li
-                  key={subCollection.id}
-                  className="even:bg-cpt-mantle flex w-full items-center gap-2 rounded-md p-2"
+                  key={link.id}
+                  className="even:bg-cpt-mantle flex items-center gap-2 rounded-md p-2"
                 >
-                  <FolderIcon
-                    className="h-5 min-h-5 w-5 min-w-5"
-                    style={{
-                      stroke: subCollection?.color ?? undefined,
-                      fill: subCollection?.color ?? undefined,
-                    }}
-                  />
+                  <LazyFavicon width="26px" height="26px" src={link.favicon ?? undefined} />
                   <Typography
                     variant="base"
                     as="label"
-                    htmlFor={subCollection.id}
+                    htmlFor={link.id}
                     muted
                     className={clsx(
                       'hover:text-foreground flex-1 cursor-pointer select-none overflow-hidden overflow-ellipsis whitespace-nowrap',
                       fetcher.state === 'loading' && 'cursor-wait',
                     )}
                   >
-                    {subCollection.name}
+                    {link.title}
                   </Typography>
-
                   <Checkbox
-                    id={subCollection.id}
-                    checked={selected.some(s => s.databaseId === subCollection.id)}
+                    id={link.id}
+                    checked={selected.some(s => s.databaseId === link.id)}
                     onCheckedChange={state => {
                       if (state) {
-                        setSelected([
-                          ...selected,
-                          { ...subCollection, databaseId: subCollection.id },
-                        ]);
+                        setSelected([...selected, { ...link, databaseId: link.id }]);
                       } else {
-                        setSelected(selected.filter(s => s.databaseId !== subCollection.id));
+                        setSelected(selected.filter(s => s.databaseId !== link.id));
                       }
                     }}
                   />
                 </li>
               ))}
           </ul>
+          <div className="flex items-center justify-between gap-0">
+            <PaginationButton
+              variant="first"
+              loading={loading}
+              disabled={page === 1}
+              onClick={() => fetchPaginatedLinks(1)}
+            />
+            <PaginationButton
+              variant="previous"
+              loading={loading}
+              disabled={page === 1}
+              onClick={() => fetchPaginatedLinks(page - 1)}
+            />
+            <Typography muted variant="small" className="px-2">
+              Page {page} of {lastPage}
+            </Typography>
+            <PaginationButton
+              variant="next"
+              loading={loading}
+              disabled={page === lastPage}
+              onClick={() => fetchPaginatedLinks(Math.min(lastPage, page + 1))}
+            />
+            <PaginationButton
+              variant="last"
+              loading={loading}
+              disabled={page === lastPage}
+              onClick={() => fetchPaginatedLinks(lastPage)}
+            />
+          </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>

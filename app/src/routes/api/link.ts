@@ -1,7 +1,8 @@
 import type { FieldErrors } from 'react-hook-form';
-import { redirect } from 'react-router';
+import { data, redirect } from 'react-router';
 
-import { createLink, increateViewCount } from '@/.server/resources/link';
+import { PaginationSchema, searchParamsToJson } from '@/.server/pagination';
+import { createLink, getAllLinks, increateViewCount } from '@/.server/resources/link';
 import { getSessionOrRedirect } from '@/.server/session';
 import { type CreateLinkFormFields, CreateLinkSchema } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -52,7 +53,7 @@ async function fetchLinkData(url: string) {
   }
 }
 
-export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
+export async function action({ request, params: { linkId } }: Route.ActionArgs) {
   const {
     headers,
     data: { user },
@@ -88,4 +89,17 @@ export async function action({ request, params: { linkId } }: Route.LoaderArgs) 
   }
 
   return null;
+}
+
+export type LinkApiData = Route.ComponentProps['loaderData'];
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const {
+    headers,
+    data: { user },
+  } = await getSessionOrRedirect(request);
+  const { searchParams } = new URL(request.url);
+  const params = PaginationSchema.parse(searchParamsToJson(searchParams));
+  const results = await getAllLinks(user.id, params);
+  return data(results, { headers });
 }

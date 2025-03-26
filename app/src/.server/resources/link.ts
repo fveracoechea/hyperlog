@@ -1,5 +1,5 @@
 import type { EditLinkSchemaType } from '@/lib/zod';
-import { SQL, and, desc, eq, or, sql } from 'drizzle-orm';
+import { SQL, and, desc, eq, notInArray, or, sql } from 'drizzle-orm';
 
 import { db } from '../db';
 import { type PaginationSchemaType, paginationHelper } from '../pagination';
@@ -26,6 +26,8 @@ export async function getAllLinks(userId: string, searchParams: PaginationSchema
         sql`LOWER(${schema.link.url}) LIKE ${search}`,
       ),
     );
+
+  if (searchParams.exclude) filters.push(notInArray(schema.link.id, searchParams.exclude));
 
   const args = paginationHelper({
     table: 'link',
