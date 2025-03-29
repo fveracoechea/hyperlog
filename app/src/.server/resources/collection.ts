@@ -1,9 +1,9 @@
 import { data } from 'react-router';
 
 import type { CreateCollectionFormFields, EditCollectionFormFields } from '@/lib/zod';
-import { SQL, and, desc, eq, isNotNull, isNull, notInArray, sql } from 'drizzle-orm';
+import { SQL, and, desc, eq, inArray, isNotNull, isNull, notInArray, sql } from 'drizzle-orm';
 
-import { db } from '../db';
+import { type TransactionType, db } from '../db';
 import * as schema from '../schema';
 
 export type CollectionSelectType = typeof schema.collection.$inferSelect;
@@ -123,19 +123,82 @@ export async function deleteCollection(userId: string, collectionId: string) {
   }
 }
 
+async function updateCollectionLinks(
+  tx: TransactionType,
+  collectionId: string,
+  links: EditCollectionFormFields['links'],
+) {
+  // Update removed links if any
+  await tx
+    .update(schema.link)
+    .set({ collectionId: null })
+    .where(
+      and(
+        eq(schema.link.collectionId, collectionId),
+        notInArray(
+          schema.link.id,
+          links.map(l => l.databaseId),
+        ),
+      ),
+    );
+
+  // Update links with the new collection id
+  await tx
+    .update(schema.link)
+    .set({ collectionId })
+    .where(
+      inArray(
+        schema.link.id,
+        links.map(l => l.databaseId),
+      ),
+    );
+}
+
+async function updateSubCollections(
+  tx: TransactionType,
+  parentId: string,
+  subCollections: EditCollectionFormFields['subCollections'],
+) {
+  // Delete removed subCollections if any
+  await tx.delete(schema.collection).where(
+    and(
+      eq(schema.collection.parentId, parentId),
+      notInArray(
+        schema.collection.id,
+        subCollections.map(c => c.databaseId),
+      ),
+    ),
+  );
+
+  // Update subCollections with the new parentId
+  await tx
+    .update(schema.collection)
+    .set({ parentId })
+    .where(
+      inArray(
+        schema.collection.id,
+        subCollections.map(c => c.databaseId),
+      ),
+    );
+}
+
 export async function editCollection(
   userId: string,
   collectionId: string,
-  data: EditCollectionFormFields,
+  formData: EditCollectionFormFields,
 ) {
   const collection = await db.query.collection.findFirst({
     where: eq(schema.collection.id, collectionId),
   });
 
   if (collection?.ownerId !== userId) {
-    throw new Error('Not allowed to edit this collection');
+    throw data('You are not allowed to edit this collection', { status: 403 });
   }
-  const { subCollections, links, ...edit } = data;
 
-  await db.update(schema.collection).set(edit).where(eq(schema.collection.id, collectionId));
+  db.transaction(async tx => {
+    const { subCollections, links, ...edit } = formData;
+    await tx.update(schema.collection).set(edit).where(eq(schema.collection.id, collectionId));
+    await updateCollectionLinks(tx, collectionId, links);
+    await updateSubCollections(tx, collectionId, subCollections);
+  });
 }

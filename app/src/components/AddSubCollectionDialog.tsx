@@ -85,11 +85,11 @@ export function AddSubCollectionDialog(props: Props) {
               fetcher.state === 'loading' && 'cursor-wait opacity-50',
             )}
           >
-            {subCollections.length < 1 && (
+            {(fetcher.data?.collections ?? []).length < 1 && (
               <li className="flex items-center gap-2 px-4 py-2">
                 <FolderXIcon className="stroke-cpt-overlay0" />
                 <Typography variant="small" muted>
-                  No sub-collections available.
+                  No sub-collections found
                 </Typography>
               </li>
             )}

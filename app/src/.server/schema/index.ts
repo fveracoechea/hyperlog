@@ -36,8 +36,8 @@ export const link = t.sqliteTable('link', {
   views: t.integer().default(1),
   lastVisit: t.integer({ mode: 'timestamp' }).default(sql`(unixepoch())`),
   isPinned: t.integer({ mode: 'boolean' }).default(false),
-  collectionId: t.text().references(() => collection.id),
-  tagId: t.text().references(() => tag.id),
+  collectionId: t.text().references(() => collection.id, { onDelete: 'set null' }),
+  tagId: t.text().references(() => tag.id, { onDelete: 'set null' }),
   notes: t.text(),
   ownerId: t
     .text()

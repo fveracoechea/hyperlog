@@ -58,7 +58,8 @@ export function CreateCollectionForm(props: { open: boolean }) {
           )}
         />
 
-        <div className="flex flex-col gap-1">
+        {/* TODO: Do we need this? */}
+        <div className="hidden flex-col gap-1">
           <Typography as="label" htmlFor="tag-select">
             Parent Collection
           </Typography>
@@ -110,7 +111,7 @@ export function CreateCollectionForm(props: { open: boolean }) {
           variant="textarea"
           label="Description"
           className="resize-none"
-          placeholder="The purpose of this collection..."
+          placeholder="The purpose of this collection"
           {...register('description')}
         />
       </div>

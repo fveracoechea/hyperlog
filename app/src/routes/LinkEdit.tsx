@@ -139,7 +139,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
           replace
           method="POST"
           onSubmit={form.handleSubmit}
-          className="border-border relative flex flex-col gap-4 rounded-md border p-4"
+          className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4"
         >
           <FormField
             label="Title"

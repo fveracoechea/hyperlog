@@ -103,11 +103,11 @@ export function AddLinkToCollectionDialog(props: Props) {
               fetcher.state === 'loading' && 'cursor-wait opacity-50',
             )}
           >
-            {links.length < 1 && (
+            {(fetcher.data?.links ?? []).length < 1 && (
               <li className="flex items-center gap-2 px-4 py-2">
                 <Link2OffIcon className="stroke-cpt-overlay0" />
                 <Typography variant="small" muted>
-                  No sub-collections available.
+                  No links found
                 </Typography>
               </li>
             )}

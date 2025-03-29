@@ -12,14 +12,15 @@ export function PageErrorBoundary({ error }: { error: unknown }) {
     'We apologize for the inconvenience. Please try again later. If the issue persists, contact support.';
 
   if (isRouteErrorResponse(error)) {
+    message = error.data ?? null;
     if (error.status === 404) {
       headline = 'Page Not Found';
-      message =
+      message ||=
         'We couldn’t find what you were looking for. It might have moved or doesn’t exist';
     }
     if (error.status === 403) {
       headline = 'Oops! You don’t have access.';
-      message = 'It looks like you don’t have permission to view this page';
+      message ||= 'It looks like you don’t have permission to access this resource';
     }
   }
 
