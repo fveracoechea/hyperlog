@@ -281,10 +281,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
             </ul>
 
             <div className="flex justify-end pt-4">
-              <AddSubCollectionDialog
-                subCollections={subCollectionsField.fields}
-                onSelect={value => subCollectionsField.append(value)}
-              />
+              <AddSubCollectionDialog />
             </div>
           </div>
         </div>

@@ -40,7 +40,7 @@ export function CreateNewDialog(props: Props) {
             <CreateLinkForm open={open} />
           </TabsContent>
           <TabsContent value="collection">
-            <CreateCollectionForm open={open} />
+            <CreateCollectionForm />
           </TabsContent>
           <TabsContent value="tag">new tag</TabsContent>
         </Tabs>

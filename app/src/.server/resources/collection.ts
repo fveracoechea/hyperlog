@@ -102,15 +102,13 @@ export async function getAllCollections(userId: string) {
   };
 }
 
-export async function createCollection(ownerId: string, data: CreateCollectionFormFields) {
-  const collection = (
+export async function createCollection(ownerId: string, formData: CreateCollectionFormFields) {
+  return (
     await db
       .insert(schema.collection)
-      .values({ ...data, ownerId })
+      .values({ ...formData, ownerId })
       .returning()
   )[0];
-
-  return collection;
 }
 
 export async function deleteCollection(userId: string, collectionId: string) {
