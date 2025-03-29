@@ -73,7 +73,7 @@ export async function action({ request, params: { collectionId } }: Route.Action
     data: { user },
   } = await getSessionOrRedirect(request);
 
-  if (request.method === 'POST') {
+  if (request.method === 'PUT') {
     const {
       errors,
       data: formData,
@@ -158,7 +158,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
       <Form
         id="collection-edit"
         className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(502px,1fr)] 2xl:gap-6"
-        method="POST"
+        method="PUT"
         onSubmit={handleSubmit}
       >
         <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4 lg:row-span-2">

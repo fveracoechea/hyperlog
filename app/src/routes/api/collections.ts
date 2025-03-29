@@ -37,15 +37,17 @@ export async function action({ request }: Route.ActionArgs) {
 
   const {
     errors,
-    data: formData,
+    data,
     receivedValues: defaultValues,
   } = await getValidatedFormData(request, createResolver);
 
   if (errors) return { errors, defaultValues };
 
-  const collection = await createCollection(user.id, formData);
+  const collection = await createCollection(user.id, data);
 
-  console.log('CREATED COLLECTION', collection);
-
-  return data({ collection }, { headers });
+  if (collection.parentId) {
+    return redirect(`/collections/${collection.parentId}/edit`, { headers });
+  } else {
+    return redirect(`/collections/${collection.id}`, { headers });
+  }
 }
