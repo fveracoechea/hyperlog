@@ -113,7 +113,7 @@ export function createCollection(ownerId: string, formData: CreateCollectionForm
       .returning()
       .then(data => {
         const collection = data.at(0);
-        if (!collection) throw new Error('No data inserted');
+        if (!collection) throw new Error('No data');
         return collection;
       }),
     err => {

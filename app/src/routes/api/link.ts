@@ -42,7 +42,7 @@ async function fetchLinkData(url: string) {
       description: descriptionNode.attr('content') ?? null,
     };
   } catch (error) {
-    console.warn('  ERROR LOADING LINK DATA  ', url);
+    console.warn('ERROR LOADING LINK DATA  ', url);
     console.error(error);
     return {
       title: null,
