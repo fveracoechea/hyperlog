@@ -13,22 +13,18 @@ import { DialogClose, DialogFooter } from './ui/dialog';
 
 const resolver = zodResolver(CreateCollectionSchema);
 
-export function CreateCollectionForm(props: { parentId?: string }) {
-  const { parentId } = props;
+export function CreateCollectionForm() {
   const fetcher = useFetcher();
-  const { register, control, handleSubmit, formState } = useRemixForm({
-    fetcher,
-    resolver,
-    submitData: { parentId },
-  });
+
+  const { register, control, handleSubmit, formState } = useRemixForm({ fetcher, resolver });
 
   return (
     <fetcher.Form
-      action="/api/collections"
+      noValidate
       method="POST"
+      action="/api/collections"
       onSubmit={handleSubmit}
       className="flex flex-col gap-4"
-      noValidate
     >
       <div className="flex flex-col gap-4">
         <FormField

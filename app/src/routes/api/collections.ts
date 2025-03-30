@@ -1,8 +1,9 @@
+import type { FieldErrors } from 'react-hook-form';
 import { data, redirect } from 'react-router';
 
 import { createCollection, getMyCollections } from '@/.server/resources/collection';
 import { getSessionOrRedirect } from '@/.server/session';
-import { CreateCollectionSchema } from '@/lib/zod';
+import { type CreateCollectionFormFields, CreateCollectionSchema } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getValidatedFormData } from 'remix-hook-form';
 
@@ -37,13 +38,31 @@ export async function action({ request }: Route.ActionArgs) {
 
   const {
     errors,
-    data,
+    data: formData,
     receivedValues: defaultValues,
   } = await getValidatedFormData(request, createResolver);
 
   if (errors) return { errors, defaultValues };
 
-  const collection = await createCollection(user.id, data);
+  const result = await createCollection(user.id, formData);
+
+  if (result.isErr()) {
+    const error = result.error;
+    if (error === 'COLLECTION_NAME_ALREADY_EXISTS')
+      return {
+        defaultValues,
+        errors: {
+          name: {
+            type: 'custom',
+            message: 'Collection name is already in use. Try a different one.',
+          },
+        } satisfies FieldErrors<CreateCollectionFormFields>,
+      };
+
+    throw data(error);
+  }
+
+  const collection = result.value;
 
   if (collection.parentId) {
     return redirect(`/collections/${collection.parentId}/edit`, { headers });

@@ -1,7 +1,10 @@
 import { data } from 'react-router';
 
+import { isNonNullable } from '@/lib/helpers';
 import type { CreateCollectionFormFields, EditCollectionFormFields } from '@/lib/zod';
+import { LibsqlError } from '@libsql/client';
 import { SQL, and, desc, eq, inArray, isNotNull, isNull, notInArray, sql } from 'drizzle-orm';
+import { fromPromise } from 'neverthrow';
 
 import { type TransactionType, db } from '../db';
 import * as schema from '../schema';
@@ -102,13 +105,26 @@ export async function getAllCollections(userId: string) {
   };
 }
 
-export async function createCollection(ownerId: string, formData: CreateCollectionFormFields) {
-  return (
-    await db
+export function createCollection(ownerId: string, formData: CreateCollectionFormFields) {
+  return fromPromise(
+    db
       .insert(schema.collection)
       .values({ ...formData, ownerId })
       .returning()
-  )[0];
+      .then(data => {
+        const collection = data.at(0);
+        if (!collection) throw new Error('No data inserted');
+        return collection;
+      }),
+    err => {
+      console.warn('UPDATE SUB-COLLECTIONS ERROR');
+      console.error(err);
+      if (err instanceof LibsqlError && err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+        return 'COLLECTION_NAME_ALREADY_EXISTS';
+      }
+      return 'UKNOWN_DATABASE_ERROR';
+    },
+  );
 }
 
 export async function deleteCollection(userId: string, collectionId: string) {
@@ -155,29 +171,29 @@ async function updateCollectionLinks(
 async function updateSubCollections(
   tx: TransactionType,
   parentId: string,
+  ownerId: string,
   subCollections: EditCollectionFormFields['subCollections'],
 ) {
-  // Delete removed subCollections if any
-  await tx.delete(schema.collection).where(
-    and(
-      eq(schema.collection.parentId, parentId),
-      notInArray(
-        schema.collection.id,
-        subCollections.map(c => c.databaseId),
-      ),
-    ),
-  );
+  try {
+    const IDs = subCollections.map(s => s.databaseId).filter(isNonNullable);
 
-  // Update subCollections with the new parentId
-  await tx
-    .update(schema.collection)
-    .set({ parentId })
-    .where(
-      inArray(
-        schema.collection.id,
-        subCollections.map(c => c.databaseId),
-      ),
-    );
+    const newSubcollections = subCollections
+      .filter(s => !s.databaseId)
+      .map(({ databaseId: _, ...s }) => ({ ...s, parentId, ownerId }));
+
+    await tx
+      .delete(schema.collection)
+      .where(
+        and(eq(schema.collection.parentId, parentId), notInArray(schema.collection.id, IDs)),
+      );
+
+    if (newSubcollections.length > 0) {
+      await tx.insert(schema.collection).values(newSubcollections);
+    }
+  } catch (error) {
+    console.warn('UPDATE SUB-COLLECTIONS ERROR');
+    console.error(error);
+  }
 }
 
 export async function editCollection(
@@ -197,6 +213,6 @@ export async function editCollection(
     const { subCollections, links, ...edit } = formData;
     await tx.update(schema.collection).set(edit).where(eq(schema.collection.id, collectionId));
     await updateCollectionLinks(tx, collectionId, links);
-    await updateSubCollections(tx, collectionId, subCollections);
+    await updateSubCollections(tx, collectionId, userId, subCollections);
   });
 }

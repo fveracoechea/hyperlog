@@ -30,7 +30,7 @@ export const CreateCollectionSchema = z.object({
     .max(512, 'Description must contain at most 512 characters')
     .nullable()
     .default(null),
-  parentId: z.string().uuid().nullable().default(null),
+  // parentId: z.string().uuid().nullable().default(null),
 });
 
 export const EditCollectionSchema = z.object({
@@ -56,7 +56,7 @@ export const EditCollectionSchema = z.object({
       name: z.string(),
       color: z.string().nullable(),
       description: z.string().nullable(),
-      databaseId: z.string().uuid(),
+      databaseId: z.string().uuid().nullable().optional(),
     })
     .array(),
 });
