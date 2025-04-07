@@ -2,11 +2,10 @@ import { data } from 'react-router';
 
 import { isNonNullable } from '@/lib/helpers';
 import type { CreateCollectionFormFields, EditCollectionFormFields } from '@/lib/zod';
-import { LibsqlError } from '@libsql/client';
 import { SQL, and, desc, eq, inArray, isNotNull, isNull, notInArray, sql } from 'drizzle-orm';
 import { fromPromise } from 'neverthrow';
 
-import { type TransactionType, db } from '../db';
+import { type TransactionType, db, isSQLiteErrorCode } from '../db';
 import * as schema from '../schema';
 
 export type CollectionSelectType = typeof schema.collection.$inferSelect;
@@ -117,11 +116,12 @@ export function createCollection(ownerId: string, formData: CreateCollectionForm
         return collection;
       }),
     err => {
-      console.warn('UPDATE SUB-COLLECTIONS ERROR');
-      console.error(err);
-      if (err instanceof LibsqlError && err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      if (isSQLiteErrorCode(err, 'SQLITE_CONSTRAINT_UNIQUE')) {
         return 'COLLECTION_NAME_ALREADY_EXISTS';
       }
+
+      console.warn('SUB-COLLECTIONS UPDATE UKNOWN_DATABASE_ERROR');
+      console.error(err);
       return 'UKNOWN_DATABASE_ERROR';
     },
   );

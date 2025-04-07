@@ -24,6 +24,7 @@ import {
 import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
 
 import { Banner } from '@/components/Banner';
+import { CollectionIcon } from '@/components/CollectionIcon';
 import { FormField } from '@/components/FormField';
 import { LazyFavicon } from '@/components/LazyFavicon';
 import { LineItem } from '@/components/LineItem';
@@ -195,13 +196,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
                     {collections.map(collection => (
                       <SelectItem key={collection.id} value={collection.id}>
                         <div className="flex items-center gap-2">
-                          <FolderIcon
-                            className="h-5 w-5"
-                            style={{
-                              stroke: collection?.color ?? undefined,
-                              fill: collection?.color ?? undefined,
-                            }}
-                          />
+                          <CollectionIcon size="small" color={collection.color ?? undefined} />
                           <Typography>{collection.name}</Typography>
                         </div>
                       </SelectItem>

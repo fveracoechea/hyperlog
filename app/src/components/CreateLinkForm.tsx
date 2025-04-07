@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleXIcon, FolderIcon, LoaderCircleIcon, PlusIcon } from 'lucide-react';
 import { useRemixForm } from 'remix-hook-form';
 
+import { CollectionIcon } from './CollectionIcon';
 import { FormField } from './FormField';
 import { Button } from './ui/button';
 import { DialogClose, DialogFooter } from './ui/dialog';
@@ -92,13 +93,7 @@ export function CreateLinkForm(props: { open: boolean }) {
                   {collections.data?.collections.map(collection => (
                     <SelectItem key={collection.id} value={collection.id}>
                       <div className="flex items-center gap-2">
-                        <FolderIcon
-                          className="h-5 w-5"
-                          style={{
-                            stroke: collection?.color ?? undefined,
-                            fill: collection?.color ?? undefined,
-                          }}
-                        />
+                        <CollectionIcon size="small" color={collection.color ?? undefined} />
                         <Typography>{collection.name}</Typography>
                       </div>
                     </SelectItem>

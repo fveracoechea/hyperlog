@@ -1,11 +1,7 @@
 import { Controller, useFieldArray } from 'react-hook-form';
 import { Form, Link, data, redirect } from 'react-router';
 
-import {
-  deleteCollection,
-  editCollection,
-  getCollectionDetails,
-} from '@/.server/resources/collection';
+import { editCollection, getCollectionDetails } from '@/.server/resources/collection';
 import { getSessionOrRedirect } from '@/.server/session';
 import { type EditCollectionFormFields, EditCollectionSchema } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -82,11 +78,6 @@ export async function action({ request, params: { collectionId } }: Route.Action
     if (errors) return data({ errors, defaultValues }, { headers });
     await editCollection(user.id, collectionId, formData);
     return redirect(`/collections/${collectionId}`, { headers });
-  }
-
-  if (request.method === 'DELETE') {
-    await deleteCollection(user.id, collectionId);
-    return redirect(`/collections`, { headers });
   }
 }
 

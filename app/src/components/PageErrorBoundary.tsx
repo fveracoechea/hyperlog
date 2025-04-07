@@ -7,12 +7,11 @@ import { Typography } from './ui/typography';
 
 export function PageErrorBoundary({ error }: { error: unknown }) {
   let stack: string | undefined;
-  let headline = 'Oops, an unexpected error occurred';
+  let headline = 'We ran into an unexpected issue';
   let message =
     'We apologize for the inconvenience. Please try again later. If the issue persists, contact support.';
 
   if (isRouteErrorResponse(error)) {
-    message = error.data ?? null;
     if (error.status === 404) {
       headline = 'Page Not Found';
       message ||=
@@ -32,7 +31,7 @@ export function PageErrorBoundary({ error }: { error: unknown }) {
     <section className="mx-auto flex flex-1 items-center pb-10">
       <div className="flex flex-col items-center gap-4">
         <Link2OffIcon className="stroke-cpt-surface1 h-24 w-24" />
-        <div className="flex max-w-screen-sm flex-col justify-center gap-0 text-center">
+        <div className="flex max-w-lg flex-col justify-center gap-0 text-center">
           <Typography variant="large">{headline}</Typography>
           <Typography muted>{message}</Typography>
         </div>

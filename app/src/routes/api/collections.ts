@@ -47,19 +47,18 @@ export async function action({ request }: Route.ActionArgs) {
   const result = await createCollection(user.id, formData);
 
   if (result.isErr()) {
-    const error = result.error;
-    if (error === 'COLLECTION_NAME_ALREADY_EXISTS')
-      return {
-        defaultValues,
-        errors: {
-          name: {
-            type: 'custom',
-            message: 'Collection name is already in use. Try a different one.',
-          },
-        } satisfies FieldErrors<CreateCollectionFormFields>,
-      };
+    // if (result.error === 'COLLECTION_NAME_ALREADY_EXISTS')
+    //   return {
+    //     defaultValues,
+    //     errors: {
+    //       name: {
+    //         type: 'custom',
+    //         message: 'Collection name is already in use. Try a different one.',
+    //       },
+    //     } satisfies FieldErrors<CreateCollectionFormFields>,
+    //   };
 
-    throw data(error);
+    throw data(null);
   }
 
   const collection = result.value;

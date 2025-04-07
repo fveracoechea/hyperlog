@@ -73,7 +73,7 @@ export const collection = t.sqliteTable(
     ...timestamps,
   },
   table => ({
-    uniqueOwnerAndName: t.unique().on(table.name, table.ownerId),
+    uniqueOwnerAndName: t.unique().on(table.name, table.ownerId, table.parentId),
   }),
 );
 

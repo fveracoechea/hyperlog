@@ -6,6 +6,10 @@ import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core';
 
 import * as schema from './schema';
 
+export function isSQLiteErrorCode(err: unknown, code: string) {
+  return err instanceof Error && 'code' in err && err.code === code;
+}
+
 export type TransactionType = SQLiteTransaction<
   'async',
   ResultSet,

@@ -55,10 +55,11 @@ export function AddSubCollectionDialog(props: Props) {
             event.stopPropagation();
             handleSubmit(fields => {
               if (subCollections.some(s => s.name === fields.name)) {
-                // setError('name', {
-                //   message: 'Sub-Collectio name is already in use. Try a different one.',
-                // });
-                // return;
+                setError('name', {
+                  type: 'value',
+                  message: 'Sub-Collection name is already in use. Try a different one.',
+                });
+                return;
               }
               onSubmit(fields);
               reset();

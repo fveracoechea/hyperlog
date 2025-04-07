@@ -15,7 +15,6 @@ const resolver = zodResolver(CreateCollectionSchema);
 
 export function CreateCollectionForm() {
   const fetcher = useFetcher();
-
   const { register, control, handleSubmit, formState } = useRemixForm({ fetcher, resolver });
 
   return (
