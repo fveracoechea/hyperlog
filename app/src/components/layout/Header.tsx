@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router';
 
 import clsx from 'clsx';
-import { PaletteIcon, PlusIcon, Unlink, UserCircleIcon } from 'lucide-react';
+import { PlusIcon, Unlink, UserCircleIcon } from 'lucide-react';
 
 import {
   NavigationMenu,
@@ -13,6 +13,7 @@ import { Typography } from '@/components/ui/typography';
 
 import { CreateNewDialog } from '../CreateNew';
 import { Button } from '../ui/button';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const { pathname } = useLocation();
@@ -60,7 +61,7 @@ export function Header() {
         </NavigationMenu>
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-4">
         <CreateNewDialog
           key={pathname}
           trigger={
@@ -70,10 +71,7 @@ export function Header() {
             </Button>
           }
         />
-        <Button variant="ghost" size="sm">
-          <PaletteIcon className="min-h-5 min-w-5" />
-          <span>Theme</span>
-        </Button>
+        <ThemeToggle />
         <Button variant="ghost" size="sm">
           <UserCircleIcon className="min-h-7 min-w-7" />
         </Button>

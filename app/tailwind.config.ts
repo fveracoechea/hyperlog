@@ -8,7 +8,7 @@ const CatppuccinPlugin = catppuccin({
   // default is `false`, which means no prefix
   prefix: 'cpt',
   // which flavour of colours to use by default, in the `:root`
-  defaultFlavour: 'mocha',
+  defaultFlavour: 'latte',
 });
 
 export default {
