@@ -1,15 +1,17 @@
 import { NavLink, useLoaderData } from 'react-router';
 
 import clsx from 'clsx';
-import { FolderIcon, PlusIcon, TagIcon } from 'lucide-react';
+import { TagIcon } from 'lucide-react';
 
+import { CollectionIcon } from '../CollectionIcon';
+import type { ColorVariant } from '../ColorPicker';
 import { Button } from '../ui/button';
 import { Typography } from '../ui/typography';
 import type { Route } from './../../routes/+types/Layout';
 
 type SideNavProps = {
   type: 'tags' | 'collections';
-  links: { color?: string | null; name: string; id: string }[];
+  links: { color?: ColorVariant | null; name: string; id: string }[];
 };
 
 function SideNav(props: SideNavProps) {
@@ -26,21 +28,12 @@ function SideNav(props: SideNavProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="[&.active]:text-primary text-muted-foreground w-full justify-start text-sm 2xl:text-base"
+              className="[&.active]:text-primary text-muted-foreground flex flex-1 items-center justify-start gap-2 text-sm 2xl:text-base"
               asChild
             >
               <NavLink to={`/${type}/${link.id}`}>
                 {type === 'collections' && (
-                  <FolderIcon
-                    className={clsx(
-                      'h-4 min-h-4 w-4 min-w-4',
-                      'group-hover:!stroke-foreground group-[.active]:!stroke-foreground',
-                    )}
-                    style={{
-                      stroke: link.color ?? undefined,
-                      fill: link.color ?? undefined,
-                    }}
-                  />
+                  <CollectionIcon size="small" color={link.color ?? undefined} />
                 )}
                 {type === 'tags' && (
                   <TagIcon

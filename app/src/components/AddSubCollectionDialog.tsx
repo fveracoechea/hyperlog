@@ -75,13 +75,15 @@ export function AddSubCollectionDialog(props: Props) {
               {...register('name')}
               errorMessage={formState.errors.name?.message}
             />
+
             <Controller
               control={control}
               name="color"
-              render={({ field }) => (
-                <ColorPicker onColorChange={value => field.onChange(value.at(1))} />
-              )}
+              render={({ field }) => {
+                return <ColorPicker {...field} value={field.value ?? undefined} />;
+              }}
             />
+
             <FormField
               variant="textarea"
               label="Description"

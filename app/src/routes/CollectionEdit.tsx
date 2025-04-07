@@ -10,7 +10,6 @@ import { getSessionOrRedirect } from '@/.server/session';
 import { type EditCollectionFormFields, EditCollectionSchema } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  FolderIcon,
   FolderPenIcon,
   FolderXIcon,
   Link2OffIcon,
@@ -25,6 +24,7 @@ import { getValidatedFormData, useRemixForm } from 'remix-hook-form';
 import { AddLinkToCollectionDialog } from '@/components/AddLinkToCollectionDialog';
 import { AddSubCollectionDialog } from '@/components/AddSubCollectionDialog';
 import { Banner } from '@/components/Banner';
+import { CollectionIcon } from '@/components/CollectionIcon';
 import { ColorPicker } from '@/components/ColorPicker';
 import { FormField } from '@/components/FormField';
 import { LazyFavicon } from '@/components/LazyFavicon';
@@ -115,15 +115,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
         <Banner
           title={collection.name}
           subtitle={collection.description}
-          iconNode={
-            <FolderIcon
-              className="h-7 w-7"
-              style={{
-                stroke: collection?.color ?? undefined,
-                fill: collection?.color ?? undefined,
-              }}
-            />
-          }
+          iconNode={<CollectionIcon size="large" color={collection.color ?? undefined} />}
         />
 
         <div className="flex gap-4">
@@ -194,7 +186,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
               {linksField.fields.map((link, index) => (
                 <li
                   key={link.id}
-                  className="even:bg-cpt-mantle flex flex-1 items-center gap-2 rounded-md p-2"
+                  className="odd:bg-cpt-mantle flex flex-1 items-center gap-2 rounded-md p-2"
                 >
                   <LazyFavicon width="26px" height="26px" src={link.favicon ?? undefined} />
                   <Typography
@@ -230,9 +222,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
           <Controller
             control={control}
             name="color"
-            render={({ field }) => (
-              <ColorPicker value={field.value} onColorChange={field.onChange} />
-            )}
+            render={({ field }) => <ColorPicker {...field} value={field.value} />}
           />
 
           <div className="flex flex-col gap-1">
@@ -249,15 +239,10 @@ export default function CollectionPage(props: Route.ComponentProps) {
               {subCollectionsField.fields.map((subCollection, index) => (
                 <li
                   key={subCollection.id}
-                  className="even:bg-cpt-mantle flex flex-1 items-center gap-2 rounded-md p-2"
+                  className="odd:bg-cpt-mantle flex flex-1 items-center gap-2 rounded-md p-2"
                 >
-                  <FolderIcon
-                    className="h-5 min-h-5 w-5 min-w-5"
-                    style={{
-                      stroke: subCollection?.color ?? undefined,
-                      fill: subCollection?.color ?? undefined,
-                    }}
-                  />
+                  <CollectionIcon size="small" color={subCollection.color ?? undefined} />
+
                   <Typography
                     variant="base"
                     as="span"

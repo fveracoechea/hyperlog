@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+import { ColorCodes, ColorNames } from '@/components/ColorPicker';
+
+const zColor = z
+  .enum([...ColorNames])
+  .nullable()
+  .default(null)
+  .catch(null);
+
 export const CreateLinkSchema = z.object({
   url: z.string().url(),
   title: z.string().optional(),
@@ -24,7 +32,7 @@ export const CreateCollectionSchema = z.object({
     .string()
     .min(1, 'Name is required')
     .max(60, 'Name must contain at most 60 characters'),
-  color: z.string().nullable().default(null),
+  color: zColor,
   description: z
     .string()
     .max(512, 'Description must contain at most 512 characters')
@@ -38,7 +46,7 @@ export const EditCollectionSchema = z.object({
     .string()
     .min(1, 'Name is required')
     .max(60, 'Name must contain at most 60 characters'),
-  color: z.string().nullable().default(null),
+  color: zColor,
   description: z
     .string()
     .max(512, 'Description must contain at most 512 characters')
@@ -54,7 +62,7 @@ export const EditCollectionSchema = z.object({
   subCollections: z
     .object({
       name: z.string(),
-      color: z.string().nullable(),
+      color: zColor,
       description: z.string().nullable(),
       databaseId: z.string().uuid().nullable().optional(),
     })

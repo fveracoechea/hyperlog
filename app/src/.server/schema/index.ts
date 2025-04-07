@@ -2,6 +2,8 @@ import { relations, sql } from 'drizzle-orm';
 import * as t from 'drizzle-orm/sqlite-core';
 import { v4 as uuidv4 } from 'uuid';
 
+import type { ColorVariant } from '@/components/ColorPicker';
+
 import { user } from './auth-schema';
 
 const timestamps = {
@@ -58,7 +60,7 @@ export const collection = t.sqliteTable(
     id,
     name: t.text().notNull(),
     description: t.text(),
-    color: t.text(),
+    color: t.text().$type<ColorVariant>(),
     icon: t.text(),
     order: t.integer().default(1),
     parentId: t

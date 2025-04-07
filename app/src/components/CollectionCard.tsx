@@ -9,10 +9,11 @@ import { PageErrorBoundary } from '@/components/PageErrorBoundary';
 import { Typography } from '@/components/ui/typography';
 
 import type { Route } from '../routes/+types/Collections';
+import { CollectionIcon } from './CollectionIcon';
 
 type CollectionType = Omit<
   Route.ComponentProps['loaderData']['myCollections'][number],
-  'links'
+  'links' | 'users'
 >;
 
 export const ErrorBoundary = PageErrorBoundary;
@@ -36,13 +37,7 @@ export function CollectionCard(props: { collection: CollectionType; linkCount?: 
         )}
       >
         <div className="flex justify-between">
-          <FolderIcon
-            className="h-6 w-6"
-            style={{
-              stroke: collection?.color ?? undefined,
-              fill: collection?.color ?? undefined,
-            }}
-          />
+          <CollectionIcon size="medium" color={collection.color ?? undefined} />
           {!!linkCount && linkCount > 0 && (
             <div className="flex items-center gap-2" title="Number of links">
               <LinkIcon className="h-4 w-4" />

@@ -2,10 +2,11 @@ import { Link, data, redirect } from 'react-router';
 
 import { deleteCollection, getCollectionDetails } from '@/.server/resources/collection';
 import { getSessionOrRedirect } from '@/.server/session';
-import { FolderIcon, FoldersIcon, LinkIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import { FoldersIcon, LinkIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
 import { Banner, SubBanner } from '@/components/Banner';
 import { CollectionCard } from '@/components/CollectionCard';
+import { CollectionIcon } from '@/components/CollectionIcon';
 import { DeleteCollectionDialog } from '@/components/DeleteCollectionDialog';
 import { GoBackButton } from '@/components/GoBackButton';
 import { LinkCard } from '@/components/LinkCard';
@@ -45,15 +46,7 @@ export default function CollectionPage({
         <Banner
           title={collection.name}
           subtitle={collection.description}
-          iconNode={
-            <FolderIcon
-              className="h-7 w-7"
-              style={{
-                stroke: collection?.color ?? undefined,
-                fill: collection?.color ?? undefined,
-              }}
-            />
-          }
+          iconNode={<CollectionIcon size="large" color={collection.color ?? undefined} />}
         />
         <div className="flex gap-2">
           <GoBackButton />
