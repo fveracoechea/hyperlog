@@ -10,7 +10,7 @@ export type LinkInsertType = typeof schema.link.$inferInsert;
 export async function getFavorites(userId: string) {
   return await db.query.link.findMany({
     orderBy: desc(schema.link.views),
-    with: { tag: true, collection: true },
+    with: { collection: true },
     where: and(eq(schema.link.ownerId, userId), eq(schema.link.isPinned, true)),
   });
 }
@@ -69,10 +69,7 @@ export async function getRecentActivity(userId: string) {
     where: and(eq(schema.link.ownerId, userId)),
     orderBy: desc(schema.link.lastVisit),
     limit: 12,
-    with: {
-      tag: true,
-      collection: true,
-    },
+    with: { collection: true },
   });
 }
 

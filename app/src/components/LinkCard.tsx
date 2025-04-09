@@ -3,9 +3,10 @@ import { useFetcher, useNavigate } from 'react-router';
 
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
-import { CalendarClockIcon, FolderIcon, LinkIcon, TagIcon } from 'lucide-react';
+import { CalendarClockIcon, LinkIcon } from 'lucide-react';
 
 import type { Route } from '../routes/+types/Home';
+import { CollectionIcon } from './CollectionIcon';
 import { LazyFavicon } from './LazyFavicon';
 import { Button } from './ui/button';
 import { Typography } from './ui/typography';
@@ -57,7 +58,7 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
           className="absolute inset-0 object-cover object-center blur"
           src={link.previewImage ?? undefined}
         />
-        <div className="bg-cpt-base/85 relative flex flex-1 flex-col gap-4 rounded-md p-2">
+        <div className="bg-cpt-base/80 relative flex flex-1 flex-col gap-4 rounded-md p-2">
           <div className="flex items-start justify-between">
             <LazyFavicon src={link.favicon ?? undefined} width="26px" height="26px" />
 
@@ -79,41 +80,31 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
             >
               <Typography
                 as="h4"
-                className="group-hover:text-primary max-h-10 overflow-y-hidden text-left leading-tight"
+                className={clsx(
+                  'group-hover:text-primary overflow-y-hidden text-left leading-tight',
+                  'max-h-5 overflow-x-hidden overflow-ellipsis whitespace-nowrap',
+                )}
               >
                 {link.title}
               </Typography>
 
-              {!hideDetails && (
-                <div className="flex items-center gap-1.5" title="URL">
-                  <LinkIcon className="stroke-muted-foreground group-hover:stroke-primary h-3.5 w-3.5" />
-                  <Typography as="span" variant="small">
-                    <span>{link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
-                  </Typography>
-                </div>
-              )}
-
-              {!hideDetails && link.tag && (
-                <div className="flex items-center gap-1.5" title="tag">
-                  <TagIcon className="stroke-muted-foreground group-hover:stroke-primary h-3.5 w-3.5" />
-                  <Typography as="span" variant="small" muted className="no-underline">
-                    {link.tag.name}
-                  </Typography>
-                </div>
-              )}
+              <div className="flex items-center gap-1.5" title="URL">
+                <LinkIcon className="stroke-muted-foreground group-hover:stroke-primary h-3.5 w-3.5" />
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
+                >
+                  <span>{link.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+                </Typography>
+              </div>
 
               {!hideDetails && link.collection && (
                 <div
                   className="flex max-w-min items-center gap-1.5 overflow-x-hidden"
                   title="Collection"
                 >
-                  <FolderIcon
-                    className="h-4 w-3.5 min-w-3.5"
-                    style={{
-                      stroke: link.collection.color ?? undefined,
-                      fill: link.collection.color ?? undefined,
-                    }}
-                  />
+                  <CollectionIcon size="small" color={link.collection.color ?? undefined} />
                   <Typography
                     as="span"
                     variant="small"

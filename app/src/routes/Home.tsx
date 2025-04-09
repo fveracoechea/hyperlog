@@ -1,4 +1,4 @@
-import { Await, data } from 'react-router';
+import { data } from 'react-router';
 
 import { getFavorites, getRecentActivity } from '@/.server/resources/link';
 import { getSessionOrRedirect } from '@/.server/session';
