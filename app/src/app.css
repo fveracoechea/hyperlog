@@ -148,7 +148,7 @@
   }
 
   body {
-    @apply bg-cpt-mantle text-foreground;
+    @apply bg-cpt-mantle text-foreground transition-colors;
   }
 }
 

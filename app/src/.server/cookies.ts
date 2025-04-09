@@ -1,59 +1,30 @@
-import { type CookieOptions, createCookie } from 'react-router';
+import { type CookieOptions, createCookie, createCookieSessionStorage } from 'react-router';
 
 import { env } from '@/.server/env';
+import { createThemeSessionResolver } from 'remix-themes';
+import { createTypedCookie } from 'remix-utils/typed-cookie';
 import { z } from 'zod';
 
-function makeCookie<S extends z.ZodTypeAny>(
-  name: string,
-  schema: S,
-  options: Omit<CookieOptions, 'secrets'> = {},
-) {
-  const {
-    sameSite = 'lax',
-    httpOnly = true,
-    secure = import.meta.env.PROD,
-    maxAge = 5, // 5 seconds by default
-    ...otherOptions
-  } = options;
-
-  const cookie = createCookie(name, {
-    sameSite,
-    httpOnly,
-    secure,
-    maxAge,
-    ...otherOptions,
-    secrets: [env.COOKIE_SECRET],
-  });
-
-  return {
-    async get(request: Request): Promise<z.infer<S>> {
-      const payload = await cookie.parse(request.headers.get('Cookie'));
-      return await schema.parseAsync(payload);
-    },
-    set(payload: z.infer<S>) {
-      return cookie.serialize(payload);
-    },
-    delete() {
-      return cookie.serialize('', { maxAge: 0 });
-    },
-  };
-}
+const cookieOptions: CookieOptions = {
+  path: '/',
+  sameSite: 'lax',
+  httpOnly: true,
+  secure: import.meta.env.PROD,
+  secrets: [env.COOKIE_SECRET],
+};
 
 /**
  * Allow sharing values between Loaders, Actions, and UI
  * */
 export const cookies = {
   /** Used to display informative message-callouts */
-  info: makeCookie(
-    'hyperlog-message',
-    z
+  info: createTypedCookie({
+    cookie: createCookie('hyperlog-message', { ...cookieOptions, maxAge: 3 }),
+    schema: z
       .object({ message: z.string(), type: z.enum(['info', 'destructive']).default('info') })
-      .nullable()
-      .default(null),
-  ),
-  /** Allows for redirects to a specific pathname */
-  redirect: makeCookie(
-    'hyperlog-redirect',
-    z.object({ pathname: z.string() }).nullable().default(null),
-  ),
+      .nullable(),
+  }),
+  theme: createCookieSessionStorage({ cookie: { ...cookieOptions, name: 'hyperlog-theme' } }),
 };
+
+export const themeSessionResolver = createThemeSessionResolver(cookies.theme);

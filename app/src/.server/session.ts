@@ -18,9 +18,9 @@ export async function getSessionOrRedirect(request: Request) {
   if (!isAuthRoute) {
     headers.append(
       'Set-Cookie',
-      await cookies.info.set({
-        message: 'You must be logged in to access this resource. Please login to continue.',
+      await cookies.info.serialize({
         type: 'info',
+        message: 'You must be logged in to access this resource. Please login to continue.',
       }),
     );
 

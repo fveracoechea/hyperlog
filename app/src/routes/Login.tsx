@@ -26,7 +26,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const info = await cookies.info.get(request);
+  const info = await cookies.info.parse(request.headers.get('Cookie'));
   return { info };
 }
 
