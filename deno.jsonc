@@ -1,0 +1,36 @@
+{
+  "unstable": [
+    "sloppy-imports"
+  ],
+  "workspace": [
+    "./apps/*",
+    "./packages/*"
+  ],
+  "tasks": {
+    "dev:web": "deno task --cwd apps/app dev"
+  },
+  "lint": {
+    "include": [
+      "packages/",
+      "apps/"
+    ],
+    "rules": {
+      "tags": [
+        "react",
+        "recommended"
+      ]
+    }
+  },
+  "fmt": {
+    "include": [
+      "packages/",
+      "apps/"
+    ],
+    "useTabs": false,
+    "lineWidth": 95,
+    "indentWidth": 2,
+    "singleQuote": true,
+    "proseWrap": "always",
+    "semiColons": true
+  }
+}
