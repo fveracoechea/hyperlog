@@ -6,10 +6,9 @@
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/fmt@^1.0.7": "1.0.7",
     "jsr:@std/html@^1.0.3": "1.0.3",
-    "jsr:@std/http@^1.0.11": "1.0.15",
+    "jsr:@std/http@^1.0.15": "1.0.15",
     "jsr:@std/media-types@^1.1.0": "1.1.0",
     "jsr:@std/net@^1.0.4": "1.0.4",
-    "jsr:@std/path@^1.0.8": "1.0.9",
     "jsr:@std/path@^1.0.9": "1.0.9",
     "jsr:@std/streams@^1.0.9": "1.0.9",
     "npm:@catppuccin/tailwindcss@~0.1.6": "0.1.6_tailwindcss@3.4.17__postcss@8.5.3",
@@ -26,9 +25,8 @@
     "npm:@radix-ui/react-select@^2.1.7": "2.2.2_@types+react@19.1.2_@types+react-dom@19.1.2__@types+react@19.1.2_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:@radix-ui/react-slot@^1.2.0": "1.2.0_@types+react@19.1.2_react@19.1.0",
     "npm:@radix-ui/react-tabs@^1.1.4": "1.1.9_@types+react@19.1.2_@types+react-dom@19.1.2__@types+react@19.1.2_react@19.1.0_react-dom@19.1.0__react@19.1.0",
-    "npm:@react-router/dev@^7.5.0": "7.5.2_@react-router+serve@7.5.2__react-router@7.5.2___react@19.1.0___react-dom@19.1.0____react@19.1.0__express@4.21.2__typescript@5.8.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_react-router@7.5.2__react@19.1.0__react-dom@19.1.0___react@19.1.0_typescript@5.8.3_vite@6.3.3__@types+node@22.15.2__tsx@4.19.3__picomatch@4.0.2_@babel+core@7.26.10_react@19.1.0_react-dom@19.1.0__react@19.1.0_@types+node@22.15.2_tsx@4.19.3",
-    "npm:@react-router/node@^7.5.0": "7.5.2_react-router@7.5.2__react@19.1.0__react-dom@19.1.0___react@19.1.0_typescript@5.8.3_react@19.1.0_react-dom@19.1.0__react@19.1.0",
-    "npm:@react-router/serve@^7.5.0": "7.5.2_react-router@7.5.2__react@19.1.0__react-dom@19.1.0___react@19.1.0_express@4.21.2_typescript@5.8.3_react@19.1.0_react-dom@19.1.0__react@19.1.0",
+    "npm:@react-router/dev@^7.5.2": "7.5.2_@react-router+serve@7.5.2__react-router@7.5.2___react@19.1.0___react-dom@19.1.0____react@19.1.0__express@4.21.2__typescript@5.8.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_react-router@7.5.2__react@19.1.0__react-dom@19.1.0___react@19.1.0_typescript@5.8.3_vite@6.3.3__@types+node@22.15.2__tsx@4.19.3__picomatch@4.0.2_@babel+core@7.26.10_react@19.1.0_react-dom@19.1.0__react@19.1.0_@types+node@22.15.2_tsx@4.19.3",
+    "npm:@react-router/serve@^7.5.2": "7.5.2_react-router@7.5.2__react@19.1.0__react-dom@19.1.0___react@19.1.0_express@4.21.2_typescript@5.8.3_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:@tsconfig/vite-react@^3.4.0": "3.4.0",
     "npm:@types/node@^22.13.10": "22.15.2",
     "npm:@types/node@^22.14.0": "22.15.2",
@@ -57,7 +55,7 @@
     "npm:postcss@^8.5.3": "8.5.3",
     "npm:react-dom@^19.1.0": "19.1.0_react@19.1.0",
     "npm:react-hook-form@^7.55.0": "7.56.1_react@19.1.0",
-    "npm:react-router@^7.5.0": "7.5.2_react@19.1.0_react-dom@19.1.0__react@19.1.0",
+    "npm:react-router@^7.5.2": "7.5.2_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:react@^19.1.0": "19.1.0",
     "npm:remix-client-cache@^2.1.0": "2.1.0_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-router@7.5.2__react@19.1.0__react-dom@19.1.0___react@19.1.0",
     "npm:remix-hook-form@7": "7.0.1_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-hook-form@7.56.1__react@19.1.0_react-router@7.5.2__react@19.1.0__react-dom@19.1.0___react@19.1.0",
@@ -103,7 +101,7 @@
         "jsr:@std/html",
         "jsr:@std/media-types",
         "jsr:@std/net",
-        "jsr:@std/path@^1.0.9",
+        "jsr:@std/path",
         "jsr:@std/streams"
       ]
     },
@@ -3410,8 +3408,8 @@
     "members": {
       "apps/app": {
         "dependencies": [
-          "jsr:@std/http@^1.0.11",
-          "jsr:@std/path@^1.0.8"
+          "jsr:@std/http@^1.0.15",
+          "jsr:@std/path@^1.0.9"
         ],
         "packageJson": {
           "dependencies": [
@@ -3428,13 +3426,12 @@
             "npm:@radix-ui/react-select@^2.1.7",
             "npm:@radix-ui/react-slot@^1.2.0",
             "npm:@radix-ui/react-tabs@^1.1.4",
-            "npm:@react-router/dev@^7.5.0",
-            "npm:@react-router/node@^7.5.0",
-            "npm:@react-router/serve@^7.5.0",
+            "npm:@react-router/dev@^7.5.2",
+            "npm:@react-router/serve@^7.5.2",
             "npm:@tsconfig/vite-react@^3.4.0",
             "npm:@types/node@^22.14.0",
-            "npm:@types/react-dom@^19.1.1",
-            "npm:@types/react@^19.1.0",
+            "npm:@types/react-dom@^19.1.2",
+            "npm:@types/react@^19.1.2",
             "npm:autoprefixer@^10.4.21",
             "npm:babel-plugin-react-compiler@19.0.0-beta-e993439-20250405",
             "npm:better-auth@^1.2.5",
@@ -3454,7 +3451,7 @@
             "npm:postcss@^8.5.3",
             "npm:react-dom@^19.1.0",
             "npm:react-hook-form@^7.55.0",
-            "npm:react-router@^7.5.0",
+            "npm:react-router@^7.5.2",
             "npm:react@^19.1.0",
             "npm:remix-client-cache@^2.1.0",
             "npm:remix-hook-form@7",

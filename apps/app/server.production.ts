@@ -5,7 +5,7 @@ import { createRequestHandler } from "react-router";
 const handleRequest = createRequestHandler(
   // @ts-expect-error - build output
   await import("./build/server/index.js"),
-  "production",
+  "production"
 );
 
 Deno.serve(async (request) => {

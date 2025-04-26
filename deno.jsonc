@@ -1,4 +1,5 @@
 {
+  // "nodeModulesDir": "manual",
   "unstable": [
     "sloppy-imports"
   ],
