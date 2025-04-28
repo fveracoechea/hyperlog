@@ -1,0 +1,17 @@
+{
+  "imports": {
+    "@/": "./",
+    "@hono/zod-validator": "npm:@hono/zod-validator@^0.5.0",
+    "@libsql/client": "npm:@libsql/client@^0.15.4",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.3",
+    "drizzle-kit": "npm:drizzle-kit@^0.31.0",
+    "drizzle-orm": "npm:drizzle-orm@^0.43.1",
+    "hono": "jsr:@hono/hono@^4.7.7",
+    "zod": "npm:zod@^3.24.3"
+  },
+  "tasks": {
+    "start": "deno run --allow-net main.ts",
+    "db:kit": "deno --env -A --node-modules-dir npm:drizzle-kit"
+    "db:seed": "deno --env -A scripts/seed.ts"
+  }
+}

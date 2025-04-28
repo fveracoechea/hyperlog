@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@hono/hono@^4.7.7": "4.7.7",
     "jsr:@std/cli@^1.0.17": "1.0.17",
+    "jsr:@std/dotenv@~0.225.3": "0.225.3",
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/fmt@^1.0.7": "1.0.7",
     "jsr:@std/html@^1.0.3": "1.0.3",
@@ -14,8 +15,10 @@
     "npm:@catppuccin/tailwindcss@~0.1.6": "0.1.6_tailwindcss@3.4.17__postcss@8.5.3",
     "npm:@deno/vite-plugin@^1.0.4": "1.0.4_vite@6.3.3__@types+node@22.15.2__tsx@4.19.3__picomatch@4.0.2_@types+node@22.15.2_tsx@4.19.3",
     "npm:@faker-js/faker@^9.6.0": "9.7.0",
+    "npm:@hono/zod-validator@0.5": "0.5.0_hono@4.7.7_zod@3.24.3",
     "npm:@hookform/resolvers@^5.0.1": "5.0.1_react-hook-form@7.56.1__react@19.1.0_react@19.1.0",
     "npm:@libsql/client@~0.15.2": "0.15.4",
+    "npm:@libsql/client@~0.15.4": "0.15.4",
     "npm:@radix-ui/react-checkbox@^1.1.5": "1.2.3_@types+react@19.1.2_@types+react-dom@19.1.2__@types+react@19.1.2_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:@radix-ui/react-dialog@^1.1.7": "1.1.11_@types+react@19.1.2_@types+react-dom@19.1.2__@types+react@19.1.2_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:@radix-ui/react-dropdown-menu@^2.1.7": "2.1.12_@types+react@19.1.2_@types+react-dom@19.1.2__@types+react@19.1.2_react@19.1.0_react-dom@19.1.0__react@19.1.0",
@@ -45,8 +48,10 @@
     "npm:cross-env@^7.0.3": "7.0.3",
     "npm:date-fns@^4.1.0": "4.1.0",
     "npm:dotenv@^16.4.7": "16.5.0",
+    "npm:drizzle-kit@0.31": "0.31.0_esbuild@0.25.3",
     "npm:drizzle-kit@~0.30.6": "0.30.6_esbuild@0.19.12",
     "npm:drizzle-orm@0.41": "0.41.0_@libsql+client@0.15.4",
+    "npm:drizzle-orm@~0.43.1": "0.43.1_@libsql+client@0.15.4",
     "npm:drizzle-seed@~0.3.1": "0.3.1_drizzle-orm@0.41.0__@libsql+client@0.15.4_@libsql+client@0.15.4",
     "npm:hono@^4.7.6": "4.7.7",
     "npm:isbot@^5.1.25": "5.1.27",
@@ -74,7 +79,8 @@
     "npm:vite-tsconfig-paths@^5.1.4": "5.1.4_vite@6.3.3__@types+node@22.15.2__tsx@4.19.3__picomatch@4.0.2_typescript@5.8.3_@types+node@22.15.2_tsx@4.19.3",
     "npm:vite@^6.2.5": "6.3.3_@types+node@22.15.2_tsx@4.19.3_picomatch@4.0.2",
     "npm:vite@^6.3.3": "6.3.3_@types+node@22.15.2_tsx@4.19.3_picomatch@4.0.2",
-    "npm:zod@^3.24.2": "3.24.3"
+    "npm:zod@^3.24.2": "3.24.3",
+    "npm:zod@^3.24.3": "3.24.3"
   },
   "jsr": {
     "@hono/hono@4.7.7": {
@@ -82,6 +88,9 @@
     },
     "@std/cli@1.0.17": {
       "integrity": "e15b9abe629e17be90cc6216327f03a29eae613365f1353837fa749aad29ce7b"
+    },
+    "@std/dotenv@0.225.3": {
+      "integrity": "a95e5b812c27b0854c52acbae215856d9cce9d4bbf774d938c51d212711e8d4a"
     },
     "@std/encoding@1.0.10": {
       "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
@@ -625,6 +634,13 @@
     },
     "@hexagon/base64@1.1.28": {
       "integrity": "sha512-lhqDEAvWixy3bZ+UOYbPwUbBkwBq5C1LAJ/xPC8Oi+lL54oyakv/npbA0aU2hgCsx/1NUd4IBvV03+aUBWxerw=="
+    },
+    "@hono/zod-validator@0.5.0_hono@4.7.7_zod@3.24.3": {
+      "integrity": "sha512-ds5bW6DCgAnNHP33E3ieSbaZFd5dkV52ZjyaXtGoR06APFrCtzAsKZxTHwOrJNBdXsi0e5wNwo5L4nVEVnJUdg==",
+      "dependencies": [
+        "hono",
+        "zod"
+      ]
     },
     "@hookform/resolvers@5.0.1_react-hook-form@7.56.1__react@19.1.0_react@19.1.0": {
       "integrity": "sha512-u/+Jp83luQNx9AdyW2fIPGY6Y7NG68eN2ZW8FOJYL+M0i4s49+refdJdOp/A9n9HFQtQs3HIDHQvX3ZET2o7YA==",
@@ -1869,9 +1885,18 @@
       "dependencies": [
         "@drizzle-team/brocli",
         "@esbuild-kit/esm-loader",
-        "esbuild-register",
+        "esbuild-register@3.6.0_esbuild@0.19.12",
         "esbuild@0.19.12",
         "gel"
+      ]
+    },
+    "drizzle-kit@0.31.0_esbuild@0.25.3": {
+      "integrity": "sha512-pcKVT+GbfPA+bUovPIilgVOoq+onNBo/YQBG86sf3/GFHkN6lRJPm1l7dKN0IMAk57RQoIm4GUllRrasLlcaSg==",
+      "dependencies": [
+        "@drizzle-team/brocli",
+        "@esbuild-kit/esm-loader",
+        "esbuild-register@3.6.0_esbuild@0.25.3",
+        "esbuild@0.25.3"
       ]
     },
     "drizzle-orm@0.41.0_@libsql+client@0.15.4": {
@@ -1880,10 +1905,16 @@
         "@libsql/client"
       ]
     },
+    "drizzle-orm@0.43.1_@libsql+client@0.15.4": {
+      "integrity": "sha512-dUcDaZtE/zN4RV/xqGrVSMpnEczxd5cIaoDeor7Zst9wOe/HzC/7eAaulywWGYXdDEc9oBPMjayVEDg0ziTLJA==",
+      "dependencies": [
+        "@libsql/client"
+      ]
+    },
     "drizzle-seed@0.3.1_drizzle-orm@0.41.0__@libsql+client@0.15.4_@libsql+client@0.15.4": {
       "integrity": "sha512-F/0lgvfOAsqlYoHM/QAGut4xXIOXoE5VoAdv2FIl7DpGYVXlAzKuJO+IphkKUFK3Dz+rFlOsQLnMNrvoQ0cx7g==",
       "dependencies": [
-        "drizzle-orm",
+        "drizzle-orm@0.41.0_@libsql+client@0.15.4",
         "pure-rand"
       ]
     },
@@ -1955,6 +1986,13 @@
       "dependencies": [
         "debug@4.4.0",
         "esbuild@0.19.12"
+      ]
+    },
+    "esbuild-register@3.6.0_esbuild@0.25.3": {
+      "integrity": "sha512-H2/S7Pm8a9CL1uhp9OvjwrBh5Pvx0H8qVOxNu8Wed9Y7qv56MPtq+GGM8RJpq6glYJn9Wspr8uw7l55uyinNeg==",
+      "dependencies": [
+        "debug@4.4.0",
+        "esbuild@0.25.3"
       ]
     },
     "esbuild@0.18.20": {
@@ -3405,8 +3443,22 @@
     }
   },
   "workspace": {
+    "dependencies": [
+      "jsr:@std/dotenv@~0.225.3"
+    ],
     "members": {
-      "apps/app": {
+      "apps/backend": {
+        "dependencies": [
+          "jsr:@hono/hono@^4.7.7",
+          "jsr:@std/dotenv@~0.225.3",
+          "npm:@hono/zod-validator@0.5",
+          "npm:@libsql/client@~0.15.4",
+          "npm:drizzle-kit@0.31",
+          "npm:drizzle-orm@~0.43.1",
+          "npm:zod@^3.24.3"
+        ]
+      },
+      "apps/frontend": {
         "dependencies": [
           "jsr:@std/http@^1.0.15",
           "jsr:@std/path@^1.0.9"
@@ -3470,11 +3522,6 @@
             "npm:zod@^3.24.2"
           ]
         }
-      },
-      "apps/hono": {
-        "dependencies": [
-          "jsr:@hono/hono@^4.7.7"
-        ]
       },
       "apps/vite-react": {
         "dependencies": [

@@ -1,11 +1,8 @@
-import 'dotenv/config';
+import { faker } from "@faker-js/faker";
 
-import { faker } from '@faker-js/faker';
+import { ColorNames } from "@/components/ColorPicker";
 
-import { ColorNames } from '@/components/ColorPicker';
-
-import { db } from './db';
-import * as schema from './schema';
+import { db, schema } from "@/db/db.ts";
 
 // type InsertUser = typeof schema.user.$inferInsert;
 type SelectUser = typeof schema.user.$inferSelect;
@@ -114,7 +111,7 @@ async function seedTags(user: SelectUser) {
 async function seedLinks(
   user: SelectUser,
   collections: SelectCollection[],
-  tags: SelectTag[],
+  tags: SelectTag[]
 ) {
   const links: InsertLink[] = [];
 
