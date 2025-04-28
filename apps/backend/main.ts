@@ -1,12 +1,51 @@
 import { Hono } from "hono";
-import apiRoutes from "@/api/_api.ts";
+import { cors } from "hono/cors";
+import { StatusCode } from "hono/utils/http-status";
+import { HTTPException } from "hono/http-exception";
 
-const app = new Hono()
-  .get("/", (c) => {
-    return c.text("Hello Hono!");
-  })
-  .route("/api", apiRoutes);
+import apiRoutes from "@/api/_api.ts";
+import { AppEnv } from "@/utils/types.ts";
+import { jsonResponseMiddleware } from "@/middlewares/jsonResponse.ts";
+import { env } from "@/utils/env.ts";
+
+const app = new Hono<AppEnv>()
+  .use("*", jsonResponseMiddleware)
+  .use(
+    "*",
+    cors({
+      origin: env.CORS_ORIGIN,
+      allowHeaders: ["Content-Type", "Authorization"],
+      allowMethods: ["POST", "GET", "OPTIONS"],
+      exposeHeaders: ["Content-Length"],
+      maxAge: 600,
+      credentials: true,
+    })
+  )
+  .route("/api", apiRoutes)
+  .notFound((ctx) =>
+    ctx.var.error(
+      {
+        message: "The requested resource was not found.",
+        url: ctx.req.url,
+      },
+      404
+    )
+  )
+  .onError((err, ctx) => {
+    console.log("-- Server Error --");
+    console.log(err);
+
+    let status: StatusCode = 500;
+    let message = "Oops, an unexpected error occurred.";
+
+    if (err instanceof HTTPException) {
+      status = err.status;
+      message = err.message;
+    }
+
+    return ctx.var.error({ message, status }, status);
+  });
 
 export type HonoApp = typeof app;
 
-Deno.serve(app.fetch);
+Deno.serve({ port: env.PORT }, app.fetch);

@@ -20,6 +20,8 @@ const EnvSchema = z
     DB_FILENAME: z.string(),
     COOKIE_SECRET: zSecret,
     BETTER_AUTH_SECRET: zSecret,
+    CORS_ORIGIN: z.string().url().default("http://localhost:8080"),
+    PORT: z.number().default(8080),
   })
   .transform((v) => ({
     ...v,

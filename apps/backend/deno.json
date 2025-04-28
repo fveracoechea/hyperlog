@@ -11,6 +11,7 @@
   },
   "tasks": {
     "start": "deno run --allow-net main.ts",
+    "dev": "deno run --env -A --watch main.ts",
     "db:kit": "deno --env -A --node-modules-dir npm:drizzle-kit"
     "db:seed": "deno --env -A scripts/seed.ts"
   }

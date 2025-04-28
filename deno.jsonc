@@ -8,7 +8,8 @@
     "./packages/*"
   ],
   "tasks": {
-    "dev:web": "deno task --cwd apps/app dev"
+    "fronted:dev": "deno task --cwd apps/fronted dev",
+    "backend:dev": "deno task --cwd apps/backend dev"
   },
   "lint": {
     "include": [
