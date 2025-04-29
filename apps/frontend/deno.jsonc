@@ -17,7 +17,6 @@
   "compilerOptions": {
     "lib": [
       "deno.window",
-      // "esnext",
       "dom"
     ],
     "jsx": "react-jsx",
@@ -32,8 +31,6 @@
     ]
   },
   "imports": {
-    "@/": "./src/",
-    "@std/http": "jsr:@std/http@^1.0.15",
-    "@std/path": "jsr:@std/path@^1.0.9"
+    "@/": "./src/"
   }
 }

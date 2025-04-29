@@ -1,8 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import * as t from "drizzle-orm/sqlite-core";
-import { v4 as uuidv4 } from "uuid";
 
-import type { ColorVariant } from "@/components/ColorPicker";
+import type { ColorName } from "@hyperlog/schemas";
 
 import { user } from "./auth-schema.ts";
 
@@ -18,7 +17,7 @@ const timestamps = {
 const id = t
   .text()
   .primaryKey()
-  .$defaultFn(() => uuidv4());
+  .$defaultFn(() => crypto.randomUUID());
 
 export * from "./auth-schema.ts";
 
@@ -60,7 +59,7 @@ export const collection = t.sqliteTable(
     id,
     name: t.text().notNull(),
     description: t.text(),
-    color: t.text().$type<ColorVariant>(),
+    color: t.text().$type<ColorName>(),
     icon: t.text(),
     order: t.integer().default(1),
     parentId: t
@@ -72,9 +71,7 @@ export const collection = t.sqliteTable(
       .references(() => user.id, { onDelete: "cascade" }),
     ...timestamps,
   },
-  (table) => ({
-    uniqueOwnerAndName: t.unique().on(table.name, table.ownerId, table.parentId),
-  })
+  (table) => [t.unique().on(table.name, table.ownerId, table.parentId)]
 );
 
 export const collectionsRelations = relations(collection, ({ one, many }) => ({
@@ -125,9 +122,7 @@ export const tag = t.sqliteTable(
       .references(() => user.id, { onDelete: "cascade" }),
     ...timestamps,
   },
-  (table) => ({
-    uniqueOwnerAndName: t.unique().on(table.name, table.ownerId),
-  })
+  (table) => [t.unique().on(table.name, table.ownerId)]
 );
 
 export const tagsRelations = relations(tag, ({ one, many }) => ({

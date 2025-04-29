@@ -1,0 +1,4 @@
+{
+  "name": "@hyperlog/ui",
+  "exports": "./_main.ts"
+}

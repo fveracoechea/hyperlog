@@ -20,6 +20,5 @@ export const sessionMiddleware = createMiddleware<AppEnv>(async (ctx, next) => {
 
   ctx.set("user", session.user);
   ctx.set("session", session.session);
-
   return next();
 });

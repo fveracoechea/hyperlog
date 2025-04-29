@@ -3,7 +3,7 @@ import { cors } from "hono/cors";
 import { StatusCode } from "hono/utils/http-status";
 import { HTTPException } from "hono/http-exception";
 
-import apiRoutes from "@/api/_api.ts";
+import apiRoutes from "@/api/_main.ts";
 import { AppEnv } from "@/utils/types.ts";
 import { jsonResponseMiddleware } from "@/middlewares/jsonResponse.ts";
 import { env } from "@/utils/env.ts";
