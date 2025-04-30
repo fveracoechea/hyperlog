@@ -7,6 +7,7 @@
     "@hono/zod-validator": "npm:@hono/zod-validator@^0.5.0",
     "@libsql/client": "npm:@libsql/client@^0.15.4",
     "better-auth": "npm:better-auth@^1.2.7",
+    "cheerio": "npm:cheerio@^1.0.0",
     "drizzle-kit": "npm:drizzle-kit@^0.31.0",
     "drizzle-orm": "npm:drizzle-orm@^0.43.1",
     "hono": "npm:hono@^4.7.8"

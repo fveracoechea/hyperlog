@@ -1,9 +1,9 @@
-import type { EditLinkSchemaType } from '@/lib/zod';
-import { SQL, and, desc, eq, notInArray, or, sql } from 'drizzle-orm';
+import type { EditLinkSchemaType } from "@/lib/zod";
+import { SQL, and, desc, eq, notInArray, or, sql } from "drizzle-orm";
 
-import { db } from '../db';
-import { type PaginationSchemaType, paginationHelper } from '../pagination';
-import * as schema from '../schema';
+import { db } from "../db";
+import { type PaginationSchemaType, paginationHelper } from "../pagination";
+import * as schema from "../schema";
 
 export type LinkInsertType = typeof schema.link.$inferInsert;
 
@@ -23,14 +23,14 @@ export async function getAllLinks(userId: string, searchParams: PaginationSchema
     filters.push(
       or(
         sql`LOWER(${schema.link.title}) LIKE ${search}`,
-        sql`LOWER(${schema.link.url}) LIKE ${search}`,
-      ),
+        sql`LOWER(${schema.link.url}) LIKE ${search}`
+      )
     );
 
   if (searchParams.exclude) filters.push(notInArray(schema.link.id, searchParams.exclude));
 
   const args = paginationHelper({
-    table: 'link',
+    table: "link",
     searchableFields: [],
     searchParams,
     where: [eq(schema.link.ownerId, userId), ...filters],
@@ -81,13 +81,6 @@ export async function getLinkDetails(linkId: string) {
       collection: true,
     },
   });
-}
-
-export async function addLinkToCollection(linkId: string, collectionId: string) {
-  return await db
-    .update(schema.link)
-    .set({ collectionId: collectionId })
-    .where(eq(schema.link.id, linkId));
 }
 
 export async function createLink(data: LinkInsertType) {

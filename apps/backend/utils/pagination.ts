@@ -1,4 +1,4 @@
-import { SQL, and, asc, desc, ilike, or } from "drizzle-orm";
+import { SQL, and, asc, desc, or, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { db, schema } from "@/db/db.ts";
@@ -55,8 +55,10 @@ export function paginationHelper<
     searchParams.sortBy in dbTable ? dbTable[searchParams.sortBy] : dbTable.createdAt;
 
   if (searchParams.search) {
-    const search = `%${searchParams.search}%`;
-    where.push(or(...searchableFields.map((f) => ilike(dbTable[f], search))));
+    const search = `%${searchParams.search}%`.toLowerCase();
+    where.push(
+      or(...searchableFields.map((field) => sql`LOWER(${dbTable[field]}) LIKE ${search}`))
+    );
   }
 
   return {

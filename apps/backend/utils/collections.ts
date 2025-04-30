@@ -1,14 +1,16 @@
 import z from "zod";
-import { db, schema, TransactionType } from "@/db/db.ts";
 import { and, desc, eq, inArray, isNotNull, isNull, notInArray, sql } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
 
 import { EditCollectionFormFields } from "@hyperlog/schemas";
 import { isNonNullable } from "@hyperlog/ui";
 
+import { db, schema, TransactionType } from "@/db/db.ts";
+import { zStringArray } from "@/utils/pagination.ts";
+
 export const CollectionQuerySchema = z.object({
   search: z.string().optional(),
-  exclude: z.string().array().optional(),
+  exclude: zStringArray,
 });
 
 export function getCollections(args: {
@@ -149,10 +151,10 @@ export async function validateCollectionAccess(collectionId: string, userId: str
     where: eq(schema.collection.id, collectionId),
   });
 
-  if (!collection) return [{ message: "Collection not found." }, 404] as const;
+  if (!collection) return ["Collection not found.", 404] as const;
 
   if (collection.ownerId !== userId)
-    return [{ message: "You are not allowed to edit this collection." }, 403] as const;
+    return ["You are not allowed to access this collection.", 403] as const;
 
   return [null, null] as const;
 }

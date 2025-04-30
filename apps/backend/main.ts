@@ -14,8 +14,8 @@ const app = new Hono<AppEnv>()
     "*",
     cors({
       origin: env.CORS_ORIGIN,
-      allowHeaders: ["Content-Type", "Authorization"],
-      allowMethods: ["POST", "GET", "OPTIONS"],
+      allowHeaders: ["Content-Type", "Authorization", "Accept"],
+      allowMethods: ["POST", "GET", "OPTIONS", "PUT", "DELETE"],
       exposeHeaders: ["Content-Length"],
       maxAge: 600,
       credentials: true,

@@ -91,8 +91,8 @@ const app = new Hono<AppEnv>()
     async (c) => {
       const { collectionId } = c.req.valid("param");
 
-      const [error, status] = await validateCollectionAccess(collectionId, c.var.user.id);
-      if (error) return c.var.error(error, status);
+      const [message, status] = await validateCollectionAccess(collectionId, c.var.user.id);
+      if (message) return c.var.error({ message }, status);
 
       await db.delete(schema.collection).where(eq(schema.collection.id, collectionId));
 
@@ -110,8 +110,8 @@ const app = new Hono<AppEnv>()
       const formData = c.req.valid("form");
       const { collectionId } = c.req.valid("param");
 
-      const [error, status] = await validateCollectionAccess(collectionId, c.var.user.id);
-      if (error) return c.var.error(error, status);
+      const [message, status] = await validateCollectionAccess(collectionId, c.var.user.id);
+      if (message) return c.var.error({ message }, status);
 
       await db.transaction(async (tx) => {
         const { subCollections, links, ...edit } = formData;
