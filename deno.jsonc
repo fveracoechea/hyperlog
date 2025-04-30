@@ -1,10 +1,14 @@
 {
+  "nodeModulesDir": "auto",
+  "unstable": [
+    "sloppy-imports"
+  ],
   "workspace": [
     "./apps/*",
     "./shared/*"
   ],
   "tasks": {
-    "fronted:dev": "deno task --cwd apps/fronted dev",
+    "frontend:dev": "deno task --cwd apps/frontend dev",
     "backend:dev": "deno task --cwd apps/backend dev"
   },
   "lint": {
@@ -36,8 +40,5 @@
     "@std/path": "jsr:@std/path@^1.0.9",
     "@std/http": "jsr:@std/http@^1.0.15",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.3"
-  },
-  "unstable": [
-    "sloppy-imports"
-  ]
+  }
 }

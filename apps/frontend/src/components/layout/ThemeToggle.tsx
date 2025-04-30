@@ -1,21 +1,12 @@
-import { Moon, Sun } from 'lucide-react';
-import { Theme, useTheme } from 'remix-themes';
+import { Moon, Sun } from "lucide-react";
 
-import { Button } from '../ui/button';
+import { Button } from "../ui/button";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useTheme();
-
-  const isDark = theme === Theme.DARK;
+  const isDark = true;
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={() => {
-        setTheme(isDark ? Theme.LIGHT : Theme.DARK);
-      }}
-    >
+    <Button variant="ghost" size="sm" onClick={() => {}}>
       {isDark ? (
         <Moon className="stroke-cpt-flamingo group-hover:stroke-cpt-blue min-h-5 min-w-5" />
       ) : (

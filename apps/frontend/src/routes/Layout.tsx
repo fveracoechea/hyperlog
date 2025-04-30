@@ -1,15 +1,11 @@
-import { Outlet, data } from 'react-router';
+import { Outlet } from "react-router";
 
-import { getMyCollections } from '@/.server/resources/collection';
-import { getMyTags } from '@/.server/resources/tag';
-import { getSessionOrRedirect } from '@/.server/session';
+import { PageErrorBoundary } from "@/components/PageErrorBoundary";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { Sidebar } from "@/components/layout/Sidebar";
 
-import { PageErrorBoundary } from '@/components/PageErrorBoundary';
-import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
-import { Sidebar } from '@/components/layout/Sidebar';
-
-import type { Route } from './+types/Layout';
+import type { Route } from "./+types/Layout";
 
 export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   return (
@@ -28,24 +24,11 @@ export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   );
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const {
-    data: { user },
-    headers,
-  } = await getSessionOrRedirect(request);
-
-  const [tags, collections] = await Promise.all([
-    getMyTags(user.id),
-    getMyCollections(user.id, { onlyParentCollections: true }),
-  ]);
-
-  return data(
-    {
-      tags,
-      collections,
-    },
-    { headers },
-  );
+export function clientLoader({}: Route.ClientLoaderArgs) {
+  return {
+    tags: [],
+    collections: [],
+  };
 }
 
 export default function Layout() {
