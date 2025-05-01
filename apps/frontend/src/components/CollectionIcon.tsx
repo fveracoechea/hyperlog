@@ -1,6 +1,6 @@
 import type { RefAttributes } from 'react';
 
-import { type VariantProps, cva } from '@/lib/cva';
+import { cva, type VariantProps } from '@/lib/cva';
 import clsx from 'clsx';
 import { FolderIcon, type LucideProps } from 'lucide-react';
 

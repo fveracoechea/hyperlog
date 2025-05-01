@@ -15,7 +15,7 @@ const cookieOptions: CookieOptions = {
 
 /**
  * Allow sharing values between Loaders, Actions, and UI
- * */
+ */
 export const cookies = {
   /** Used to display informative message-callouts */
   info: createTypedCookie({

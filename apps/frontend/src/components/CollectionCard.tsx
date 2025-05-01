@@ -36,22 +36,22 @@ export function CollectionCard(props: { collection: CollectionType; linkCount?: 
           'relative flex flex-col gap-2 overflow-hidden p-4',
         )}
       >
-        <div className="flex justify-between">
-          <CollectionIcon size="medium" color={collection.color ?? undefined} />
+        <div className='flex justify-between'>
+          <CollectionIcon size='medium' color={collection.color ?? undefined} />
           {!!linkCount && linkCount > 0 && (
-            <div className="flex items-center gap-2" title="Number of links">
-              <LinkIcon className="h-4 w-4" />
-              <Typography variant="small">{linkCount}</Typography>
+            <div className='flex items-center gap-2' title='Number of links'>
+              <LinkIcon className='h-4 w-4' />
+              <Typography variant='small'>{linkCount}</Typography>
             </div>
           )}
         </div>
 
-        <Typography variant="base" className="group-hover:text-primary">
+        <Typography variant='base' className='group-hover:text-primary'>
           {collection.name}
         </Typography>
-        <div className="flex w-fit items-center gap-2" title="Last modified">
-          <CalendarIcon className="h-4 w-4" />
-          <Typography variant="small">
+        <div className='flex w-fit items-center gap-2' title='Last modified'>
+          <CalendarIcon className='h-4 w-4' />
+          <Typography variant='small'>
             {formatDate(collection.updatedAt ?? new Date(), 'PP')}
           </Typography>
         </div>

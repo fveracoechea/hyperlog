@@ -36,64 +36,64 @@ export function CreateLinkForm(props: { open: boolean }) {
   return (
     <link.Form
       noValidate
-      method="post"
-      action="/api/link"
-      onSubmit={data => {
+      method='post'
+      action='/api/link'
+      onSubmit={(data) => {
         const url = getValues('url');
         if (!/^https?:\/\//.test(String(url))) {
           setValue('url', `https://${url}`);
         }
         handleSubmit(data);
       }}
-      className="flex flex-col gap-4"
+      className='flex flex-col gap-4'
     >
-      <div className="flex flex-col gap-4">
+      <div className='flex flex-col gap-4'>
         <FormField
-          label="URL"
-          placeholder="https://example.com"
+          label='URL'
+          placeholder='https://example.com'
           required
           {...register('url')}
           errorMessage={errors.url?.message}
         />
         <FormField
-          label="Title"
-          placeholder="Auto-generated if left blank"
+          label='Title'
+          placeholder='Auto-generated if left blank'
           {...register('title')}
           errorMessage={errors.title?.message}
         />
-        <div className="flex flex-col gap-1">
-          <Typography as="label" htmlFor="tag-select">
+        <div className='flex flex-col gap-1'>
+          <Typography as='label' htmlFor='tag-select'>
             Collection
           </Typography>
           <Controller
             control={control}
-            name="collectionId"
+            name='collectionId'
             render={({ field: { value, name, onChange, ...selectProps } }) => (
               <Select
                 key={value}
                 name={name}
                 value={value ?? undefined}
-                onValueChange={selected => {
+                onValueChange={(selected) => {
                   if (selected === 'NO-COLLECTION') onChange('');
                   else onChange(selected);
                 }}
               >
                 <SelectTrigger {...selectProps}>
-                  <SelectValue placeholder="No collection" />
+                  <SelectValue placeholder='No collection' />
                 </SelectTrigger>
                 <SelectContent>
                   {value && (
-                    <SelectItem value="NO-COLLECTION">
-                      <div className="flex items-center gap-2">
-                        <CircleXIcon className="h-5 w-5" />
+                    <SelectItem value='NO-COLLECTION'>
+                      <div className='flex items-center gap-2'>
+                        <CircleXIcon className='h-5 w-5' />
                         <Typography>No Collection</Typography>
                       </div>
                     </SelectItem>
                   )}
-                  {collections.data?.collections.map(collection => (
+                  {collections.data?.collections.map((collection) => (
                     <SelectItem key={collection.id} value={collection.id}>
-                      <div className="flex items-center gap-2">
-                        <CollectionIcon size="small" color={collection.color ?? undefined} />
+                      <div className='flex items-center gap-2'>
+                        <CollectionIcon size='small' color={collection.color ?? undefined} />
                         <Typography>{collection.name}</Typography>
                       </div>
                     </SelectItem>
@@ -104,30 +104,32 @@ export function CreateLinkForm(props: { open: boolean }) {
           />
         </div>
         <FormField
-          variant="textarea"
-          label="Notes"
-          className="resize-none"
-          placeholder="Relevant details or thoughts"
+          variant='textarea'
+          label='Notes'
+          className='resize-none'
+          placeholder='Relevant details or thoughts'
           {...register('notes')}
         />
       </div>
       <DialogFooter>
         <DialogClose asChild>
-          <Button type="button" variant="ghost">
+          <Button type='button' variant='ghost'>
             Close
           </Button>
         </DialogClose>
 
-        {formState.isSubmitting ? (
-          <Button disabled type="button" className="min-w-24">
-            <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
-          </Button>
-        ) : (
-          <Button type="submit">
-            <PlusIcon />
-            Create Link
-          </Button>
-        )}
+        {formState.isSubmitting
+          ? (
+            <Button disabled type='button' className='min-w-24'>
+              <LoaderCircleIcon className='min-h-5 min-w-5 animate-spin' />
+            </Button>
+          )
+          : (
+            <Button type='submit'>
+              <PlusIcon />
+              Create Link
+            </Button>
+          )}
       </DialogFooter>
     </link.Form>
   );

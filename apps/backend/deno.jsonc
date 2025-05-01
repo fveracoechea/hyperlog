@@ -9,8 +9,7 @@
     "better-auth": "npm:better-auth@^1.2.7",
     "cheerio": "npm:cheerio@^1.0.0",
     "drizzle-kit": "npm:drizzle-kit@^0.31.0",
-    "drizzle-orm": "npm:drizzle-orm@^0.43.1",
-    "hono": "npm:hono@^4.7.8"
+    "drizzle-orm": "npm:drizzle-orm@^0.43.1"
   },
   "tasks": {
     "start": "deno run --allow-net main.ts",

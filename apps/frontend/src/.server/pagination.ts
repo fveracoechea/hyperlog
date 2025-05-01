@@ -1,4 +1,4 @@
-import { SQL, and, asc, desc, ilike, or } from 'drizzle-orm';
+import { and, asc, desc, ilike, or, SQL } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { db } from './db';
@@ -8,18 +8,18 @@ export const zStringArray = z
   .string()
   .array()
   .or(z.string())
-  .transform(v => (typeof v === 'string' ? [v] : v))
+  .transform((v) => (typeof v === 'string' ? [v] : v))
   .optional();
 
 /**
  * Search params to JS Object
  * Object.fromEntries does not account for params with multiple values
- * */
+ */
 export function searchParamsToJson(params: URLSearchParams) {
   const data: Record<string, string[] | string> = {};
 
   for (const key of params.keys()) {
-    const value = params.getAll(key).filter(v => v !== 'undefined' && v !== 'null');
+    const value = params.getAll(key).filter((v) => v !== 'undefined' && v !== 'null');
     if (value.length > 1) data[key] = value;
     else data[key] = value[0];
   }
@@ -52,12 +52,13 @@ export function paginationHelper<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dbTable = schema[table] as Record<string, any>;
   const directionFn = searchParams.direction === 'asc' ? asc : desc;
-  const sortBy =
-    searchParams.sortBy in dbTable ? dbTable[searchParams.sortBy] : dbTable.createdAt;
+  const sortBy = searchParams.sortBy in dbTable
+    ? dbTable[searchParams.sortBy]
+    : dbTable.createdAt;
 
   if (searchParams.search) {
     const search = `%${searchParams.search}%`;
-    where.push(or(...searchableFields.map(f => ilike(dbTable[f], search))));
+    where.push(or(...searchableFields.map((f) => ilike(dbTable[f], search))));
   }
 
   return {

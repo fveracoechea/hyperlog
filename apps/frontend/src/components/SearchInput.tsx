@@ -15,27 +15,21 @@ export function SearchInput(
       value={value}
       defaultValue={defaultValue}
       autoFocus
-      name="search"
-      icon={
-        loading ? (
-          <LoaderCircleIcon className="text-primary animate-spin" />
-        ) : (
-          <SearchIcon className="text-muted-foreground" />
-        )
-      }
-      rightBtn={
-        (value || defaultValue) && (
-          <Button
-            variant="ghost"
-            title="Clear search"
-            size="sm"
-            type="button"
-            onClick={onClearSearch}
-          >
-            <XIcon className="text-destructive" />
-          </Button>
-        )
-      }
+      name='search'
+      icon={loading
+        ? <LoaderCircleIcon className='text-primary animate-spin' />
+        : <SearchIcon className='text-muted-foreground' />}
+      rightBtn={(value || defaultValue) && (
+        <Button
+          variant='ghost'
+          title='Clear search'
+          size='sm'
+          type='button'
+          onClick={onClearSearch}
+        >
+          <XIcon className='text-destructive' />
+        </Button>
+      )}
     />
   );
 }

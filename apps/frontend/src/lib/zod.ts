@@ -99,7 +99,7 @@ export const SignupSchema = z
     email: zEmail,
     verifyPassword: z.string(),
   })
-  .refine(data => data.password === data.verifyPassword, {
+  .refine((data) => data.password === data.verifyPassword, {
     message: 'The confirmation password doesn’t match.',
     path: ['verifyPassword'],
   });

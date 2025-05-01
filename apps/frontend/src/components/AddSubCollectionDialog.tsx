@@ -37,7 +37,7 @@ export function AddSubCollectionDialog(props: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" type="button">
+        <Button variant='outline' size='sm' type='button'>
           <PlusIcon />
           <span>Add Sub-Collection</span>
         </Button>
@@ -50,11 +50,11 @@ export function AddSubCollectionDialog(props: Props) {
 
         <form
           noValidate
-          onSubmit={event => {
+          onSubmit={(event) => {
             event.preventDefault();
             event.stopPropagation();
-            handleSubmit(fields => {
-              if (subCollections.some(s => s.name === fields.name)) {
+            handleSubmit((fields) => {
+              if (subCollections.some((s) => s.name === fields.name)) {
                 setError('name', {
                   type: 'value',
                   message: 'Sub-Collection name is already in use. Try a different one.',
@@ -66,51 +66,53 @@ export function AddSubCollectionDialog(props: Props) {
               setOpen(false);
             })(event);
           }}
-          className="flex flex-col gap-4"
+          className='flex flex-col gap-4'
         >
-          <div className="flex flex-col gap-4">
+          <div className='flex flex-col gap-4'>
             <FormField
-              label="Name"
+              label='Name'
               required
-              placeholder="e.g. Recipes"
+              placeholder='e.g. Recipes'
               {...register('name')}
               errorMessage={formState.errors.name?.message}
             />
 
             <Controller
               control={control}
-              name="color"
+              name='color'
               render={({ field }) => {
                 return <ColorPicker {...field} value={field.value ?? undefined} />;
               }}
             />
 
             <FormField
-              variant="textarea"
-              label="Description"
-              className="resize-none"
-              placeholder="The purpose of this collection"
+              variant='textarea'
+              label='Description'
+              className='resize-none'
+              placeholder='The purpose of this collection'
               {...register('description')}
               errorMessage={formState.errors.description?.message}
             />
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="ghost">
+              <Button type='button' variant='ghost'>
                 Close
               </Button>
             </DialogClose>
 
-            {formState.isSubmitting ? (
-              <Button disabled type="button" className="min-w-28">
-                <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
-              </Button>
-            ) : (
-              <Button type="submit">
-                <PlusIcon />
-                Create Collection
-              </Button>
-            )}
+            {formState.isSubmitting
+              ? (
+                <Button disabled type='button' className='min-w-28'>
+                  <LoaderCircleIcon className='min-h-5 min-w-5 animate-spin' />
+                </Button>
+              )
+              : (
+                <Button type='submit'>
+                  <PlusIcon />
+                  Create Collection
+                </Button>
+              )}
           </DialogFooter>
         </form>
       </DialogContent>

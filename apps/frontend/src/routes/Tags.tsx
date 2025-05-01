@@ -5,7 +5,7 @@ import { Banner } from '@/components/Banner';
 export default function Tags() {
   return (
     <>
-      <Banner Icon={Tag} title="Tags" />
+      <Banner Icon={Tag} title='Tags' />
     </>
   );
 }

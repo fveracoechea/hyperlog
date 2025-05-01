@@ -1,24 +1,24 @@
-import { SQL, and, asc, desc, or, sql } from "drizzle-orm";
-import { z } from "zod";
+import { and, asc, desc, or, SQL, sql } from 'drizzle-orm';
+import { z } from 'zod';
 
-import { db, schema } from "@/db/db.ts";
+import { db, schema } from '@/db/db.ts';
 
 export const zStringArray = z
   .string()
   .array()
   .or(z.string())
-  .transform((v) => (typeof v === "string" ? [v] : v))
+  .transform((v) => (typeof v === 'string' ? [v] : v))
   .optional();
 
 /**
  * Search params to JS Object
  * Object.fromEntries does not account for params with multiple values
- * */
+ */
 export function searchParamsToJson(params: URLSearchParams) {
   const data: Record<string, string[] | string> = {};
 
   for (const key of params.keys()) {
-    const value = params.getAll(key).filter((v) => v !== "undefined" && v !== "null");
+    const value = params.getAll(key).filter((v) => v !== 'undefined' && v !== 'null');
     if (value.length > 1) data[key] = value;
     else data[key] = value[0];
   }
@@ -27,8 +27,8 @@ export function searchParamsToJson(params: URLSearchParams) {
 }
 
 export const PaginationSchema = z.object({
-  direction: z.enum(["asc", "desc"]).default("desc").catch("desc"),
-  sortBy: z.string().default("createdAt"),
+  direction: z.enum(['asc', 'desc']).default('desc').catch('desc'),
+  sortBy: z.string().default('createdAt'),
   search: z.string().optional(),
   page: z.coerce.number().int().default(1).catch(1),
   pageSize: z.coerce.number().int().default(24).catch(24),
@@ -39,7 +39,7 @@ export type PaginationSchemaType = z.infer<typeof PaginationSchema>;
 
 export function paginationHelper<
   K extends keyof typeof db.query,
-  P extends PaginationSchemaType
+  P extends PaginationSchemaType,
 >(config: {
   table: K;
   searchableFields: K extends keyof typeof schema ? (keyof (typeof schema)[K])[] : never;
@@ -50,14 +50,15 @@ export function paginationHelper<
 
   // deno-lint-ignore no-explicit-any
   const dbTable = schema[table] as Record<string, any>;
-  const directionFn = searchParams.direction === "asc" ? asc : desc;
-  const sortBy =
-    searchParams.sortBy in dbTable ? dbTable[searchParams.sortBy] : dbTable.createdAt;
+  const directionFn = searchParams.direction === 'asc' ? asc : desc;
+  const sortBy = searchParams.sortBy in dbTable
+    ? dbTable[searchParams.sortBy]
+    : dbTable.createdAt;
 
   if (searchParams.search) {
     const search = `%${searchParams.search}%`.toLowerCase();
     where.push(
-      or(...searchableFields.map((field) => sql`LOWER(${dbTable[field]}) LIKE ${search}`))
+      or(...searchableFields.map((field) => sql`LOWER(${dbTable[field]}) LIKE ${search}`)),
     );
   }
 
@@ -67,7 +68,7 @@ export function paginationHelper<
     offset: (searchParams.page - 1) * searchParams.pageSize,
     orderBy: directionFn(sortBy),
     extras: {
-      totalRecords: db.$count(schema[table], and(...where)).as("totalRecords"),
+      totalRecords: db.$count(schema[table], and(...where)).as('totalRecords'),
     },
   };
 }

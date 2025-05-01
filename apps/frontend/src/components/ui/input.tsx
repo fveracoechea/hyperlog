@@ -46,7 +46,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, disabled, icon, rightBtn, error = false, ...props }, ref) => {
     return (
       <div className={wrapper({ disabled, error })}>
-        {icon && <span className="pl-2">{icon}</span>}
+        {icon && <span className='pl-2'>{icon}</span>}
         <input
           type={type}
           className={cn(input, className)}

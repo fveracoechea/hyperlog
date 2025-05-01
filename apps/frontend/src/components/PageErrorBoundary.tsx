@@ -1,4 +1,4 @@
-import { Link, isRouteErrorResponse } from 'react-router';
+import { isRouteErrorResponse, Link } from 'react-router';
 
 import { Link2OffIcon } from 'lucide-react';
 
@@ -28,22 +28,22 @@ export function PageErrorBoundary({ error }: { error: unknown }) {
   }
 
   return (
-    <section className="mx-auto flex flex-1 items-center pb-10">
-      <div className="flex flex-col items-center gap-4">
-        <Link2OffIcon className="stroke-cpt-surface1 h-24 w-24" />
-        <div className="flex max-w-lg flex-col justify-center gap-0 text-center">
-          <Typography variant="large">{headline}</Typography>
+    <section className='mx-auto flex flex-1 items-center pb-10'>
+      <div className='flex flex-col items-center gap-4'>
+        <Link2OffIcon className='stroke-cpt-surface1 h-24 w-24' />
+        <div className='flex max-w-lg flex-col justify-center gap-0 text-center'>
+          <Typography variant='large'>{headline}</Typography>
           <Typography muted>{message}</Typography>
         </div>
         <Button asChild>
-          <Link to="/" replace>
+          <Link to='/' replace>
             Go to Homepage
           </Link>
         </Button>
 
         {stack && (
-          <div className="border-border max-w-full rounded-md border p-2 text-sm">
-            <pre className="max-w-screen-2xl overflow-x-auto p-4">
+          <div className='border-border max-w-full rounded-md border p-2 text-sm'>
+            <pre className='max-w-screen-2xl overflow-x-auto p-4'>
               <code>{stack}</code>
             </pre>
           </div>

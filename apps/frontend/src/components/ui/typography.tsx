@@ -1,7 +1,7 @@
 import type { ComponentPropsWithRef, ElementType } from 'react';
 import { Link, type LinkProps, NavLink, type NavLinkProps } from 'react-router';
 
-import { type VariantProps, cva } from '@/lib/cva';
+import { cva, type VariantProps } from '@/lib/cva';
 import { cn } from '@/lib/utils';
 
 type H1Props = {
@@ -88,19 +88,20 @@ const typography = cva({
   },
 });
 
-type Props = (
-  | H1Props
-  | H2Props
-  | H3Props
-  | H4Props
-  | PProps
-  | LabelProps
-  | SpanProps
-  | RouterLinkProps
-  | RouterNavLinkProps
-  | ALinkProps
-) &
-  VariantProps<typeof typography>;
+type Props =
+  & (
+    | H1Props
+    | H2Props
+    | H3Props
+    | H4Props
+    | PProps
+    | LabelProps
+    | SpanProps
+    | RouterLinkProps
+    | RouterNavLinkProps
+    | ALinkProps
+  )
+  & VariantProps<typeof typography>;
 
 export function Typography(props: Partial<Props>) {
   const { as: element, variant, className, muted, link: isLink, ...otherProps } = props;

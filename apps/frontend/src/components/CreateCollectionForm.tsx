@@ -20,53 +20,55 @@ export function CreateCollectionForm() {
   return (
     <fetcher.Form
       noValidate
-      method="POST"
-      action="/api/collections"
+      method='POST'
+      action='/api/collections'
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4"
+      className='flex flex-col gap-4'
     >
-      <div className="flex flex-col gap-4">
+      <div className='flex flex-col gap-4'>
         <FormField
-          label="Name"
+          label='Name'
           required
-          placeholder="e.g. Recipes"
+          placeholder='e.g. Recipes'
           {...register('name')}
           errorMessage={formState.errors.name?.message}
         />
 
         <Controller
           control={control}
-          name="color"
+          name='color'
           render={({ field }) => {
             return <ColorPicker {...field} value={field.value ?? undefined} />;
           }}
         />
 
         <FormField
-          variant="textarea"
-          label="Description"
-          className="resize-none"
-          placeholder="The purpose of this collection"
+          variant='textarea'
+          label='Description'
+          className='resize-none'
+          placeholder='The purpose of this collection'
           {...register('description')}
         />
       </div>
       <DialogFooter>
         <DialogClose asChild>
-          <Button type="button" variant="ghost">
+          <Button type='button' variant='ghost'>
             Close
           </Button>
         </DialogClose>
 
-        {formState.isSubmitting ? (
-          <Button disabled type="button" className="min-w-28">
-            <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
-          </Button>
-        ) : (
-          <Button type="submit">
-            <PlusIcon />
-            Create Collection
-          </Button>
-        )}
+        {formState.isSubmitting
+          ? (
+            <Button disabled type='button' className='min-w-28'>
+              <LoaderCircleIcon className='min-h-5 min-w-5 animate-spin' />
+            </Button>
+          )
+          : (
+            <Button type='submit'>
+              <PlusIcon />
+              Create Collection
+            </Button>
+          )}
       </DialogFooter>
     </fetcher.Form>
   );

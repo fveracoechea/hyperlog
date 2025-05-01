@@ -48,7 +48,6 @@ const DrawerContent = React.forwardRef<
       className={cn(
         'fixed bottom-0 right-0 top-0 z-10 flex w-full max-w-screen-md outline-none',
         'border-cpt-overlay1 bg-cpt-mantle z-50 border-l',
-
         className,
       )}
       {...props}
@@ -59,7 +58,7 @@ const DrawerContent = React.forwardRef<
           'bg-cpt-surface1 hover:bg-cpt-surface2 transition-colors',
         )}
       />
-      <div className="flex h-full w-full flex-1 flex-col">{children}</div>
+      <div className='flex h-full w-full flex-1 flex-col'>{children}</div>
     </DrawerPrimitive.Content>
   </DrawerPortal>
 ));
@@ -85,7 +84,7 @@ const DrawerTitle = React.forwardRef<
   { className?: string; children: React.ReactNode }
 >((props, ref) => (
   <DrawerPrimitive.Title ref={ref} asChild>
-    <Typography as="h2" variant="large" {...props} />
+    <Typography as='h2' variant='large' {...props} />
   </DrawerPrimitive.Title>
 ));
 DrawerTitle.displayName = DrawerPrimitive.Title.displayName;
@@ -95,21 +94,21 @@ const DrawerDescription = React.forwardRef<
   { className?: string; children: React.ReactNode }
 >((props, ref) => (
   <DrawerPrimitive.Description ref={ref} asChild>
-    <Typography variant="base" as="p" muted {...props} />
+    <Typography variant='base' as='p' muted {...props} />
   </DrawerPrimitive.Description>
 ));
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
 
 export {
   Drawer,
-  DrawerPortal,
-  DrawerOverlay,
-  DrawerTrigger,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
-  DrawerHeader,
-  DrawerFooter,
-  DrawerBody,
-  DrawerTitle,
   DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerPortal,
+  DrawerTitle,
+  DrawerTrigger,
 };

@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef } from 'react';
 
-import { type VariantProps, cva } from '@/lib/cva';
+import { cva, type VariantProps } from '@/lib/cva';
 import clsx from 'clsx';
 import { CheckIcon } from 'lucide-react';
 
@@ -57,16 +57,16 @@ type Props = {
 
 export function ColorPicker({ onChange, value, ...otherProps }: Props) {
   return (
-    <div className="flex w-full flex-col gap-1">
-      <Typography as="label">Color</Typography>
-      <div className="grid grid-cols-4 gap-2">
-        {ColorNames.map(color => {
+    <div className='flex w-full flex-col gap-1'>
+      <Typography as='label'>Color</Typography>
+      <div className='grid grid-cols-4 gap-2'>
+        {ColorNames.map((color) => {
           const isActive = color === value;
           return (
             <Button
-              variant="outline"
-              type="button"
-              size="sm"
+              variant='outline'
+              type='button'
+              size='sm'
               key={color}
               onClick={() => onChange(color)}
               className={clsx(
@@ -76,9 +76,9 @@ export function ColorPicker({ onChange, value, ...otherProps }: Props) {
               {...otherProps}
             >
               <span className={colorPicker({ color })}>
-                {isActive && <CheckIcon className="stroke-cpt-mantle h-4 w-4" />}
+                {isActive && <CheckIcon className='stroke-cpt-mantle h-4 w-4' />}
               </span>
-              <Typography variant="small" className="capitalize">
+              <Typography variant='small' className='capitalize'>
                 {color}
               </Typography>
             </Button>

@@ -17,23 +17,23 @@ type SideNavProps = {
 function SideNav(props: SideNavProps) {
   const { links, type } = props;
   return (
-    <nav className="flex flex-col gap-1">
-      <Typography as="h3" variant="base">
+    <nav className='flex flex-col gap-1'>
+      <Typography as='h3' variant='base'>
         {type === 'collections' && 'Collections'}
         {type === 'tags' && 'Tags'}
       </Typography>
-      <ul className="flex flex-col gap-0">
-        {links.map(link => (
+      <ul className='flex flex-col gap-0'>
+        {links.map((link) => (
           <li key={link.id}>
             <Button
-              variant="ghost"
-              size="sm"
-              className="[&.active]:text-primary text-muted-foreground flex flex-1 items-center justify-start gap-2 text-sm 2xl:text-base"
+              variant='ghost'
+              size='sm'
+              className='[&.active]:text-primary text-muted-foreground flex flex-1 items-center justify-start gap-2 text-sm 2xl:text-base'
               asChild
             >
               <NavLink to={`/${type}/${link.id}`}>
                 {type === 'collections' && (
-                  <CollectionIcon size="small" color={link.color ?? undefined} />
+                  <CollectionIcon size='small' color={link.color ?? undefined} />
                 )}
                 {type === 'tags' && (
                   <TagIcon
@@ -43,7 +43,7 @@ function SideNav(props: SideNavProps) {
                     )}
                   />
                 )}
-                <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
+                <span className='overflow-hidden overflow-ellipsis whitespace-pre text-inherit'>
                   {link.name}
                 </span>
               </NavLink>
@@ -66,8 +66,8 @@ export function Sidebar() {
         'border-muted overflow-y-auto border-r border-solid',
       )}
     >
-      <SideNav type="collections" links={data.collections ?? []} />
-      <SideNav type="tags" links={data.tags ?? []} />
+      <SideNav type='collections' links={data.collections ?? []} />
+      <SideNav type='tags' links={data.tags ?? []} />
     </aside>
   );
 }

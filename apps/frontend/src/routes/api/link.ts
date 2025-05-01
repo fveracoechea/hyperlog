@@ -20,20 +20,20 @@ async function fetchLinkData(url: string) {
 
     const title = $('meta[property="og:title"]').attr('content') || $('title').text() || null;
 
-    const descriptionNode =
-      $('head meta[property="og:description"]') || $('head meta[name="description"]');
+    const descriptionNode = $('head meta[property="og:description"]') ||
+      $('head meta[name="description"]');
 
-    const image =
-      $('head meta[property="og:image"]').attr('content') ||
+    const image = $('head meta[property="og:image"]').attr('content') ||
       $('head meta[property="twitter:image"]').attr('content');
 
     // Look for favicon link tags
-    let faviconUrl =
-      $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href');
+    let faviconUrl = $('link[rel="icon"]').attr('href') ||
+      $('link[rel="shortcut icon"]').attr('href');
 
     // Ensure the URL is absolute
-    if (faviconUrl && !faviconUrl.startsWith('http'))
+    if (faviconUrl && !faviconUrl.startsWith('http')) {
       faviconUrl = new URL(faviconUrl, origin).href;
+    }
 
     return {
       title,
@@ -76,13 +76,14 @@ export async function action({ request, params: { linkId } }: Route.ActionArgs) 
 
     const title = data.title || linkData.title;
 
-    if (!title)
+    if (!title) {
       return {
         defaultValues,
         errors: {
           title: { type: 'required', message: 'No page Title found. Please provide one.' },
         } satisfies FieldErrors<CreateLinkFormFields>,
       };
+    }
 
     const link = await createLink({ ...data, ...linkData, title, ownerId: user.id });
     return redirect(`/links/${link.id}`, { headers });

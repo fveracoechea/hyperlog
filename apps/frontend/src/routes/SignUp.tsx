@@ -37,66 +37,66 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
         'from-cpt-crust to-cpt-base bg-gradient-to-b',
       )}
     >
-      <div className="flex gap-2">
-        <Unlink width="36" height="36" className="text-primary" />
-        <Typography as="h1" variant="title" className="text-4xl">
+      <div className='flex gap-2'>
+        <Unlink width='36' height='36' className='text-primary' />
+        <Typography as='h1' variant='title' className='text-4xl'>
           Hyperlog
         </Typography>
       </div>
-      <Card className="w-full max-w-96">
+      <Card className='w-full max-w-96'>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <UserRoundPlus width="24" height="24" />
-            <Typography as="h2" variant="lead" className="text-2xl">
+          <CardTitle className='flex items-center gap-2'>
+            <UserRoundPlus width='24' height='24' />
+            <Typography as='h2' variant='lead' className='text-2xl'>
               Sign Up
             </Typography>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form method="POST" noValidate className="flex flex-col gap-4">
-            <FormField label="Name" name="name" required errorMessage={errors?.name?.at(0)} />
+          <Form method='POST' noValidate className='flex flex-col gap-4'>
+            <FormField label='Name' name='name' required errorMessage={errors?.name?.at(0)} />
             <FormField
-              label="Email"
-              type="email"
-              name="email"
+              label='Email'
+              type='email'
+              name='email'
               required
               errorMessage={errors?.email?.at(0)}
             />
             <FormField
-              label="Password"
-              type="password"
-              name="password"
+              label='Password'
+              type='password'
+              name='password'
               required
               errorMessage={errors?.password?.at(0)}
             />
             <FormField
-              label="Confirm Password"
-              type="password"
+              label='Confirm Password'
+              type='password'
               required
-              name="verifyPassword"
+              name='verifyPassword'
               errorMessage={errors?.verifyPassword?.at(0)}
             />
 
             {navigation.state === 'idle' && message && (
-              <Alert variant="destructive">{message}</Alert>
+              <Alert variant='destructive'>{message}</Alert>
             )}
 
-            <Button className="mt-1">
-              {navigation.state === 'loading' ? (
-                <LoaderCircleIcon className="animate-spin" />
-              ) : (
-                'Sign Up'
-              )}
+            <Button className='mt-1'>
+              {navigation.state === 'loading'
+                ? <LoaderCircleIcon className='animate-spin' />
+                : (
+                  'Sign Up'
+                )}
             </Button>
           </Form>
         </CardContent>
         <CardFooter>
           <Typography
-            as="link"
-            to="/login"
-            variant="small"
+            as='link'
+            to='/login'
+            variant='small'
             muted
-            className="w-full text-center"
+            className='w-full text-center'
           >
             Already have an account? log-in here.
           </Typography>

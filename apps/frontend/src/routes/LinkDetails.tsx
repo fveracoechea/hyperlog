@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Form, Link, data, redirect, useFetcher, useNavigation } from 'react-router';
+import { data, Form, Link, redirect, useFetcher, useNavigation } from 'react-router';
 
 import {
   addToFavorites,
@@ -66,89 +66,91 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
   const fetcher = useFetcher();
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  const isTogglingFavorite =
-    navigation.state !== 'idle' && Boolean(navigation.formData?.has('toggleFavorite'));
+  const isTogglingFavorite = navigation.state !== 'idle' &&
+    Boolean(navigation.formData?.has('toggleFavorite'));
 
   return (
     <>
-      <div className="flex flex-col gap-2.5">
+      <div className='flex flex-col gap-2.5'>
         <Banner
           title={link.title}
           subtitle={link.description}
           iconNode={
             <LazyFavicon
               src={link.favicon ?? undefined}
-              width="28px"
-              height="28px"
-              className="min-h-7 min-w-7"
+              width='28px'
+              height='28px'
+              className='min-h-7 min-w-7'
             />
           }
         />
-        <div className="flex gap-2">
+        <div className='flex gap-2'>
           <GoBackButton />
           <DeleteLinkDialog
             link={link}
             trigger={
-              <Button size="sm" variant="outline">
+              <Button size='sm' variant='outline'>
                 <TrashIcon />
                 <span>Delete Link</span>
               </Button>
             }
           />
-          <Button size="sm" variant="outline" asChild>
+          <Button size='sm' variant='outline' asChild>
             <Link to={`/links/${link.id}/edit`} replace>
               <PencilIcon />
               <span>Edit Link</span>
             </Link>
           </Button>
-          <Form method="PUT">
+          <Form method='PUT'>
             <Button
-              size="sm"
+              size='sm'
               variant={link.isPinned ? 'secondary' : 'default'}
-              name="toggleFavorite"
+              name='toggleFavorite'
               value={String(Boolean(link.isPinned))}
             >
               {isTogglingFavorite && (
                 <>
-                  <LoaderCircle className="stroke-primary h-4 w-4 animate-spin" />
+                  <LoaderCircle className='stroke-primary h-4 w-4 animate-spin' />
                   <span>Updating Favories</span>
                 </>
               )}
 
               {!isTogglingFavorite &&
-                (link.isPinned ? (
-                  <>
-                    <StarOffIcon /> Remove from Favorites
-                  </>
-                ) : (
-                  <>
-                    <StarIcon /> Add to Favorites
-                  </>
-                ))}
+                (link.isPinned
+                  ? (
+                    <>
+                      <StarOffIcon /> Remove from Favorites
+                    </>
+                  )
+                  : (
+                    <>
+                      <StarIcon /> Add to Favorites
+                    </>
+                  ))}
             </Button>
           </Form>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(400px,1fr)] 2xl:gap-6">
-        <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4">
+      <div className='grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(400px,1fr)] 2xl:gap-6'>
+        <div className='border-border relative flex h-fit flex-col gap-4 rounded-md border p-4'>
           <fetcher.Form
-            method="PUT"
+            method='PUT'
             action={`/api/link/${link.id}`}
             ref={formRef}
-            className="hidden"
+            className='hidden'
           />
           <LineItem
-            title="Link"
+            title='Link'
             Icon={LinkIcon}
-            className="col-span-2"
-            iconClassName="stroke-primary"
+            className='col-span-2'
+            iconClassName='stroke-primary'
           >
             <Typography
-              as="a"
+              as='a'
               link
-              rel="noreferrer"
-              target="_blank"
+              rel='noreferrer'
+              target='_blank'
               href={link.url}
               onClick={() => formRef.current?.requestSubmit()}
             >
@@ -156,79 +158,83 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
             </Typography>
           </LineItem>
 
-          <LineItem title="Tag" Icon={TagIcon} iconClassName={link.tag && 'stroke-primary'}>
-            {link.tag ? (
-              <Typography
-                as="link"
-                className="text-foreground no-underline"
-                to={`/tags/${link.tagId}`}
-              >
-                {link.tag?.name}
-              </Typography>
-            ) : (
-              <Typography muted className="font-light">
-                No tag
-              </Typography>
-            )}
+          <LineItem title='Tag' Icon={TagIcon} iconClassName={link.tag && 'stroke-primary'}>
+            {link.tag
+              ? (
+                <Typography
+                  as='link'
+                  className='text-foreground no-underline'
+                  to={`/tags/${link.tagId}`}
+                >
+                  {link.tag?.name}
+                </Typography>
+              )
+              : (
+                <Typography muted className='font-light'>
+                  No tag
+                </Typography>
+              )}
           </LineItem>
 
           <LineItem
-            title="Collection"
+            title='Collection'
             Icon={FolderIcon}
             iconStyle={{
               stroke: link.collection?.color ?? undefined,
               fill: link.collection?.color ?? undefined,
             }}
           >
-            {link.collection ? (
-              <Typography
-                as="link"
-                className="text-foreground no-underline"
-                to={`/collections/${link.collectionId}`}
-              >
-                {link.collection?.name}
-              </Typography>
-            ) : (
-              <Typography muted className="font-light">
-                No collection
-              </Typography>
-            )}
+            {link.collection
+              ? (
+                <Typography
+                  as='link'
+                  className='text-foreground no-underline'
+                  to={`/collections/${link.collectionId}`}
+                >
+                  {link.collection?.name}
+                </Typography>
+              )
+              : (
+                <Typography muted className='font-light'>
+                  No collection
+                </Typography>
+              )}
           </LineItem>
 
           {/* TODO: add rich markdown editor */}
-          <LineItem title="Notes" className="col-span-2">
-            {link.notes ? (
-              <pre className="whitespace-pre-line font-sans">{link.notes}</pre>
-            ) : (
-              <Typography muted className="font-light">
-                No notes yet
-              </Typography>
-            )}
+          <LineItem title='Notes' className='col-span-2'>
+            {link.notes
+              ? <pre className='whitespace-pre-line font-sans'>{link.notes}</pre>
+              : (
+                <Typography muted className='font-light'>
+                  No notes yet
+                </Typography>
+              )}
           </LineItem>
         </div>
 
-        <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4">
-          <LineItem title="Last Saved" Icon={SaveIcon}>
-            <Typography className="leading-none">
+        <div className='border-border relative flex h-fit flex-col gap-4 rounded-md border p-4'>
+          <LineItem title='Last Saved' Icon={SaveIcon}>
+            <Typography className='leading-none'>
               {formatDate(link.updatedAt ?? new Date(), 'PPPp')}
             </Typography>
           </LineItem>
 
-          <LineItem title="Last Visit" Icon={CalendarClockIcon}>
-            <Typography className="leading-none">
+          <LineItem title='Last Visit' Icon={CalendarClockIcon}>
+            <Typography className='leading-none'>
               {formatDistanceToNow(link.lastVisit ?? new Date(), { addSuffix: true })}
             </Typography>
           </LineItem>
 
-          <LineItem title="Views" Icon={EyeIcon}>
-            <Typography className="leading-none">{link.views}</Typography>
+          <LineItem title='Views' Icon={EyeIcon}>
+            <Typography className='leading-none'>{link.views}</Typography>
           </LineItem>
-          <LineItem title="Thumbnail">
+          <LineItem title='Thumbnail'>
             <img
-              role="presentation"
-              height="630"
-              width="1200"
-              className="border-border rounded-md border"
+              role='presentation'
+              height='630'
+              width='1200'
+              className='border-border rounded-md border'
               src={link.previewImage ?? undefined}
             />
           </LineItem>

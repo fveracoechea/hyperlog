@@ -38,22 +38,24 @@ export function PaginationButton(
   const { title, Icon } = PaginationProps[variant];
   return (
     <Button
-      variant="ghost"
-      size="sm"
+      variant='ghost'
+      size='sm'
       disabled={disabled}
       title={title}
       className={clsx('px-1.5', loading && 'cursor-wait')}
       asChild
     >
-      {disabled || !to ? (
-        <button {...btnProps}>
-          <Icon className="min-h-5 min-w-5" />
-        </button>
-      ) : (
-        <Link to={to}>
-          <Icon className="min-h-5 min-w-5" />
-        </Link>
-      )}
+      {disabled || !to
+        ? (
+          <button {...btnProps}>
+            <Icon className='min-h-5 min-w-5' />
+          </button>
+        )
+        : (
+          <Link to={to}>
+            <Icon className='min-h-5 min-w-5' />
+          </Link>
+        )}
     </Button>
   );
 }
@@ -67,8 +69,7 @@ export function PaginationForm(props: { params: PaginationSchemaType; totalRecor
   const loading = navigation.state === 'loading';
   const lastPage = Math.ceil(totalRecords / params.pageSize);
 
-  const isSearching =
-    navigation.state !== 'idle' &&
+  const isSearching = navigation.state !== 'idle' &&
     (new URLSearchParams(navigation.location.search).has('search') ||
       typeof params.search !== 'undefined');
 
@@ -85,42 +86,42 @@ export function PaginationForm(props: { params: PaginationSchemaType; totalRecor
   }
 
   return (
-    <div className="flex gap-5">
-      <Form className="flex flex-1 gap-4">
-        <div className="w-1/2 min-w-80 max-w-screen-sm">
+    <div className='flex gap-5'>
+      <Form className='flex flex-1 gap-4'>
+        <div className='w-1/2 min-w-80 max-w-screen-sm'>
           <SearchInput
             key={params.search}
             loading={isSearching}
             defaultValue={params.search || ''}
-            placeholder="Search by Title or URL"
+            placeholder='Search by Title or URL'
             onClearSearch={onClearSearch}
           />
         </div>
       </Form>
-      <div className="flex items-center gap-0">
+      <div className='flex items-center gap-0'>
         <PaginationButton
-          variant="first"
+          variant='first'
           disabled={params.page === 1}
           to={getPaginationLink(1)}
           loading={loading}
         />
         <PaginationButton
-          variant="previous"
+          variant='previous'
           disabled={params.page === 1}
           to={getPaginationLink(Math.max(1, params.page - 1))}
           loading={loading}
         />
-        <Typography muted variant="small" className="px-2">
+        <Typography muted variant='small' className='px-2'>
           Page {params.page} of {lastPage}
         </Typography>
         <PaginationButton
-          variant="next"
+          variant='next'
           disabled={params.page === lastPage}
           to={getPaginationLink(Math.min(lastPage, params.page + 1))}
           loading={loading}
         />
         <PaginationButton
-          variant="last"
+          variant='last'
           disabled={params.page === lastPage}
           to={getPaginationLink(lastPage)}
           loading={loading}

@@ -1,6 +1,6 @@
-import { Context } from "hono";
-import { createMiddleware } from "hono/factory";
-import { ContentfulStatusCode } from "hono/utils/http-status";
+import { Context } from 'hono';
+import { createMiddleware } from 'hono/factory';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 
 function makeSuccessResponseHandler(ctx: Context) {
   return <D, S extends ContentfulStatusCode>(data: D, status?: S) =>
@@ -10,7 +10,7 @@ function makeSuccessResponseHandler(ctx: Context) {
         data,
         error: null,
       },
-      status
+      status,
     );
 }
 
@@ -22,7 +22,7 @@ function makeErrorResponseHandler(ctx: Context) {
         data: null,
         error,
       },
-      status
+      status,
     );
 }
 
@@ -38,14 +38,14 @@ export type SuccessResponseHandler = ReturnType<typeof makeSuccessResponseHandle
  * return ctx.var.success(data);
  * return ctx.var.error({ message: "No record found" }, 404)
  * ```
- * */
+ */
 export const jsonResponseMiddleware = createMiddleware<{
   Variables: {
     success: SuccessResponseHandler;
     error: ErrorResponseHandler;
   };
 }>(async (ctx, next) => {
-  ctx.set("success", makeSuccessResponseHandler(ctx));
-  ctx.set("error", makeErrorResponseHandler(ctx));
+  ctx.set('success', makeSuccessResponseHandler(ctx));
+  ctx.set('error', makeErrorResponseHandler(ctx));
   await next();
 });

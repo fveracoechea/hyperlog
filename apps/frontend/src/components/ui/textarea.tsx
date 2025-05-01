@@ -17,11 +17,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           error
             ? 'ring-destructive/60 focus-visible:!ring-destructive'
             : readOnly
-              ? 'ring-input'
-              : [
-                  'hover:ring-1 focus-visible:ring-1',
-                  'ring-input hover:ring-ring/40 focus-visible:!ring-ring',
-                ],
+            ? 'ring-input'
+            : [
+              'hover:ring-1 focus-visible:ring-1',
+              'ring-input hover:ring-ring/40 focus-visible:!ring-ring',
+            ],
           className,
         )}
         ref={ref}

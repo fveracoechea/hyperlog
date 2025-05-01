@@ -2,10 +2,10 @@ import { data } from 'react-router';
 
 import { isNonNullable } from '@/lib/helpers';
 import type { CreateCollectionFormFields, EditCollectionFormFields } from '@/lib/zod';
-import { SQL, and, desc, eq, inArray, isNotNull, isNull, notInArray, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNotNull, isNull, notInArray, SQL, sql } from 'drizzle-orm';
 import { fromPromise } from 'neverthrow';
 
-import { type TransactionType, db, isSQLiteErrorCode } from '../db';
+import { db, isSQLiteErrorCode, type TransactionType } from '../db';
 import * as schema from '../schema';
 
 export type CollectionSelectType = typeof schema.collection.$inferSelect;
@@ -36,8 +36,9 @@ export async function getMyCollections(
       if (onlySubCollections) filters.push(isNotNull(schema.collection.parentId));
       if (onlyParentCollections) filters.push(isNull(schema.collection.parentId));
 
-      if (exclude && exclude.length > 0)
+      if (exclude && exclude.length > 0) {
         filters.push(notInArray(schema.collection.id, exclude));
+      }
 
       return and(...filters);
     },
@@ -90,7 +91,7 @@ export async function getAllCollections(userId: string) {
         eq(fields.userId, userId),
         notInArray(
           fields.collectionId,
-          myCollections.map(c => c.id),
+          myCollections.map((c) => c.id),
         ),
       );
     },
@@ -99,8 +100,8 @@ export async function getAllCollections(userId: string) {
   return {
     myCollections,
     otherCollections: sharedCollections
-      .filter(c => typeof c.collection.parentId !== 'string')
-      .map(c => c.collection),
+      .filter((c) => typeof c.collection.parentId !== 'string')
+      .map((c) => c.collection),
   };
 }
 
@@ -110,12 +111,12 @@ export function createCollection(ownerId: string, formData: CreateCollectionForm
       .insert(schema.collection)
       .values({ ...formData, ownerId })
       .returning()
-      .then(data => {
+      .then((data) => {
         const collection = data.at(0);
         if (!collection) throw new Error('No data');
         return collection;
       }),
-    err => {
+    (err) => {
       if (isSQLiteErrorCode(err, 'SQLITE_CONSTRAINT_UNIQUE')) {
         return 'COLLECTION_NAME_ALREADY_EXISTS';
       }
@@ -151,7 +152,7 @@ async function updateCollectionLinks(
         eq(schema.link.collectionId, collectionId),
         notInArray(
           schema.link.id,
-          links.map(l => l.databaseId),
+          links.map((l) => l.databaseId),
         ),
       ),
     );
@@ -163,7 +164,7 @@ async function updateCollectionLinks(
     .where(
       inArray(
         schema.link.id,
-        links.map(l => l.databaseId),
+        links.map((l) => l.databaseId),
       ),
     );
 }
@@ -175,10 +176,10 @@ async function updateSubCollections(
   subCollections: EditCollectionFormFields['subCollections'],
 ) {
   try {
-    const IDs = subCollections.map(s => s.databaseId).filter(isNonNullable);
+    const IDs = subCollections.map((s) => s.databaseId).filter(isNonNullable);
 
     const newSubcollections = subCollections
-      .filter(s => !s.databaseId)
+      .filter((s) => !s.databaseId)
       .map(({ databaseId: _, ...s }) => ({ ...s, parentId, ownerId }));
 
     await tx
@@ -209,7 +210,7 @@ export async function editCollection(
     throw data('You are not allowed to edit this collection', { status: 403 });
   }
 
-  db.transaction(async tx => {
+  db.transaction(async (tx) => {
     const { subCollections, links, ...edit } = formData;
     await tx.update(schema.collection).set(edit).where(eq(schema.collection.id, collectionId));
     await updateCollectionLinks(tx, collectionId, links);

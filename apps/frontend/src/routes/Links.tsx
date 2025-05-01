@@ -30,13 +30,13 @@ export default function Links({ loaderData }: Route.ComponentProps) {
   const navigation = useNavigation();
 
   return (
-    <section className="flex flex-col gap-4">
-      <Banner title="Links" Icon={LinkIcon} subtitle="All links from every collection" />
+    <section className='flex flex-col gap-4'>
+      <Banner title='Links' Icon={LinkIcon} subtitle='All links from every collection' />
 
       <PaginationForm {...loaderData} />
 
-      <div className="grid grid-cols-1 gap-6 pt-2 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
-        {loaderData.links.map(link => (
+      <div className='grid grid-cols-1 gap-6 pt-2 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4'>
+        {loaderData.links.map((link) => (
           <LinkCard isLoading={navigation.state === 'loading'} key={link.id} link={link} />
         ))}
       </div>

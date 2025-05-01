@@ -14,7 +14,6 @@
     "npm:@catppuccin/tailwindcss@~0.1.6": "0.1.6_tailwindcss@3.4.17__postcss@8.5.3",
     "npm:@deno/vite-plugin@^1.0.4": "1.0.4_vite@6.3.3__@types+node@22.15.3__picomatch@4.0.2_@types+node@22.15.3",
     "npm:@faker-js/faker@^9.6.0": "9.7.0",
-    "npm:@hono/client@^0.0.3": "0.0.3",
     "npm:@hono/zod-validator@0.5": "0.5.0_hono@4.7.8_zod@3.24.3",
     "npm:@hookform/resolvers@^5.0.1": "5.0.1_react-hook-form@7.56.1__react@19.1.0_react@19.1.0",
     "npm:@libsql/client@~0.15.2": "0.15.4",
@@ -45,7 +44,6 @@
     "npm:clsx@^2.1.1": "2.1.1",
     "npm:cross-env@^7.0.3": "7.0.3",
     "npm:date-fns@^4.1.0": "4.1.0",
-    "npm:dotenv@^16.4.7": "16.5.0",
     "npm:drizzle-kit@0.31": "0.31.0_esbuild@0.25.3",
     "npm:drizzle-orm@~0.43.1": "0.43.1_@libsql+client@0.15.4",
     "npm:hono@^4.7.8": "4.7.8",
@@ -556,9 +554,6 @@
     },
     "@hexagon/base64@1.1.28": {
       "integrity": "sha512-lhqDEAvWixy3bZ+UOYbPwUbBkwBq5C1LAJ/xPC8Oi+lL54oyakv/npbA0aU2hgCsx/1NUd4IBvV03+aUBWxerw=="
-    },
-    "@hono/client@0.0.3": {
-      "integrity": "sha512-1TrYdppLelv39uCqevePjKUeyf4AoKYWQ+/qfNtRzY8OPBur78XA1Gtv3Pi08uXT6GOuQN5fi3IFUwMsxnEhcQ=="
     },
     "@hono/zod-validator@0.5.0_hono@4.7.8_zod@3.24.3": {
       "integrity": "sha512-ds5bW6DCgAnNHP33E3ieSbaZFd5dkV52ZjyaXtGoR06APFrCtzAsKZxTHwOrJNBdXsi0e5wNwo5L4nVEVnJUdg==",
@@ -1822,9 +1817,6 @@
         "domelementtype",
         "domhandler"
       ]
-    },
-    "dotenv@16.5.0": {
-      "integrity": "sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg=="
     },
     "drizzle-kit@0.31.0_esbuild@0.25.3": {
       "integrity": "sha512-pcKVT+GbfPA+bUovPIilgVOoq+onNBo/YQBG86sf3/GFHkN6lRJPm1l7dKN0IMAk57RQoIm4GUllRrasLlcaSg==",
@@ -3281,6 +3273,7 @@
       "jsr:@std/dotenv@~0.225.3",
       "jsr:@std/http@^1.0.15",
       "jsr:@std/path@^1.0.9",
+      "npm:hono@^4.7.8",
       "npm:zod@^3.24.2"
     ],
     "members": {
@@ -3291,8 +3284,7 @@
           "npm:better-auth@^1.2.7",
           "npm:cheerio@1",
           "npm:drizzle-kit@0.31",
-          "npm:drizzle-orm@~0.43.1",
-          "npm:hono@^4.7.8"
+          "npm:drizzle-orm@~0.43.1"
         ]
       },
       "apps/browser-extension": {
@@ -3311,7 +3303,6 @@
             "npm:@catppuccin/tailwindcss@~0.1.6",
             "npm:@deno/vite-plugin@^1.0.4",
             "npm:@faker-js/faker@^9.6.0",
-            "npm:@hono/client@^0.0.3",
             "npm:@hookform/resolvers@^5.0.1",
             "npm:@libsql/client@~0.15.2",
             "npm:@radix-ui/react-checkbox@^1.1.5",
@@ -3336,7 +3327,6 @@
             "npm:clsx@^2.1.1",
             "npm:cross-env@^7.0.3",
             "npm:date-fns@^4.1.0",
-            "npm:dotenv@^16.4.7",
             "npm:isbot@^5.1.25",
             "npm:lucide-react@0.487",
             "npm:neverthrow@^8.2.0",

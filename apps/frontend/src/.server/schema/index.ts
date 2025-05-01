@@ -14,7 +14,7 @@ const timestamps = {
 /**
  * Identity Column
  * @docs https://orm.drizzle.team/docs/column-types/pg#identity-columns
- * */
+ */
 const id = t
   .text()
   .primaryKey()
@@ -72,7 +72,7 @@ export const collection = t.sqliteTable(
       .references(() => user.id, { onDelete: 'cascade' }),
     ...timestamps,
   },
-  table => ({
+  (table) => ({
     uniqueOwnerAndName: t.unique().on(table.name, table.ownerId, table.parentId),
   }),
 );
@@ -100,7 +100,7 @@ export const userToCollection = t.sqliteTable(
       .notNull()
       .references(() => collection.id, { onDelete: 'cascade' }),
   },
-  table => ({
+  (table) => ({
     uniqueUserToCollection: t.unique().on(table.userId, table.collectionId),
   }),
 );
@@ -125,7 +125,7 @@ export const tag = t.sqliteTable(
       .references(() => user.id, { onDelete: 'cascade' }),
     ...timestamps,
   },
-  table => ({
+  (table) => ({
     uniqueOwnerAndName: t.unique().on(table.name, table.ownerId),
   }),
 );

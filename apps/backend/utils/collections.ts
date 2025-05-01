@@ -1,29 +1,29 @@
-import z from "zod";
-import { and, desc, eq, inArray, isNotNull, isNull, notInArray, sql } from "drizzle-orm";
-import { HTTPException } from "hono/http-exception";
+import z from 'zod';
+import { and, desc, eq, inArray, isNotNull, isNull, notInArray, sql } from 'drizzle-orm';
+import { HTTPException } from 'hono/http-exception';
 
-import { EditCollectionFormFields } from "@hyperlog/schemas";
-import { isNonNullable } from "@hyperlog/ui";
+import { EditCollectionFormFields } from '@hyperlog/schemas';
+import { isNonNullable } from '@hyperlog/ui';
 
-import { db, schema, TransactionType } from "@/db/db.ts";
-import { zStringArray } from "@/utils/pagination.ts";
+import { db, schema, TransactionType } from '@/db/db.ts';
+import { zStringArray } from '@/utils/pagination.ts';
 
 export const CollectionQuerySchema = z.object({
   search: z.string().optional(),
   exclude: zStringArray,
-});
+}).optional();
 
 export function getCollections(args: {
-  type: "parent" | "child";
+  type: 'parent' | 'child';
   query: z.infer<typeof CollectionQuerySchema>;
   userId: string;
 }) {
-  const { query, type, userId } = args;
+  const { query = {}, type, userId } = args;
   const { search, exclude } = query;
 
   const filters = [
     eq(schema.collection.ownerId, userId),
-    type === "parent"
+    type === 'parent'
       ? isNull(schema.collection.parentId)
       : isNotNull(schema.collection.parentId),
   ];
@@ -55,16 +55,16 @@ export async function getCollectionDetails(userId: string, collectionId: string)
     db.query.userToCollection.findFirst({
       where: and(
         eq(schema.userToCollection.userId, userId),
-        eq(schema.userToCollection.collectionId, collectionId)
+        eq(schema.userToCollection.collectionId, collectionId),
       ),
     }),
   ]);
 
   if (!collection) {
-    error = new HTTPException(404, { message: "Collection not found." });
+    error = new HTTPException(404, { message: 'Collection not found.' });
   } else if (!sharedRelation && collection.ownerId !== userId) {
     error = new HTTPException(403, {
-      message: "You are not allowed to access this collection.",
+      message: 'You are not allowed to access this collection.',
     });
   }
 
@@ -89,7 +89,7 @@ export async function getCollectionDetails(userId: string, collectionId: string)
 export async function updateCollectionLinks(
   tx: TransactionType,
   collectionId: string,
-  links: EditCollectionFormFields["links"]
+  links: EditCollectionFormFields['links'],
 ) {
   // Update removed links if any
   await tx
@@ -100,9 +100,9 @@ export async function updateCollectionLinks(
         eq(schema.link.collectionId, collectionId),
         notInArray(
           schema.link.id,
-          links.map((l) => l.databaseId)
-        )
-      )
+          links.map((l) => l.databaseId),
+        ),
+      ),
     );
 
   // Update links with the new collection id
@@ -112,8 +112,8 @@ export async function updateCollectionLinks(
     .where(
       inArray(
         schema.link.id,
-        links.map((l) => l.databaseId)
-      )
+        links.map((l) => l.databaseId),
+      ),
     );
 }
 
@@ -121,7 +121,7 @@ export async function updateSubCollections(
   tx: TransactionType,
   parentId: string,
   ownerId: string,
-  subCollections: EditCollectionFormFields["subCollections"]
+  subCollections: EditCollectionFormFields['subCollections'],
 ) {
   try {
     const IDs = subCollections.map((s) => s.databaseId).filter(isNonNullable);
@@ -133,14 +133,14 @@ export async function updateSubCollections(
     await tx
       .delete(schema.collection)
       .where(
-        and(eq(schema.collection.parentId, parentId), notInArray(schema.collection.id, IDs))
+        and(eq(schema.collection.parentId, parentId), notInArray(schema.collection.id, IDs)),
       );
 
     if (newSubcollections.length > 0) {
       await tx.insert(schema.collection).values(newSubcollections);
     }
   } catch (error) {
-    console.warn("UPDATE SUB-COLLECTIONS ERROR");
+    console.warn('UPDATE SUB-COLLECTIONS ERROR');
     console.error(error);
     throw new HTTPException(500, { cause: error });
   }
@@ -151,10 +151,11 @@ export async function validateCollectionAccess(collectionId: string, userId: str
     where: eq(schema.collection.id, collectionId),
   });
 
-  if (!collection) return ["Collection not found.", 404] as const;
+  if (!collection) return ['Collection not found.', 404] as const;
 
-  if (collection.ownerId !== userId)
-    return ["You are not allowed to access this collection.", 403] as const;
+  if (collection.ownerId !== userId) {
+    return ['You are not allowed to access this collection.', 403] as const;
+  }
 
   return [null, null] as const;
 }

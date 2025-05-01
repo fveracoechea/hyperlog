@@ -27,12 +27,12 @@ export function LazyFavicon(props: ComponentPropsWithRef<'img'>) {
 
   return (
     <div ref={targetRef} style={{ height: imageProps.height, width: imageProps.width }}>
-      {!src || (status === 'error' && <Link2OffIcon className="stroke-cpt-overlay0" />)}
+      {!src || (status === 'error' && <Link2OffIcon className='stroke-cpt-overlay0' />)}
       {src && status === 'success' && (
         <img
-          alt="Favicon"
-          role="presentation"
-          loading="lazy"
+          alt='Favicon'
+          role='presentation'
+          loading='lazy'
           src={src}
           {...imageProps}
           className={clsx('rounded', imageProps.className)}

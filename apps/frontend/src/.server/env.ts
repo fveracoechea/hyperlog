@@ -19,7 +19,7 @@ const EnvSchema = z
     COOKIE_SECRET: zSecret,
     BETTER_AUTH_SECRET: zSecret,
   })
-  .transform(v => ({
+  .transform((v) => ({
     ...v,
     isDev: v.MODE === 'development',
     isProd: v.MODE === 'production',
@@ -33,7 +33,7 @@ function loadEnv() {
   } catch (error) {
     if (error instanceof z.ZodError) {
       let message = 'Missing required ENV variables: \n';
-      error.issues.forEach(issue => {
+      error.issues.forEach((issue) => {
         message += `- ${issue.path[0]} \n`;
       });
       const e = new Error(message);

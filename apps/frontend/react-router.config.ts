@@ -1,7 +1,7 @@
-import type { Config } from "@react-router/dev/config";
+import type { Config } from '@react-router/dev/config';
 
 const config: Config = {
-  appDirectory: "src",
+  appDirectory: 'src',
   ssr: false,
   future: {
     unstable_middleware: true,
