@@ -4,12 +4,24 @@ import { Banner } from '@/components/Banner';
 import { LinkCard } from '@/components/LinkCard';
 
 import type { Route } from './+types/Home';
+import { jsonHash } from 'remix-utils/json-hash';
+import { client } from '@/utility/honoClient.ts';
 
-export async function clientLoader({}: Route.ClientLoaderArgs) {
-  return {
-    favorites: [],
-    recentActivity: [],
-  };
+export function clientLoader({}: Route.ClientLoaderArgs) {
+  return jsonHash({
+    async favorites() {
+      const res = await client.api.link.favorites.$get();
+      const json = await res.json();
+      return json.data.links;
+    },
+    async recentActivity() {
+      const res = await client.api.link.$get({
+        query: { sortBy: 'lastVisit', direction: 'desc', pageSize: '12' },
+      });
+      const json = await res.json();
+      return json.data.links;
+    },
+  });
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {

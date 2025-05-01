@@ -32,18 +32,17 @@ export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
 
 export async function clientAction({ request }: Route.ActionArgs) {
   const formData = await parseFormData(request);
+
   const validation = await LoginSchema.safeParseAsync(formData);
   if (!validation.success) return { formErrors: validation.error.flatten() };
 
   const result = await authClient.signIn.email(validation.data);
-  console.log('client action', result);
   if (!result.error) return redirect('/');
 
-  console.warn('LOGIN ERROR', result.error);
   return { message: result.error.message };
 }
 
-export default function Login({ actionData, loaderData }: Route.ComponentProps) {
+export default function Login({ actionData }: Route.ComponentProps) {
   const navigation = useNavigation();
   const fieldErrors = actionData?.formErrors?.fieldErrors;
   const message = actionData?.message;
@@ -90,11 +89,9 @@ export default function Login({ actionData, loaderData }: Route.ComponentProps) 
               <Alert variant='destructive'>{message}</Alert>
             )}
             <Button className='mt-1'>
-              {navigation.state === 'submitting'
-                ? <LoaderCircleIcon className='animate-spin' />
-                : (
-                  'Log In'
-                )}
+              {navigation.state !== 'idle' ? <LoaderCircleIcon className='animate-spin' /> : (
+                'Log In'
+              )}
             </Button>
           </Form>
         </CardContent>
