@@ -10,8 +10,6 @@ import { jsonHash } from 'remix-utils/json-hash';
 import { client } from '@/utility/honoClient.ts';
 
 import type { Route } from './+types/Layout';
-import { useLoaderData } from 'npm:react-router@^7.5.3';
-import clsx from 'clsx';
 
 export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   return (
@@ -30,7 +28,7 @@ export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   );
 }
 
-export async function clientLoader({}: Route.ClientLoaderArgs) {
+export function clientLoader({}: Route.ClientLoaderArgs) {
   return jsonHash({
     async collections() {
       const response = await client.api.collection.parent.$get();
