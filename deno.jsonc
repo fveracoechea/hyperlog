@@ -21,7 +21,8 @@
       "tags": [
         "react",
         "recommended"
-      ]
+      ],
+      "exclude": ["no-sloppy-imports"]
     }
   },
   "fmt": {

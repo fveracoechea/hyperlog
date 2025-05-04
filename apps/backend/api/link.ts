@@ -6,9 +6,9 @@ import { zValidator } from '@hono/zod-validator';
 import { db, schema } from '@/db/db.ts';
 import { AppEnv } from '@/utils/types.ts';
 import { sessionMiddleware } from '@/middlewares/session.ts';
-import { paginationHelper, PaginationSchema } from '@/utils/pagination.ts';
+import { paginationHelper } from '@/utils/pagination.ts';
 
-import { CreateLinkSchema, EditLinkSchema } from '@hyperlog/schemas';
+import { CreateLinkSchema, EditLinkSchema, PaginationSchema } from '@hyperlog/schemas';
 import { fetchLinkData, validateLinkAccess } from '@/utils/links.ts';
 
 const app = new Hono<AppEnv>()

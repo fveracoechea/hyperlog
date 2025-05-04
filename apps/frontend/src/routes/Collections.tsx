@@ -1,28 +1,33 @@
-import { data } from 'react-router';
-
-import { getAllCollections } from '@/.server/resources/collection';
-import { getSessionOrRedirect } from '@/.server/session';
-import { FolderHeartIcon, FolderOpenIcon, FoldersIcon } from 'lucide-react';
+import { FolderOpenIcon, FoldersIcon } from 'lucide-react';
+import { jsonHash } from 'remix-utils/json-hash';
 
 import { Banner } from '@/components/Banner';
 import { CollectionCard } from '@/components/CollectionCard';
 import { PageErrorBoundary } from '@/components/PageErrorBoundary';
 import { Typography } from '@/components/ui/typography';
+import { client } from '@/utility/honoClient.ts';
 
 import type { Route } from './+types/Collections';
 
 export const ErrorBoundary = PageErrorBoundary;
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const {
-    data: { user },
-    headers,
-  } = await getSessionOrRedirect(request);
-
-  return data(await getAllCollections(user.id), { headers });
+export function clientLoader({}: Route.LoaderArgs) {
+  return jsonHash({
+    async parent() {
+      const response = await client.api.collection.parent.$get();
+      const json = await response.json();
+      return json.data.collections;
+    },
+    async tags() {
+      const response = await client.api.collection.shared.$get();
+      const json = await response.json();
+      return json.data.collections;
+    },
+  });
 }
 
 export default function Collections({ loaderData }: Route.ComponentProps) {
+  const { parent, shared } = loaderData;
   return (
     <>
       <section className='flex flex-col gap-4'>
@@ -33,7 +38,7 @@ export default function Collections({ loaderData }: Route.ComponentProps) {
         />
 
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4'>
-          {loaderData.myCollections.map((collection) => (
+          {parent.map((collection) => (
             <CollectionCard
               key={collection.id}
               collection={collection}
@@ -60,13 +65,6 @@ export default function Collections({ loaderData }: Route.ComponentProps) {
               Stay tuned!
             </Typography>
           </div>
-          {loaderData.otherCollections.map((collection) => (
-            <CollectionCard
-              key={collection.id}
-              collection={collection}
-              linkCount={collection.links.length}
-            />
-          ))}
         </div>
       </section>
     </>

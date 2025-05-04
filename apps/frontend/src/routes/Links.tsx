@@ -1,8 +1,7 @@
-import { data, useNavigation } from 'react-router';
+import { useNavigation } from 'react-router';
 
-import { PaginationSchema } from '@/.server/pagination';
-import { getAllLinks } from '@/.server/resources/link';
-import { getSessionOrRedirect } from '@/.server/session';
+import { PaginationSchema } from '@hyperlog/schemas';
+import { searchParamsToJson } from '@hyperlog/helpers';
 import { LinkIcon } from 'lucide-react';
 
 import { Banner } from '@/components/Banner';
@@ -11,19 +10,16 @@ import { PageErrorBoundary } from '@/components/PageErrorBoundary';
 import { PaginationForm } from '@/components/PaginationForm';
 
 import { type Route } from './+types/Links';
+import { client } from '../utility/honoClient.ts';
 
 export const ErrorBoundary = PageErrorBoundary;
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const {
-    data: { user },
-    headers,
-  } = await getSessionOrRedirect(request);
-
-  const { searchParams } = new URL(request.url);
-  const params = PaginationSchema.parse(Object.fromEntries(searchParams));
-  const result = await getAllLinks(user.id, params);
-  return data({ ...result, params }, { headers });
+export async function clientLoader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const query = searchParamsToJson(url.searchParams);
+  const res = await client.api.link.$get({ query });
+  const json = await res.json();
+  return { ...json.data, params: PaginationSchema.parse(query) };
 }
 
 export default function Links({ loaderData }: Route.ComponentProps) {

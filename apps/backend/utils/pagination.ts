@@ -1,41 +1,7 @@
 import { and, asc, desc, or, SQL, sql } from 'drizzle-orm';
-import { z } from 'zod';
 
 import { db, schema } from '@/db/db.ts';
-
-export const zStringArray = z
-  .string()
-  .array()
-  .or(z.string())
-  .transform((v) => (typeof v === 'string' ? [v] : v))
-  .optional();
-
-/**
- * Search params to JS Object
- * Object.fromEntries does not account for params with multiple values
- */
-export function searchParamsToJson(params: URLSearchParams) {
-  const data: Record<string, string[] | string> = {};
-
-  for (const key of params.keys()) {
-    const value = params.getAll(key).filter((v) => v !== 'undefined' && v !== 'null');
-    if (value.length > 1) data[key] = value;
-    else data[key] = value[0];
-  }
-
-  return data;
-}
-
-export const PaginationSchema = z.object({
-  direction: z.enum(['asc', 'desc']).default('desc').catch('desc'),
-  sortBy: z.string().default('createdAt'),
-  search: z.string().optional(),
-  page: z.coerce.number().int().default(1).catch(1),
-  pageSize: z.coerce.number().int().default(24).catch(24),
-  exclude: zStringArray,
-});
-
-export type PaginationSchemaType = z.infer<typeof PaginationSchema>;
+import { PaginationSchemaType } from '@hyperlog/schemas';
 
 export function paginationHelper<
   K extends keyof typeof db.query,

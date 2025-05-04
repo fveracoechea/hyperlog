@@ -1,13 +1,6 @@
 import { useRef } from 'react';
 import { data, Form, Link, redirect, useFetcher, useNavigation } from 'react-router';
 
-import {
-  addToFavorites,
-  deleteLink,
-  getLinkDetails,
-  removeFromFavorites,
-} from '@/.server/resources/link';
-import { getSessionOrRedirect } from '@/.server/session';
 import { formatDate, formatDistanceToNow } from 'date-fns';
 import {
   CalendarClockIcon,
@@ -33,31 +26,32 @@ import { Typography } from '@/components/ui/typography';
 
 import { LineItem } from '../components/LineItem';
 import { type Route } from './+types/LinkDetails';
+import { client } from '@/utility/honoClient.ts';
 
 export const ErrorBoundary = PageErrorBoundary;
 
-export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
-  const formData = await request.formData();
+// export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
+//   const formData = await request.formData();
+//
+//   if (request.method === 'DELETE') {
+//     await deleteLink(linkId);
+//     return redirect('/links');
+//   }
+//
+//   if (request.method === 'PUT') {
+//     const value = String(formData.get('toggleFavorite'));
+//     if (value === 'true') await removeFromFavorites(linkId);
+//     if (value === 'false') await addToFavorites(linkId);
+//   }
+//
+//   return null;
+// }
 
-  if (request.method === 'DELETE') {
-    await deleteLink(linkId);
-    return redirect('/links');
-  }
-
-  if (request.method === 'PUT') {
-    const value = String(formData.get('toggleFavorite'));
-    if (value === 'true') await removeFromFavorites(linkId);
-    if (value === 'false') await addToFavorites(linkId);
-  }
-
-  return null;
-}
-
-export async function loader({ request, params: { linkId } }: Route.LoaderArgs) {
-  const { headers } = await getSessionOrRedirect(request);
-  const link = await getLinkDetails(linkId);
+export async function clientLoader({ request, params: { linkId } }: Route.LoaderArgs) {
+  const res = await client.api.link[':linkId'].$get({ param: { linkId } });
+  const link = (await res.json()).data.link;
   if (!link) throw data(null, { status: 404 });
-  return data({ link }, { headers });
+  return { link };
 }
 
 export default function LinkDetailsPage({ loaderData: { link } }: Route.ComponentProps) {

@@ -1,5 +1,4 @@
 {
-  "unstable": ["sloppy-imports"],
   "tasks": {
     "build": "react-router build",
     "dev": "react-router dev",

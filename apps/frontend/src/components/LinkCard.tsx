@@ -56,10 +56,13 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
           height='630'
           width='1200'
           loading='lazy'
-          className='absolute inset-0 object-cover object-center blur'
+          className={clsx(
+            'absolute inset-0 object-cover object-center blur',
+            'opacity-0 group-hover:opacity-30 group-focus-visible:opacity-30 transition-opacity',
+          )}
           src={link.previewImage ?? undefined}
         />
-        <div className='bg-cpt-base/80 relative flex flex-1 flex-col gap-4 rounded-md p-2'>
+        <div className='relative flex flex-1 flex-col gap-4 rounded-md p-2'>
           <div className='flex items-start justify-between'>
             <LazyFavicon src={link.favicon ?? undefined} width='26px' height='26px' />
 

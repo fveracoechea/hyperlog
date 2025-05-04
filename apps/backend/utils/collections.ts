@@ -3,10 +3,10 @@ import { and, desc, eq, inArray, isNotNull, isNull, notInArray, sql } from 'driz
 import { HTTPException } from 'hono/http-exception';
 
 import { EditCollectionFormFields } from '@hyperlog/schemas';
-import { isNonNullable } from '@hyperlog/ui';
+import { isNonNullable } from '@hyperlog/helpers';
 
 import { db, schema, TransactionType } from '@/db/db.ts';
-import { zStringArray } from '@/utils/pagination.ts';
+import { zStringArray } from '@hyperlog/schemas';
 
 export const CollectionQuerySchema = z.object({
   search: z.string().optional(),
