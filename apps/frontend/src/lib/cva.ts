@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { clsx } from 'clsx';
+import { clsx } from "clsx";
 
 /* Types
   ============================================ */
@@ -19,7 +19,7 @@ type ClassArray = ClassValue[];
   ---------------------------------- */
 
 type OmitUndefined<T> = T extends undefined ? never : T;
-type StringToBoolean<T> = T extends 'true' | 'false' ? boolean : T;
+type StringToBoolean<T> = T extends "true" | "false" ? boolean : T;
 type MergeVariantProps<Types extends object[]> = Types extends [infer First, ...infer Rest]
   ? First extends object ? Rest extends object[] ? {
         [K in keyof First | keyof MergeVariantProps<Rest>]: K extends keyof First
@@ -35,7 +35,7 @@ type MergeVariantProps<Types extends object[]> = Types extends [infer First, ...
 
 export type VariantProps<Component extends (...args: any[]) => unknown> = Omit<
   OmitUndefined<Parameters<Component>[0]>,
-  'class' | 'className'
+  "class" | "className"
 >;
 
 /* compose
@@ -115,7 +115,7 @@ export interface DefineConfigOptions {
     /**
      * @deprecated please use `onComplete`
      */
-    'cx:done'?: (className: string) => string;
+    "cx:done"?: (className: string) => string;
     /**
      * Returns the completed string of concatenated classes/classNames.
      */
@@ -142,7 +142,7 @@ function isKeyOf<R extends Record<PropertyKey, unknown>, V = keyof R>(
   key: unknown,
 ): key is V {
   return (
-    (typeof key === 'string' || typeof key === 'number' || typeof key === 'symbol') &&
+    (typeof key === "string" || typeof key === "number" || typeof key === "symbol") &&
     Object.prototype.hasOwnProperty.call(record, key)
   );
 }
@@ -160,7 +160,7 @@ function mergeDefaultsAndProps<
   for (const key in props) {
     if (!isKeyOf(props, key)) continue;
     const value = props[key];
-    if (typeof value !== 'undefined') result[key] = value;
+    if (typeof value !== "undefined") result[key] = value;
   }
 
   return result as Record<keyof V, NonNullable<ClassValue>>;
@@ -204,7 +204,7 @@ function getCompoundVariantClassNames<V extends CVAVariantShape>(
     let selectorMatches = true;
 
     for (const cvKey in compoundConfig) {
-      if (!isKeyOf(compoundConfig, cvKey) || cvKey === 'class' || cvKey === 'className') {
+      if (!isKeyOf(compoundConfig, cvKey) || cvKey === "class" || cvKey === "className") {
         continue;
       }
 
@@ -230,17 +230,17 @@ function getCompoundVariantClassNames<V extends CVAVariantShape>(
 }
 
 const falsyToString = <T>(value: T) =>
-  typeof value === 'boolean' ? `${value}` : value === 0 ? '0' : value;
+  typeof value === "boolean" ? `${value}` : value === 0 ? "0" : value;
 
 /* Exports
   ============================================ */
 
 export const defineConfig: DefineConfig = (options) => {
   const cx: CX = (...inputs) => {
-    if (typeof options?.hooks?.['cx:done'] !== 'undefined') {
-      return options?.hooks['cx:done'](clsx(inputs));
+    if (typeof options?.hooks?.["cx:done"] !== "undefined") {
+      return options?.hooks["cx:done"](clsx(inputs));
     }
-    if (typeof options?.hooks?.onComplete !== 'undefined') {
+    if (typeof options?.hooks?.onComplete !== "undefined") {
       return options?.hooks.onComplete(clsx(inputs));
     }
 

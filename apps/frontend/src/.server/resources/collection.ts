@@ -1,12 +1,12 @@
-import { data } from 'react-router';
+import { data } from "react-router";
 
-import { isNonNullable } from '@/lib/helpers';
-import type { CreateCollectionFormFields, EditCollectionFormFields } from '@/lib/zod';
-import { and, desc, eq, inArray, isNotNull, isNull, notInArray, SQL, sql } from 'drizzle-orm';
-import { fromPromise } from 'neverthrow';
+import { isNonNullable } from "@/lib/helpers";
+import type { CreateCollectionFormFields, EditCollectionFormFields } from "@/lib/zod";
+import { and, desc, eq, inArray, isNotNull, isNull, notInArray, SQL, sql } from "drizzle-orm";
+import { fromPromise } from "neverthrow";
 
-import { db, isSQLiteErrorCode, type TransactionType } from '../db';
-import * as schema from '../schema';
+import { db, isSQLiteErrorCode, type TransactionType } from "../db";
+import * as schema from "../schema";
 
 export type CollectionSelectType = typeof schema.collection.$inferSelect;
 
@@ -100,7 +100,7 @@ export async function getAllCollections(userId: string) {
   return {
     myCollections,
     otherCollections: sharedCollections
-      .filter((c) => typeof c.collection.parentId !== 'string')
+      .filter((c) => typeof c.collection.parentId !== "string")
       .map((c) => c.collection),
   };
 }
@@ -113,17 +113,17 @@ export function createCollection(ownerId: string, formData: CreateCollectionForm
       .returning()
       .then((data) => {
         const collection = data.at(0);
-        if (!collection) throw new Error('No data');
+        if (!collection) throw new Error("No data");
         return collection;
       }),
     (err) => {
-      if (isSQLiteErrorCode(err, 'SQLITE_CONSTRAINT_UNIQUE')) {
-        return 'COLLECTION_NAME_ALREADY_EXISTS';
+      if (isSQLiteErrorCode(err, "SQLITE_CONSTRAINT_UNIQUE")) {
+        return "COLLECTION_NAME_ALREADY_EXISTS";
       }
 
-      console.warn('SUB-COLLECTIONS UPDATE UKNOWN_DATABASE_ERROR');
+      console.warn("SUB-COLLECTIONS UPDATE UKNOWN_DATABASE_ERROR");
       console.error(err);
-      return 'UKNOWN_DATABASE_ERROR';
+      return "UKNOWN_DATABASE_ERROR";
     },
   );
 }
@@ -141,7 +141,7 @@ export async function deleteCollection(userId: string, collectionId: string) {
 async function updateCollectionLinks(
   tx: TransactionType,
   collectionId: string,
-  links: EditCollectionFormFields['links'],
+  links: EditCollectionFormFields["links"],
 ) {
   // Update removed links if any
   await tx
@@ -173,7 +173,7 @@ async function updateSubCollections(
   tx: TransactionType,
   parentId: string,
   ownerId: string,
-  subCollections: EditCollectionFormFields['subCollections'],
+  subCollections: EditCollectionFormFields["subCollections"],
 ) {
   try {
     const IDs = subCollections.map((s) => s.databaseId).filter(isNonNullable);
@@ -192,7 +192,7 @@ async function updateSubCollections(
       await tx.insert(schema.collection).values(newSubcollections);
     }
   } catch (error) {
-    console.warn('UPDATE SUB-COLLECTIONS ERROR');
+    console.warn("UPDATE SUB-COLLECTIONS ERROR");
     console.error(error);
   }
 }
@@ -207,7 +207,7 @@ export async function editCollection(
   });
 
   if (collection?.ownerId !== userId) {
-    throw data('You are not allowed to edit this collection', { status: 403 });
+    throw data("You are not allowed to edit this collection", { status: 403 });
   }
 
   db.transaction(async (tx) => {

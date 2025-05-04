@@ -1,15 +1,15 @@
-import type { FieldErrors } from 'react-hook-form';
-import { data, redirect } from 'react-router';
+import type { FieldErrors } from "react-hook-form";
+import { data, redirect } from "react-router";
 
-import { PaginationSchema, searchParamsToJson } from '@/.server/pagination';
-import { createLink, getAllLinks, increateViewCount } from '@/.server/resources/link';
-import { getSessionOrRedirect } from '@/.server/session';
-import { type CreateLinkFormFields, CreateLinkSchema } from '@/lib/zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as cheerio from 'cheerio';
-import { getValidatedFormData } from 'remix-hook-form';
+import { PaginationSchema, searchParamsToJson } from "@/.server/pagination";
+import { createLink, getAllLinks, increateViewCount } from "@/.server/resources/link";
+import { getSessionOrRedirect } from "@/.server/session";
+import { type CreateLinkFormFields, CreateLinkSchema } from "@/lib/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as cheerio from "cheerio";
+import { getValidatedFormData } from "remix-hook-form";
 
-import type { Route } from './+types/link';
+import type { Route } from "./+types/link";
 
 const resolver = zodResolver(CreateLinkSchema);
 
@@ -18,31 +18,31 @@ async function fetchLinkData(url: string) {
   try {
     const $ = await cheerio.fromURL(url);
 
-    const title = $('meta[property="og:title"]').attr('content') || $('title').text() || null;
+    const title = $('meta[property="og:title"]').attr("content") || $("title").text() || null;
 
     const descriptionNode = $('head meta[property="og:description"]') ||
       $('head meta[name="description"]');
 
-    const image = $('head meta[property="og:image"]').attr('content') ||
-      $('head meta[property="twitter:image"]').attr('content');
+    const image = $('head meta[property="og:image"]').attr("content") ||
+      $('head meta[property="twitter:image"]').attr("content");
 
     // Look for favicon link tags
-    let faviconUrl = $('link[rel="icon"]').attr('href') ||
-      $('link[rel="shortcut icon"]').attr('href');
+    let faviconUrl = $('link[rel="icon"]').attr("href") ||
+      $('link[rel="shortcut icon"]').attr("href");
 
     // Ensure the URL is absolute
-    if (faviconUrl && !faviconUrl.startsWith('http')) {
+    if (faviconUrl && !faviconUrl.startsWith("http")) {
       faviconUrl = new URL(faviconUrl, origin).href;
     }
 
     return {
       title,
       favicon: faviconUrl || `${origin}/favicon.ico`,
-      previewImage: image ? (image.startsWith('http') ? image : `${origin}${image}`) : null,
-      description: descriptionNode.attr('content') ?? null,
+      previewImage: image ? (image.startsWith("http") ? image : `${origin}${image}`) : null,
+      description: descriptionNode.attr("content") ?? null,
     };
   } catch (error) {
-    console.warn('ERROR LOADING LINK DATA  ', url);
+    console.warn("ERROR LOADING LINK DATA  ", url);
     console.error(error);
     return {
       title: null,
@@ -59,11 +59,11 @@ export async function action({ request, params: { linkId } }: Route.ActionArgs) 
     data: { user },
   } = await getSessionOrRedirect(request);
 
-  if (request.method === 'PUT' && linkId) {
+  if (request.method === "PUT" && linkId) {
     await increateViewCount(linkId);
   }
 
-  if (request.method === 'POST') {
+  if (request.method === "POST") {
     const {
       errors,
       data,
@@ -80,7 +80,7 @@ export async function action({ request, params: { linkId } }: Route.ActionArgs) 
       return {
         defaultValues,
         errors: {
-          title: { type: 'required', message: 'No page Title found. Please provide one.' },
+          title: { type: "required", message: "No page Title found. Please provide one." },
         } satisfies FieldErrors<CreateLinkFormFields>,
       };
     }
@@ -92,7 +92,7 @@ export async function action({ request, params: { linkId } }: Route.ActionArgs) 
   return null;
 }
 
-export type LinkApiData = Route.ComponentProps['loaderData'];
+export type LinkApiData = Route.ComponentProps["loaderData"];
 
 export async function loader({ request }: Route.LoaderArgs) {
   const {

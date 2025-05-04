@@ -1,6 +1,6 @@
-import { Context } from 'hono';
-import { createMiddleware } from 'hono/factory';
-import { ContentfulStatusCode } from 'hono/utils/http-status';
+import { Context } from "hono";
+import { createMiddleware } from "hono/factory";
+import { ContentfulStatusCode } from "hono/utils/http-status";
 
 function makeSuccessResponseHandler(ctx: Context) {
   return <D, S extends ContentfulStatusCode>(data: D, status?: S) =>
@@ -45,7 +45,7 @@ export const jsonResponseMiddleware = createMiddleware<{
     error: ErrorResponseHandler;
   };
 }>(async (ctx, next) => {
-  ctx.set('success', makeSuccessResponseHandler(ctx));
-  ctx.set('error', makeErrorResponseHandler(ctx));
+  ctx.set("success", makeSuccessResponseHandler(ctx));
+  ctx.set("error", makeErrorResponseHandler(ctx));
   await next();
 });

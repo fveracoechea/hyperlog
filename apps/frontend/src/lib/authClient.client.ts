@@ -1,5 +1,5 @@
-import { createAuthClient } from 'better-auth/client';
-import { username } from 'better-auth/plugins';
+import { createAuthClient } from "better-auth/client";
+import { username } from "better-auth/plugins";
 
 export const authClient = createAuthClient({
   plugins: [username()],
@@ -14,7 +14,7 @@ export const authClient = createAuthClient({
   user: {
     additionalFields: {
       isActive: {
-        type: 'boolean',
+        type: "boolean",
         required: true,
         defaultValue: true,
       },

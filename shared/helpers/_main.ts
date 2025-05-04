@@ -1,3 +1,4 @@
+export * from "./namedActions.ts";
 
 export async function tryCatch<T, E = Error>(promise: T | Promise<T>) {
   try {
@@ -23,7 +24,7 @@ export function searchParamsToJson(params: URLSearchParams) {
   const data: Record<string, string[] | string> = {};
 
   for (const key of params.keys()) {
-    const value = params.getAll(key).filter((v) => v !== 'undefined' && v !== 'null');
+    const value = params.getAll(key).filter((v) => v !== "undefined" && v !== "null");
     if (value.length > 1) data[key] = value;
     else data[key] = value[0];
   }

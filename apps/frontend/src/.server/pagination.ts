@@ -1,14 +1,14 @@
-import { and, asc, desc, ilike, or, SQL } from 'drizzle-orm';
-import { z } from 'zod';
+import { and, asc, desc, ilike, or, SQL } from "drizzle-orm";
+import { z } from "zod";
 
-import { db } from './db';
-import * as schema from './schema';
+import { db } from "./db";
+import * as schema from "./schema";
 
 export const zStringArray = z
   .string()
   .array()
   .or(z.string())
-  .transform((v) => (typeof v === 'string' ? [v] : v))
+  .transform((v) => (typeof v === "string" ? [v] : v))
   .optional();
 
 /**
@@ -19,7 +19,7 @@ export function searchParamsToJson(params: URLSearchParams) {
   const data: Record<string, string[] | string> = {};
 
   for (const key of params.keys()) {
-    const value = params.getAll(key).filter((v) => v !== 'undefined' && v !== 'null');
+    const value = params.getAll(key).filter((v) => v !== "undefined" && v !== "null");
     if (value.length > 1) data[key] = value;
     else data[key] = value[0];
   }
@@ -28,8 +28,8 @@ export function searchParamsToJson(params: URLSearchParams) {
 }
 
 export const PaginationSchema = z.object({
-  direction: z.enum(['asc', 'desc']).default('desc').catch('desc'),
-  sortBy: z.string().default('createdAt'),
+  direction: z.enum(["asc", "desc"]).default("desc").catch("desc"),
+  sortBy: z.string().default("createdAt"),
   search: z.string().optional(),
   page: z.coerce.number().int().default(1).catch(1),
   pageSize: z.coerce.number().int().default(24).catch(24),
@@ -51,7 +51,7 @@ export function paginationHelper<
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dbTable = schema[table] as Record<string, any>;
-  const directionFn = searchParams.direction === 'asc' ? asc : desc;
+  const directionFn = searchParams.direction === "asc" ? asc : desc;
   const sortBy = searchParams.sortBy in dbTable
     ? dbTable[searchParams.sortBy]
     : dbTable.createdAt;
@@ -67,7 +67,7 @@ export function paginationHelper<
     offset: (searchParams.page - 1) * searchParams.pageSize,
     orderBy: directionFn(sortBy),
     extras: {
-      totalRecords: db.$count(schema[table], and(...where)).as('totalRecords'),
+      totalRecords: db.$count(schema[table], and(...where)).as("totalRecords"),
     },
   };
 }

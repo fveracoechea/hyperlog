@@ -1,9 +1,9 @@
-import type { EditLinkSchemaType } from '@/lib/zod';
-import { and, desc, eq, notInArray, or, SQL, sql } from 'drizzle-orm';
+import type { EditLinkSchemaType } from "@/lib/zod";
+import { and, desc, eq, notInArray, or, SQL, sql } from "drizzle-orm";
 
-import { db } from '../db';
-import { paginationHelper, type PaginationSchemaType } from '../pagination';
-import * as schema from '../schema';
+import { db } from "../db";
+import { paginationHelper, type PaginationSchemaType } from "../pagination";
+import * as schema from "../schema";
 
 export type LinkInsertType = typeof schema.link.$inferInsert;
 
@@ -31,7 +31,7 @@ export async function getAllLinks(userId: string, searchParams: PaginationSchema
   if (searchParams.exclude) filters.push(notInArray(schema.link.id, searchParams.exclude));
 
   const args = paginationHelper({
-    table: 'link',
+    table: "link",
     searchableFields: [],
     searchParams,
     where: [eq(schema.link.ownerId, userId), ...filters],

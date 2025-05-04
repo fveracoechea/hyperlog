@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { ColorNames } from './common.ts';
+import { ColorNames } from "./common.ts";
 
 const zColor = z
   .enum([...ColorNames])
@@ -11,12 +11,12 @@ const zColor = z
 export const CreateCollectionSchema = z.object({
   name: z
     .string()
-    .min(1, 'Name is required')
-    .max(60, 'Name must contain at most 60 characters'),
+    .min(1, "Name is required")
+    .max(60, "Name must contain at most 60 characters"),
   color: zColor,
   description: z
     .string()
-    .max(512, 'Description must contain at most 512 characters')
+    .max(512, "Description must contain at most 512 characters")
     .nullable()
     .default(null),
 });
@@ -24,12 +24,12 @@ export const CreateCollectionSchema = z.object({
 export const EditCollectionSchema = z.object({
   name: z
     .string()
-    .min(1, 'Name is required')
-    .max(60, 'Name must contain at most 60 characters'),
+    .min(1, "Name is required")
+    .max(60, "Name must contain at most 60 characters"),
   color: zColor,
   description: z
     .string()
-    .max(512, 'Description must contain at most 512 characters')
+    .max(512, "Description must contain at most 512 characters")
     .nullable()
     .default(null),
   links: z

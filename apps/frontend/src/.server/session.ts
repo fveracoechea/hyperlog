@@ -1,9 +1,9 @@
-import { data, redirect } from 'react-router';
+import { data, redirect } from "react-router";
 
-import { auth } from './auth';
-import { cookies } from './cookies';
+import { auth } from "./auth";
+import { cookies } from "./cookies";
 
-const authRoutes = ['/login', '/sign-up'];
+const authRoutes = ["/login", "/sign-up"];
 
 export async function getSessionOrRedirect(request: Request) {
   const { pathname } = new URL(request.url);
@@ -17,19 +17,19 @@ export async function getSessionOrRedirect(request: Request) {
 
   if (!isAuthRoute) {
     headers.append(
-      'Set-Cookie',
+      "Set-Cookie",
       await cookies.info.serialize({
-        type: 'info',
-        message: 'You must be logged in to access this resource. Please login to continue.',
+        type: "info",
+        message: "You must be logged in to access this resource. Please login to continue.",
       }),
     );
 
-    throw redirect('/login', { headers });
+    throw redirect("/login", { headers });
   }
 
   if (isAuthRoute) {
-    throw redirect('/', { headers });
+    throw redirect("/", { headers });
   }
 
-  throw data('Session Not found', { status: 404, headers });
+  throw data("Session Not found", { status: 404, headers });
 }

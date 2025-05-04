@@ -1,16 +1,16 @@
-import { useNavigation } from 'react-router';
+import { useNavigation } from "react-router";
 
-import { PaginationSchema } from '@hyperlog/schemas';
-import { searchParamsToJson } from '@hyperlog/helpers';
-import { LinkIcon } from 'lucide-react';
+import { PaginationSchema } from "@hyperlog/schemas";
+import { searchParamsToJson } from "@hyperlog/helpers";
+import { LinkIcon } from "lucide-react";
 
-import { Banner } from '@/components/Banner';
-import { LinkCard } from '@/components/LinkCard';
-import { PageErrorBoundary } from '@/components/PageErrorBoundary';
-import { PaginationForm } from '@/components/PaginationForm';
+import { Banner } from "@/components/Banner";
+import { LinkCard } from "@/components/LinkCard";
+import { PageErrorBoundary } from "@/components/PageErrorBoundary";
+import { PaginationForm } from "@/components/PaginationForm";
 
-import { type Route } from './+types/Links';
-import { client } from '../utility/honoClient.ts';
+import { type Route } from "./+types/Links";
+import { client } from "../utility/honoClient.ts";
 
 export const ErrorBoundary = PageErrorBoundary;
 
@@ -26,14 +26,14 @@ export default function Links({ loaderData }: Route.ComponentProps) {
   const navigation = useNavigation();
 
   return (
-    <section className='flex flex-col gap-4'>
-      <Banner title='Links' Icon={LinkIcon} subtitle='All links from every collection' />
+    <section className="flex flex-col gap-4">
+      <Banner title="Links" Icon={LinkIcon} subtitle="All links from every collection" />
 
       <PaginationForm {...loaderData} />
 
-      <div className='grid grid-cols-1 gap-6 pt-2 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4'>
+      <div className="grid grid-cols-1 gap-6 pt-2 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
         {loaderData.links.map((link) => (
-          <LinkCard isLoading={navigation.state === 'loading'} key={link.id} link={link} />
+          <LinkCard isLoading={navigation.state === "loading"} key={link.id} link={link} />
         ))}
       </div>
     </section>

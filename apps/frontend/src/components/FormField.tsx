@@ -1,17 +1,17 @@
-import { type ComponentPropsWithRef, type ReactNode, useId } from 'react';
+import { type ComponentPropsWithRef, type ReactNode, useId } from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
-import { Input, type InputProps } from './ui/input';
-import { Textarea, type TextareaProps } from './ui/textarea';
-import { Typography } from './ui/typography';
+import { Input, type InputProps } from "./ui/input";
+import { Textarea, type TextareaProps } from "./ui/textarea";
+import { Typography } from "./ui/typography";
 
 type FieldTextareaProps = {
-  variant: 'textarea';
+  variant: "textarea";
 } & TextareaProps;
 
 type FieldInpuProps = {
-  variant?: 'input';
+  variant?: "input";
 } & InputProps;
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
 
 export function FormField(props: Props) {
   const {
-    variant = 'input',
+    variant = "input",
     label,
     fieldClassName,
     errorMessage,
@@ -33,28 +33,28 @@ export function FormField(props: Props) {
   const id = useId();
 
   return (
-    <div className={cn('flex flex-col gap-1', fieldClassName)}>
-      <Typography as='label' htmlFor={id}>
+    <div className={cn("flex flex-col gap-1", fieldClassName)}>
+      <Typography as="label" htmlFor={id}>
         {label}
-        {inputProps.required && <span className='text-cpt-red ml-1'>*</span>}
+        {inputProps.required && <span className="text-cpt-red ml-1">*</span>}
       </Typography>
-      {variant === 'textarea' && (
+      {variant === "textarea" && (
         <Textarea
           id={id}
           error={Boolean(errorMessage)}
-          {...(inputProps as ComponentPropsWithRef<'textarea'>)}
+          {...(inputProps as ComponentPropsWithRef<"textarea">)}
         />
       )}
-      {variant === 'input' && (
+      {variant === "input" && (
         <Input
           id={id}
           error={Boolean(errorMessage)}
           rightBtn={rightBtn}
-          {...(inputProps as ComponentPropsWithRef<'input'>)}
+          {...(inputProps as ComponentPropsWithRef<"input">)}
         />
       )}
       {errorMessage && (
-        <Typography variant='small' className='text-destructive pt-1'>
+        <Typography variant="small" className="text-destructive pt-1">
           {errorMessage}
         </Typography>
       )}

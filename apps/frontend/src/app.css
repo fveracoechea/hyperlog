@@ -3,48 +3,48 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Fira Sans';
+  font-family: "Fira Sans";
   font-display: swap;
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
-  src: url(/fonts/FiraSans-Light.woff2) format('woff2');
+  src: url(/fonts/FiraSans-Light.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: 'Fira Sans';
+  font-family: "Fira Sans";
   font-display: swap;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-  src: url(/fonts/FiraSans-Regular.woff2) format('woff2');
+  src: url(/fonts/FiraSans-Regular.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: 'Fira Sans';
+  font-family: "Fira Sans";
   font-display: swap;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
-  src: url(/fonts/FiraSans-Medium.woff2) format('woff2');
+  src: url(/fonts/FiraSans-Medium.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: 'Fira Sans';
+  font-family: "Fira Sans";
   font-display: swap;
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
-  src: url(/fonts/FiraSans-SemiBold.woff2) format('woff2');
+  src: url(/fonts/FiraSans-SemiBold.woff2) format("woff2");
 }
 
 @font-face {
-  font-family: 'Fira Sans';
+  font-family: "Fira Sans";
   font-display: swap;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: italic;
-  src: url('/fonts/FiraSans-MediumItalic.woff2') format('woff2');
+  src: url("/fonts/FiraSans-MediumItalic.woff2") format("woff2");
 }
 
 @layer base {
@@ -144,7 +144,7 @@
   }
 
   html {
-    font-family: 'Fira Sans', sans-serif;
+    font-family: "Fira Sans", sans-serif;
   }
 
   body {

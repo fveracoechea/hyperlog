@@ -1,14 +1,14 @@
-import { relations, sql } from 'drizzle-orm';
-import * as t from 'drizzle-orm/sqlite-core';
-import { v4 as uuidv4 } from 'uuid';
+import { relations, sql } from "drizzle-orm";
+import * as t from "drizzle-orm/sqlite-core";
+import { v4 as uuidv4 } from "uuid";
 
-import type { ColorVariant } from '@/components/ColorPicker';
+import type { ColorVariant } from "@/components/ColorPicker";
 
-import { user } from './auth-schema';
+import { user } from "./auth-schema";
 
 const timestamps = {
-  createdAt: t.integer({ mode: 'timestamp' }).default(sql`(unixepoch())`),
-  updatedAt: t.integer({ mode: 'timestamp' }).$onUpdateFn(() => new Date()),
+  createdAt: t.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
+  updatedAt: t.integer({ mode: "timestamp" }).$onUpdateFn(() => new Date()),
 };
 
 /**
@@ -20,7 +20,7 @@ const id = t
   .primaryKey()
   .$defaultFn(() => uuidv4());
 
-export * from './auth-schema';
+export * from "./auth-schema";
 
 export const usersRelations = relations(user, ({ many }) => ({
   links: many(link),
@@ -28,7 +28,7 @@ export const usersRelations = relations(user, ({ many }) => ({
   collections: many(userToCollection),
 }));
 
-export const link = t.sqliteTable('link', {
+export const link = t.sqliteTable("link", {
   id,
   url: t.text().notNull(),
   title: t.text().notNull(),
@@ -36,15 +36,15 @@ export const link = t.sqliteTable('link', {
   previewImage: t.text(),
   favicon: t.text(),
   views: t.integer().default(1),
-  lastVisit: t.integer({ mode: 'timestamp' }).default(sql`(unixepoch())`),
-  isPinned: t.integer({ mode: 'boolean' }).default(false),
-  collectionId: t.text().references(() => collection.id, { onDelete: 'set null' }),
-  tagId: t.text().references(() => tag.id, { onDelete: 'set null' }),
+  lastVisit: t.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
+  isPinned: t.integer({ mode: "boolean" }).default(false),
+  collectionId: t.text().references(() => collection.id, { onDelete: "set null" }),
+  tagId: t.text().references(() => tag.id, { onDelete: "set null" }),
   notes: t.text(),
   ownerId: t
     .text()
     .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
+    .references(() => user.id, { onDelete: "cascade" }),
   ...timestamps,
 });
 
@@ -55,7 +55,7 @@ export const linksRelations = relations(link, ({ one }) => ({
 }));
 
 export const collection = t.sqliteTable(
-  'collection',
+  "collection",
   {
     id,
     name: t.text().notNull(),
@@ -64,12 +64,12 @@ export const collection = t.sqliteTable(
     icon: t.text(),
     order: t.integer().default(1),
     parentId: t
-      .text('parent_id')
-      .references((): t.AnySQLiteColumn => collection.id, { onDelete: 'cascade' }),
+      .text("parent_id")
+      .references((): t.AnySQLiteColumn => collection.id, { onDelete: "cascade" }),
     ownerId: t
       .text()
       .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
+      .references(() => user.id, { onDelete: "cascade" }),
     ...timestamps,
   },
   (table) => ({
@@ -88,17 +88,17 @@ export const collectionsRelations = relations(collection, ({ one, many }) => ({
 }));
 
 export const userToCollection = t.sqliteTable(
-  'user_to_collection',
+  "user_to_collection",
   {
     id,
     userId: t
       .text()
       .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
+      .references(() => user.id, { onDelete: "cascade" }),
     collectionId: t
       .text()
       .notNull()
-      .references(() => collection.id, { onDelete: 'cascade' }),
+      .references(() => collection.id, { onDelete: "cascade" }),
   },
   (table) => ({
     uniqueUserToCollection: t.unique().on(table.userId, table.collectionId),
@@ -114,7 +114,7 @@ export const usersToCollectionsRelations = relations(userToCollection, ({ one })
 }));
 
 export const tag = t.sqliteTable(
-  'tag',
+  "tag",
   {
     id,
     name: t.text().notNull(),
@@ -122,7 +122,7 @@ export const tag = t.sqliteTable(
     ownerId: t
       .text()
       .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
+      .references(() => user.id, { onDelete: "cascade" }),
     ...timestamps,
   },
   (table) => ({

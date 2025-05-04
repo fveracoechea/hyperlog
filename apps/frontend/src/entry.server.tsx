@@ -1,7 +1,7 @@
-import { isbot } from 'isbot';
-import { renderToReadableStream } from 'react-dom/server.browser';
-import type { AppLoadContext, EntryContext } from 'react-router';
-import { ServerRouter } from 'react-router';
+import { isbot } from "isbot";
+import { renderToReadableStream } from "react-dom/server.browser";
+import type { AppLoadContext, EntryContext } from "react-router";
+import { ServerRouter } from "react-router";
 
 // Reject all pending promises from handler functions after 5 seconds
 export const streamTimeout = 5_000;
@@ -14,7 +14,7 @@ export default async function handleRequest(
   _loadContext: AppLoadContext,
 ) {
   let shellRendered = false;
-  const userAgent = request.headers.get('user-agent');
+  const userAgent = request.headers.get("user-agent");
 
   const controller = new AbortController();
 
@@ -39,7 +39,7 @@ export default async function handleRequest(
     await stream.allReady;
   }
 
-  responseHeaders.set('Content-Type', 'text/html');
+  responseHeaders.set("Content-Type", "text/html");
 
   return new Response(stream, {
     headers: responseHeaders,

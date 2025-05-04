@@ -1,4 +1,4 @@
-import { Outlet, redirect } from 'react-router';
+import { Outlet, redirect } from "react-router";
 
 // export async function loader({ request }: Route.LoaderArgs) {
 //   const response = await api.user.whoami.$get({}, getSession(request));

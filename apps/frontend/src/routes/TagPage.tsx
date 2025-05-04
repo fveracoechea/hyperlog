@@ -1,6 +1,6 @@
-import { Typography } from '@/components/ui/typography';
+import { Typography } from "@/components/ui/typography";
 
-import type { Route } from './+types/TagPage';
+import type { Route } from "./+types/TagPage";
 
 export default function TagPage({ params }: Route.ComponentProps) {
   return (

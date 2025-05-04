@@ -1,15 +1,15 @@
-import type { FieldErrors } from 'react-hook-form';
-import { data, redirect } from 'react-router';
+import type { FieldErrors } from "react-hook-form";
+import { data, redirect } from "react-router";
 
-import { createCollection, getMyCollections } from '@/.server/resources/collection';
-import { getSessionOrRedirect } from '@/.server/session';
-import { type CreateCollectionFormFields, CreateCollectionSchema } from '@/lib/zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { getValidatedFormData } from 'remix-hook-form';
+import { createCollection, getMyCollections } from "@/.server/resources/collection";
+import { getSessionOrRedirect } from "@/.server/session";
+import { type CreateCollectionFormFields, CreateCollectionSchema } from "@/lib/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { getValidatedFormData } from "remix-hook-form";
 
-import type { Route } from './+types/collections';
+import type { Route } from "./+types/collections";
 
-export type CollectionApiData = Route.ComponentProps['loaderData'];
+export type CollectionApiData = Route.ComponentProps["loaderData"];
 
 export async function loader({ request }: Route.LoaderArgs) {
   const searchParams = new URL(request.url).searchParams;
@@ -19,10 +19,10 @@ export async function loader({ request }: Route.LoaderArgs) {
   } = await getSessionOrRedirect(request);
 
   const collections = await getMyCollections(user.id, {
-    onlySubCollections: searchParams.has('onlySubCollections'),
-    onlyParentCollections: searchParams.has('onlyParentCollections'),
-    search: searchParams.get('search'),
-    exclude: searchParams.getAll('exclude') ?? [],
+    onlySubCollections: searchParams.has("onlySubCollections"),
+    onlyParentCollections: searchParams.has("onlyParentCollections"),
+    search: searchParams.get("search"),
+    exclude: searchParams.getAll("exclude") ?? [],
   });
 
   return data({ collections }, { headers });

@@ -1,7 +1,7 @@
-import { and, asc, desc, or, SQL, sql } from 'drizzle-orm';
+import { and, asc, desc, or, SQL, sql } from "drizzle-orm";
 
-import { db, schema } from '@/db/db.ts';
-import { PaginationSchemaType } from '@hyperlog/schemas';
+import { db, schema } from "@/db/db.ts";
+import { PaginationSchemaType } from "@hyperlog/schemas";
 
 export function paginationHelper<
   K extends keyof typeof db.query,
@@ -16,7 +16,7 @@ export function paginationHelper<
 
   // deno-lint-ignore no-explicit-any
   const dbTable = schema[table] as Record<string, any>;
-  const directionFn = searchParams.direction === 'asc' ? asc : desc;
+  const directionFn = searchParams.direction === "asc" ? asc : desc;
   const sortBy = searchParams.sortBy in dbTable
     ? dbTable[searchParams.sortBy]
     : dbTable.createdAt;
@@ -34,7 +34,7 @@ export function paginationHelper<
     offset: (searchParams.page - 1) * searchParams.pageSize,
     orderBy: directionFn(sortBy),
     extras: {
-      totalRecords: db.$count(schema[table], and(...where)).as('totalRecords'),
+      totalRecords: db.$count(schema[table], and(...where)).as("totalRecords"),
     },
   };
 }

@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { db } from "../db";
 
 export async function getMyTags(userId: string) {
   const tags = await db.query.tag.findMany({

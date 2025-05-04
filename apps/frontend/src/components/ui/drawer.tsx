@@ -1,14 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { cn } from '@/lib/utils';
-import clsx from 'clsx';
-import { Drawer as DrawerPrimitive } from 'vaul';
+import { cn } from "@/lib/utils";
+import clsx from "clsx";
+import { Drawer as DrawerPrimitive } from "vaul";
 
-import { Typography } from './typography';
+import { Typography } from "./typography";
 
 const Drawer = ({
   shouldScaleBackground = true,
-  direction = 'right',
+  direction = "right",
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root
@@ -17,7 +17,7 @@ const Drawer = ({
     {...props}
   />
 );
-Drawer.displayName = 'Drawer';
+Drawer.displayName = "Drawer";
 
 const DrawerTrigger = DrawerPrimitive.Trigger;
 
@@ -31,7 +31,7 @@ const DrawerOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn('bg-cpt-overlay0/60 fixed inset-0 z-50', className)}
+    className={cn("bg-cpt-overlay0/60 fixed inset-0 z-50", className)}
     {...props}
   />
 ));
@@ -46,45 +46,45 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed bottom-0 right-0 top-0 z-10 flex w-full max-w-screen-md outline-none',
-        'border-cpt-overlay1 bg-cpt-mantle z-50 border-l',
+        "fixed bottom-0 right-0 top-0 z-10 flex w-full max-w-screen-md outline-none",
+        "border-cpt-overlay1 bg-cpt-mantle z-50 border-l",
         className,
       )}
       {...props}
     >
       <div
         className={clsx(
-          'my-auto ml-2 h-40 w-2 cursor-grab rounded-full',
-          'bg-cpt-surface1 hover:bg-cpt-surface2 transition-colors',
+          "my-auto ml-2 h-40 w-2 cursor-grab rounded-full",
+          "bg-cpt-surface1 hover:bg-cpt-surface2 transition-colors",
         )}
       />
-      <div className='flex h-full w-full flex-1 flex-col'>{children}</div>
+      <div className="flex h-full w-full flex-1 flex-col">{children}</div>
     </DrawerPrimitive.Content>
   </DrawerPortal>
 ));
-DrawerContent.displayName = 'DrawerContent';
+DrawerContent.displayName = "DrawerContent";
 
 const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('p-4 text-left', className)} {...props} />
+  <div className={cn("p-4 text-left", className)} {...props} />
 );
-DrawerHeader.displayName = 'DrawerHeader';
+DrawerHeader.displayName = "DrawerHeader";
 
 const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('mt-auto flex flex-col gap-2 p-4', className)} {...props} />
+  <div className={cn("mt-auto flex flex-col gap-2 p-4", className)} {...props} />
 );
 
 const DrawerBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('p-4 pb-0', className)} {...props} />
+  <div className={cn("p-4 pb-0", className)} {...props} />
 );
 
-DrawerFooter.displayName = 'DrawerFooter';
+DrawerFooter.displayName = "DrawerFooter";
 
 const DrawerTitle = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Title>,
   { className?: string; children: React.ReactNode }
 >((props, ref) => (
   <DrawerPrimitive.Title ref={ref} asChild>
-    <Typography as='h2' variant='large' {...props} />
+    <Typography as="h2" variant="large" {...props} />
   </DrawerPrimitive.Title>
 ));
 DrawerTitle.displayName = DrawerPrimitive.Title.displayName;
@@ -94,7 +94,7 @@ const DrawerDescription = React.forwardRef<
   { className?: string; children: React.ReactNode }
 >((props, ref) => (
   <DrawerPrimitive.Description ref={ref} asChild>
-    <Typography variant='base' as='p' muted {...props} />
+    <Typography variant="base" as="p" muted {...props} />
   </DrawerPrimitive.Description>
 ));
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName;

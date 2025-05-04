@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useRef, useState } from 'react';
+import { type RefObject, useEffect, useRef, useState } from "react";
 
 export interface IntersectionObserverArgs<E extends Element> extends IntersectionObserverInit {
   ref: RefObject<E | null>;

@@ -1,24 +1,24 @@
-import { Outlet } from 'react-router';
+import { Outlet } from "react-router";
 
-import { PageErrorBoundary } from '@/components/PageErrorBoundary';
-import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { PageErrorBoundary } from "@/components/PageErrorBoundary";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { Sidebar } from "@/components/layout/Sidebar";
 
-import { jsonHash } from 'remix-utils/json-hash';
+import { jsonHash } from "remix-utils/json-hash";
 
-import { client } from '@/utility/honoClient.ts';
+import { client } from "@/utility/honoClient.ts";
 
-import type { Route } from './+types/Layout';
+import type { Route } from "./+types/Layout";
 
 export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   return (
     <>
       <Header />
-      <div className='flex'>
+      <div className="flex">
         <Sidebar />
-        <div className='flex flex-1 flex-col justify-between'>
-          <main className='bg-background xlg:p-8 flex flex-1 flex-col gap-10 p-4 lg:p-6'>
+        <div className="flex flex-1 flex-col justify-between">
+          <main className="bg-background xlg:p-8 flex flex-1 flex-col gap-10 p-4 lg:p-6">
             <PageErrorBoundary {...props} />
           </main>
           <Footer />
@@ -47,10 +47,10 @@ export default function Layout() {
   return (
     <>
       <Header />
-      <div className='flex'>
+      <div className="flex">
         <Sidebar />
-        <div className='flex flex-1 flex-col justify-between'>
-          <main className='bg-background xlg:p-8 flex flex-1 flex-col gap-10 p-4 lg:p-6'>
+        <div className="flex flex-1 flex-col justify-between">
+          <main className="bg-background xlg:p-8 flex flex-1 flex-col gap-10 p-4 lg:p-6">
             <Outlet />
           </main>
           <Footer />

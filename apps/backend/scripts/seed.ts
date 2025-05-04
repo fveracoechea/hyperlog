@@ -1,8 +1,8 @@
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 
-import { ColorNames } from '@/components/ColorPicker';
+import { ColorNames } from "@/components/ColorPicker";
 
-import { db, schema } from '@/db/db.ts';
+import { db, schema } from "@/db/db.ts";
 
 // type InsertUser = typeof schema.user.$inferInsert;
 type SelectUser = typeof schema.user.$inferSelect;

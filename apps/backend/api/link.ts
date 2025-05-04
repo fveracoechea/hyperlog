@@ -1,22 +1,22 @@
-import { Hono } from 'hono';
-import { z } from 'zod';
-import { and, desc, eq, notInArray, sql } from 'drizzle-orm';
-import { zValidator } from '@hono/zod-validator';
+import { Hono } from "hono";
+import { z } from "zod";
+import { and, desc, eq, notInArray, sql } from "drizzle-orm";
+import { zValidator } from "@hono/zod-validator";
 
-import { db, schema } from '@/db/db.ts';
-import { AppEnv } from '@/utils/types.ts';
-import { sessionMiddleware } from '@/middlewares/session.ts';
-import { paginationHelper } from '@/utils/pagination.ts';
+import { db, schema } from "@/db/db.ts";
+import { AppEnv } from "@/utils/types.ts";
+import { sessionMiddleware } from "@/middlewares/session.ts";
+import { paginationHelper } from "@/utils/pagination.ts";
 
-import { CreateLinkSchema, EditLinkSchema, PaginationSchema } from '@hyperlog/schemas';
-import { fetchLinkData, validateLinkAccess } from '@/utils/links.ts';
+import { CreateLinkSchema, EditLinkSchema, PaginationSchema } from "@hyperlog/schemas";
+import { fetchLinkData, validateLinkAccess } from "@/utils/links.ts";
 
 const app = new Hono<AppEnv>()
   .use(sessionMiddleware)
   /**
    * List all Favories
    */
-  .get('/favorites', async (c) => {
+  .get("/favorites", async (c) => {
     const links = await db.query.link.findMany({
       orderBy: desc(schema.link.views),
       with: { collection: true },
@@ -28,34 +28,34 @@ const app = new Hono<AppEnv>()
    * Edit Favorites status of a given link
    */
   .put(
-    '/:linkId/favorites/:intent',
+    "/:linkId/favorites/:intent",
     zValidator(
-      'param',
-      z.object({ linkId: z.string().uuid(), intent: z.enum(['add', 'remove']) }),
+      "param",
+      z.object({ linkId: z.string().uuid(), intent: z.enum(["add", "remove"]) }),
     ),
     async (c) => {
-      const { linkId, intent } = c.req.valid('param');
+      const { linkId, intent } = c.req.valid("param");
       await db
         .update(schema.link)
-        .set({ isPinned: intent === 'add' })
+        .set({ isPinned: intent === "add" })
         .where(eq(schema.link.id, linkId));
-      return c.var.success({ message: 'success' });
+      return c.var.success({ message: "success" });
     },
   )
   /**
    * Create Link
    */
-  .post('/', zValidator('form', CreateLinkSchema), async (c) => {
-    const formData = c.req.valid('form');
+  .post("/", zValidator("form", CreateLinkSchema), async (c) => {
+    const formData = c.req.valid("form");
     const linkData = await fetchLinkData(formData.url);
     const title = formData.title || linkData.title;
 
     if (!title) {
       return c.var.error(
         {
-          field: 'title',
-          type: 'required',
-          message: 'No page Title found. Please provide one.',
+          field: "title",
+          type: "required",
+          message: "No page Title found. Please provide one.",
         },
         400,
       );
@@ -72,42 +72,42 @@ const app = new Hono<AppEnv>()
    * Delete link
    */
   .delete(
-    '/:linkId',
-    zValidator('param', z.object({ linkId: z.string().uuid() })),
+    "/:linkId",
+    zValidator("param", z.object({ linkId: z.string().uuid() })),
     async (c) => {
-      const { linkId } = c.req.valid('param');
+      const { linkId } = c.req.valid("param");
       const [message, status] = await validateLinkAccess(linkId, c.var.user.id);
       if (message) return c.var.error({ message }, status);
 
       await db.delete(schema.link).where(eq(schema.link.id, linkId));
-      return c.var.success({ message: 'Link deleted successfully.' });
+      return c.var.success({ message: "Link deleted successfully." });
     },
   )
   /**
    * Track Visit and Increase view count
    */
   .put(
-    '/:linkId/visited',
-    zValidator('param', z.object({ linkId: z.string().uuid() })),
+    "/:linkId/visited",
+    zValidator("param", z.object({ linkId: z.string().uuid() })),
     async (c) => {
-      const { linkId } = c.req.valid('param');
+      const { linkId } = c.req.valid("param");
       await db
         .update(schema.link)
         .set({ views: sql`${schema.link.views} + 1`, lastVisit: sql`(unixepoch())` })
         .where(eq(schema.link.id, linkId));
-      return c.var.success({ message: 'success' });
+      return c.var.success({ message: "success" });
     },
   )
   /**
    * Edit link
    */
   .put(
-    '/:linkId',
-    zValidator('param', z.object({ linkId: z.string().uuid() })),
-    zValidator('form', EditLinkSchema),
+    "/:linkId",
+    zValidator("param", z.object({ linkId: z.string().uuid() })),
+    zValidator("form", EditLinkSchema),
     async (c) => {
-      const { linkId } = c.req.valid('param');
-      const formData = c.req.valid('form');
+      const { linkId } = c.req.valid("param");
+      const formData = c.req.valid("form");
 
       const [message, status] = await validateLinkAccess(linkId, c.var.user.id);
       if (message) return c.var.error({ message }, status);
@@ -118,14 +118,14 @@ const app = new Hono<AppEnv>()
         .where(eq(schema.link.id, linkId))
         .returning();
 
-      return c.var.success({ message: 'success', link });
+      return c.var.success({ message: "success", link });
     },
   )
   /**
    * Get Link Details
    */
-  .get('/:linkId', zValidator('param', z.object({ linkId: z.string().uuid() })), async (c) => {
-    const { linkId } = c.req.valid('param');
+  .get("/:linkId", zValidator("param", z.object({ linkId: z.string().uuid() })), async (c) => {
+    const { linkId } = c.req.valid("param");
     const link = await db.query.link.findFirst({
       where: and(eq(schema.link.id, linkId)),
       with: {
@@ -134,21 +134,21 @@ const app = new Hono<AppEnv>()
       },
     });
 
-    if (!link) c.var.error({ message: 'Not found' }, 404);
+    if (!link) c.var.error({ message: "Not found" }, 404);
     return c.var.success({ link });
   })
   /**
    * Get paginated links
    */
-  .get('/', zValidator('query', PaginationSchema), async (c) => {
-    const searchParams = c.req.valid('query');
+  .get("/", zValidator("query", PaginationSchema), async (c) => {
+    const searchParams = c.req.valid("query");
 
     const where = [eq(schema.link.ownerId, c.var.user.id)];
     if (searchParams.exclude) where.push(notInArray(schema.link.id, searchParams.exclude));
 
     const args = paginationHelper({
-      table: 'link',
-      searchableFields: ['title', 'url'],
+      table: "link",
+      searchableFields: ["title", "url"],
       searchParams,
       where,
     });

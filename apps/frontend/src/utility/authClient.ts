@@ -1,8 +1,8 @@
-import { createAuthClient } from 'better-auth/react';
-import { adminClient, usernameClient } from 'better-auth/client/plugins';
+import { createAuthClient } from "better-auth/react";
+import { adminClient, usernameClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  baseURL: 'http://localhost:8080',
+  baseURL: "http://localhost:8080",
   plugins: [usernameClient(), adminClient()],
   emailAndPassword: {
     enabled: true,
@@ -15,7 +15,7 @@ export const authClient = createAuthClient({
   user: {
     additionalFields: {
       isActive: {
-        type: 'boolean',
+        type: "boolean",
         required: true,
         defaultValue: true,
       },

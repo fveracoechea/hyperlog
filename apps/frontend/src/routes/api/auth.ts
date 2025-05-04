@@ -1,6 +1,6 @@
-import { auth } from '@/.server/auth';
+import { auth } from "@/.server/auth";
 
-import type { Route } from './+types/auth';
+import type { Route } from "./+types/auth";
 
 export async function loader({ request }: Route.LoaderArgs) {
   return auth.handler(request);
