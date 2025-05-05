@@ -1,5 +1,4 @@
-import { useRef } from "react";
-import { data, Form, Link, redirect, useFetcher, useNavigation } from "react-router";
+import { data, href, Link, redirect } from "react-router";
 
 import { namedAction } from "@hyperlog/helpers";
 
@@ -9,7 +8,6 @@ import {
   EyeIcon,
   FolderIcon,
   LinkIcon,
-  LoaderCircle,
   PencilIcon,
   SaveIcon,
   StarIcon,
@@ -29,7 +27,8 @@ import { Typography } from "@/components/ui/typography";
 import { type Route } from "./+types/LinkDetails";
 import { LineItem } from "../components/LineItem";
 import { client } from "@/utility/honoClient.ts";
-import { href } from "npm:react-router@^7.5.3";
+import { trackLinkActivity } from "../utility/link.ts";
+import { useFetcher } from "react-router";
 
 export const ErrorBoundary = PageErrorBoundary;
 
@@ -63,13 +62,12 @@ export async function clientLoader({ params: { linkId } }: Route.LoaderArgs) {
 }
 
 export default function LinkDetailsPage({ loaderData: { link } }: Route.ComponentProps) {
-  const navigation = useNavigation();
+  const favorite = useFetcher();
 
-  const fetcher = useFetcher();
-  const formRef = useRef<HTMLFormElement | null>(null);
-
-  const isTogglingFavorite = navigation.state !== "idle" &&
-    Boolean(navigation.formData?.has("toggleFavorite"));
+  let isFavorite = link.isPinned;
+  if (favorite.formData) {
+    isFavorite = favorite.formData.get("toggle") === "add";
+  }
 
   return (
     <>
@@ -103,46 +101,34 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
               <span>Edit Link</span>
             </Link>
           </Button>
-          <Form method="post">
-            <input type="hidden" name="toggle" value={link.isPinned ? "remove" : "add"} />
+          <favorite.Form method="post">
+            <input type="hidden" name="toggle" value={isFavorite ? "remove" : "add"} />
             <Button
               size="sm"
-              variant={link.isPinned ? "secondary" : "default"}
+              variant={isFavorite ? "secondary" : "default"}
               name="intent"
               value="favorite"
             >
-              {isTogglingFavorite && (
-                <>
-                  <LoaderCircle className="stroke-primary h-4 w-4 animate-spin" />
-                  <span>Updating Favories</span>
-                </>
-              )}
-
-              {!isTogglingFavorite &&
-                (link.isPinned
-                  ? (
-                    <>
-                      <StarOffIcon /> Remove from Favorites
-                    </>
-                  )
-                  : (
-                    <>
-                      <StarIcon /> Add to Favorites
-                    </>
-                  ))}
+              {isFavorite
+                ? (
+                  <>
+                    <StarOffIcon />
+                    <span>Remove from Favorites</span>
+                  </>
+                )
+                : (
+                  <>
+                    <StarIcon />
+                    <span>Add to Favorites</span>
+                  </>
+                )}
             </Button>
-          </Form>
+          </favorite.Form>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(400px,1fr)] 2xl:gap-6">
         <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4">
-          <fetcher.Form
-            method="PUT"
-            action={`/api/link/${link.id}`}
-            ref={formRef}
-            className="hidden"
-          />
           <LineItem
             title="Link"
             Icon={LinkIcon}
@@ -155,7 +141,7 @@ export default function LinkDetailsPage({ loaderData: { link } }: Route.Componen
               rel="noreferrer"
               target="_blank"
               href={link.url}
-              onClick={() => formRef.current?.requestSubmit()}
+              onClick={async () => await trackLinkActivity(link.id)}
             >
               {link.url}
             </Typography>

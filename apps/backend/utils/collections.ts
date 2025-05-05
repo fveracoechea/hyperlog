@@ -8,25 +8,37 @@ import { isNonNullable } from "@hyperlog/helpers";
 import { db, schema, TransactionType } from "@/db/db.ts";
 import { zStringArray } from "@hyperlog/schemas";
 
+/**
+ * - parent: collections with a null parent-id
+ * - child: collections with a non-null parent-id
+ * - owned: all collections created by the current user (both parent and child)
+ * - shared: collections other users have shared with current user
+ */
 export const CollectionQuerySchema = z.object({
   search: z.string().optional(),
   exclude: zStringArray,
+  type: z.enum(["parent", "child", "owned", "shared"]).optional(),
 }).optional();
 
+/**
+ * TODO: Handle shared collections
+ */
 export function getCollections(args: {
-  type: "parent" | "child";
   query: z.infer<typeof CollectionQuerySchema>;
   userId: string;
 }) {
-  const { query = {}, type, userId } = args;
-  const { search, exclude } = query;
+  const { query = {}, userId } = args;
+  const { search, exclude, type = "owned" } = query;
 
   const filters = [
     eq(schema.collection.ownerId, userId),
-    type === "parent"
-      ? isNull(schema.collection.parentId)
-      : isNotNull(schema.collection.parentId),
   ];
+
+  if (type === "parent") {
+    filters.push(isNull(schema.collection.parentId));
+  } else if (type === "child") {
+    filters.push(isNotNull(schema.collection.parentId));
+  }
 
   if (search) {
     const searchValue = `%${search}%`.toLowerCase();

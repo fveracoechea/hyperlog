@@ -31,7 +31,7 @@ export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
 export function clientLoader({}: Route.ClientLoaderArgs) {
   return jsonHash({
     async collections() {
-      const response = await client.api.collection.parent.$get();
+      const response = await client.api.collection.$get({ query: { type: "parent" } });
       const json = await response.json();
       return json.data.collections;
     },

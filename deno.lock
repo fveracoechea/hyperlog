@@ -15,7 +15,7 @@
     "npm:@deno/vite-plugin@^1.0.4": "1.0.4_vite@6.3.3__@types+node@22.15.3__picomatch@4.0.2_@types+node@22.15.3",
     "npm:@faker-js/faker@^9.6.0": "9.7.0",
     "npm:@hono/zod-validator@0.5": "0.5.0_hono@4.7.8_zod@3.24.3",
-    "npm:@hookform/resolvers@^5.0.1": "5.0.1_react-hook-form@7.56.1__react@19.1.0_react@19.1.0",
+    "npm:@hookform/resolvers@^5.0.1": "5.0.1_react-hook-form@7.56.2__react@19.1.0_react@19.1.0",
     "npm:@libsql/client@~0.15.2": "0.15.4",
     "npm:@libsql/client@~0.15.4": "0.15.4",
     "npm:@radix-ui/react-checkbox@^1.1.5": "1.2.3_@types+react@19.1.2_@types+react-dom@19.1.2__@types+react@19.1.2_react@19.1.0_react-dom@19.1.0__react@19.1.0",
@@ -50,11 +50,10 @@
     "npm:neverthrow@^8.2.0": "8.2.0",
     "npm:postcss@^8.5.3": "8.5.3",
     "npm:react-dom@^19.1.0": "19.1.0_react@19.1.0",
-    "npm:react-hook-form@^7.56.1": "7.56.1_react@19.1.0",
+    "npm:react-hook-form@^7.56.2": "7.56.2_react@19.1.0",
     "npm:react-router@^7.5.3": "7.5.3_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:react@^19.1.0": "19.1.0",
-    "npm:remix-client-cache@^2.1.0": "2.1.0_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0",
-    "npm:remix-hook-form@^7.0.1": "7.0.1_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-hook-form@7.56.1__react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0",
+    "npm:remix-hook-form@^7.0.1": "7.0.1_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-hook-form@7.56.2__react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0",
     "npm:remix-themes@^2.0.4": "2.0.4_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:remix-utils@^8.5.0": "8.5.0_react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_zod@3.24.3_react-dom@19.1.0__react@19.1.0",
     "npm:tailwind-merge@^2.6.0": "2.6.0",
@@ -654,7 +653,7 @@
         "zod"
       ]
     },
-    "@hookform/resolvers@5.0.1_react-hook-form@7.56.1__react@19.1.0_react@19.1.0": {
+    "@hookform/resolvers@5.0.1_react-hook-form@7.56.2__react@19.1.0_react@19.1.0": {
       "integrity": "sha512-u/+Jp83luQNx9AdyW2fIPGY6Y7NG68eN2ZW8FOJYL+M0i4s49+refdJdOp/A9n9HFQtQs3HIDHQvX3ZET2o7YA==",
       "dependencies": [
         "@standard-schema/utils",
@@ -2590,8 +2589,8 @@
         "scheduler"
       ]
     },
-    "react-hook-form@7.56.1_react@19.1.0": {
-      "integrity": "sha512-qWAVokhSpshhcEuQDSANHx3jiAEFzu2HAaaQIzi/r9FNPm1ioAvuJSD4EuZzWd7Al7nTRKcKPnBKO7sRn+zavQ==",
+    "react-hook-form@7.56.2_react@19.1.0": {
+      "integrity": "sha512-vpfuHuQMF/L6GpuQ4c3ZDo+pRYxIi40gQqsCmmfUBwm+oqvBhKhwghCuj2o00YCgSfU6bR9KC/xnQGWm3Gr08A==",
       "dependencies": [
         "react"
       ]
@@ -2669,15 +2668,7 @@
     "readdirp@4.1.2": {
       "integrity": "sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg=="
     },
-    "remix-client-cache@2.1.0_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0": {
-      "integrity": "sha512-FVQ3ha2qmtpyXStNultVCdnrkMhqa8meKcNorlKMwqWW059zoKZupWO58z7I07kjj+R/okkAW5gofKrI9cQv9w==",
-      "dependencies": [
-        "react",
-        "react-dom",
-        "react-router"
-      ]
-    },
-    "remix-hook-form@7.0.1_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-hook-form@7.56.1__react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0": {
+    "remix-hook-form@7.0.1_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-hook-form@7.56.2__react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0": {
       "integrity": "sha512-1qTeY08f0TVh/jq4OTbJG3lbB5mePe7UmtWXVWoJCGlk9gWRNweupYJ/POuHtyDVCnxNhgbsSi8gd/IhkB7RwA==",
       "dependencies": [
         "react",
@@ -3211,9 +3202,8 @@
             "npm:neverthrow@^8.2.0",
             "npm:postcss@^8.5.3",
             "npm:react-dom@^19.1.0",
-            "npm:react-hook-form@^7.56.1",
+            "npm:react-hook-form@^7.56.2",
             "npm:react@^19.1.0",
-            "npm:remix-client-cache@^2.1.0",
             "npm:remix-hook-form@^7.0.1",
             "npm:remix-themes@^2.0.4",
             "npm:remix-utils@^8.5.0",

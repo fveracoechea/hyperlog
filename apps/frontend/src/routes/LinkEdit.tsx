@@ -1,18 +1,13 @@
-import { Controller } from "react-hook-form";
-import { data, Form, Link, redirect } from "react-router";
-
-import { getMyCollections } from "@/.server/resources/collection";
-import { getLinkDetails, updateLink } from "@/.server/resources/link";
-import { getMyTags } from "@/.server/resources/tag";
-import { getSessionOrRedirect } from "@/.server/session";
-import { EditLinkSchema } from "@/lib/zod";
+import { Controller, useForm } from "react-hook-form";
+import { data, Link, redirect } from "react-router";
+import { clsx } from "clsx";
+import { jsonHash } from "remix-utils/json-hash";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatDate, formatDistanceToNow } from "date-fns";
 import {
   CalendarClockIcon,
   CircleXIcon,
   EyeIcon,
-  FolderIcon,
   LinkIcon,
   LoaderCircleIcon,
   PencilOffIcon,
@@ -21,7 +16,9 @@ import {
   TypeOutlineIcon,
   Undo2Icon,
 } from "lucide-react";
-import { getValidatedFormData, useRemixForm } from "remix-hook-form";
+
+import { EditLinkSchema, EditLinkSchemaType } from "@hyperlog/schemas";
+import { client } from "@/utility/honoClient.ts";
 
 import { Banner } from "@/components/Banner";
 import { CollectionIcon } from "@/components/CollectionIcon";
@@ -40,57 +37,61 @@ import {
 import { Typography } from "@/components/ui/typography";
 
 import { type Route } from "./+types/LinkEdit";
+import { href } from "react-router";
+import { useSubmit } from "react-router";
 
 export const ErrorBoundary = PageErrorBoundary;
 
 const resolver = zodResolver(EditLinkSchema);
 
-export async function action({ request, params: { linkId } }: Route.LoaderArgs) {
-  const {
-    errors,
-    data,
-    receivedValues: defaultValues,
-  } = await getValidatedFormData(request, resolver);
-
-  if (errors) return { errors, defaultValues };
-
-  await updateLink(linkId, data);
-  return redirect(`/links/${linkId}`);
+export async function clientAction({ request, params: { linkId } }: Route.ClientActionArgs) {
+  const form = await request.json() as EditLinkSchemaType;
+  const res = await client.api.link[":linkId"].$put({ param: { linkId }, form });
+  const json = await res.json();
+  if (!json.success) throw data(json.error.message, { status: res.status });
+  // TODO: add snackbar notification
+  return redirect(href("/links/:linkId", { linkId }));
 }
 
-export async function loader({ request, params: { linkId } }: Route.LoaderArgs) {
-  const {
-    headers,
-    data: { user },
-  } = await getSessionOrRedirect(request);
-
-  const link = await getLinkDetails(linkId);
-  if (!link) throw data(null, { status: 404 });
-
-  const [tags, collections] = await Promise.all([
-    getMyTags(user.id),
-    getMyCollections(user.id),
-  ]);
-
-  return data({ link, tags, collections, user }, { headers });
+export function clientLoader({ params: { linkId } }: Route.ClientLoaderArgs) {
+  return jsonHash({
+    async link() {
+      const res = await client.api.link[":linkId"].$get({ param: { linkId } });
+      const json = await res.json();
+      if (!json.success || !json.data.link) throw data(null, { status: res.status });
+      return json.data.link;
+    },
+    async tags() {
+      const response = await client.api.tag.$get();
+      const json = await response.json();
+      return json.data.tags;
+    },
+    async collections() {
+      const res = await client.api.collection.$get({ query: { type: "owned" } });
+      const json = await res.json();
+      return json.data.collections;
+    },
+  });
 }
 
 export default function LinkEditPage(props: Route.ComponentProps) {
-  const {
-    loaderData: { link, tags, collections },
-  } = props;
+  const { loaderData: { link, tags, collections } } = props;
 
-  const form = useRemixForm({
-    submitConfig: { replace: true },
+  const submit = useSubmit();
+  const { control, register, handleSubmit, formState, reset } = useForm({
     resolver,
     defaultValues: {
       title: link.title,
       url: link.url,
-      notes: link.notes,
+      notes: link.notes ?? undefined,
       tagId: link.tagId ?? undefined,
       collectionId: link.collectionId ?? undefined,
     },
   });
+
+  const onSubmit = handleSubmit((form) =>
+    submit(form, { method: "post", encType: "application/json", replace: true })
+  );
 
   return (
     <>
@@ -107,8 +108,8 @@ export default function LinkEditPage(props: Route.ComponentProps) {
             />
           }
         />
-        <div className="flex gap-4">
-          <Button asChild variant="destructive">
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
             <Link to={`/links/${link.id}`} replace>
               <PencilOffIcon /> <span>Cancel Edit</span>
             </Link>
@@ -117,14 +118,14 @@ export default function LinkEditPage(props: Route.ComponentProps) {
           <Button
             variant="outline"
             type="button"
-            disabled={!form.formState.isDirty}
-            onClick={() => form.reset()}
+            disabled={!formState.isDirty || formState.isSubmitting}
+            onClick={() => reset()}
           >
             <Undo2Icon className="min-h-5 min-w-5" /> <span>Revert Changes</span>
           </Button>
 
-          <Button type="submit" form="link-edit" disabled={!form.formState.isDirty}>
-            {form.formState.isSubmitting
+          <Button type="submit" form="link-edit" disabled={!formState.isDirty}>
+            {formState.isSubmitting
               ? <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
               : <SaveIcon className="min-h-5 min-w-5" />}
             <span>Save Changes</span>
@@ -132,18 +133,22 @@ export default function LinkEditPage(props: Route.ComponentProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(400px,1fr)] 2xl:gap-6">
-        <Form
+      <div
+        className={clsx(
+          "grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(400px,1fr)] 2xl:gap-6",
+          formState.isSubmitting && "opacity-50 cursor-wait",
+        )}
+      >
+        <form
           id="link-edit"
-          replace
           method="POST"
-          onSubmit={form.handleSubmit}
+          onSubmit={onSubmit}
           className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4"
         >
           <FormField
             label="Title"
-            {...form.register("title")}
-            errorMessage={form.formState.errors.title?.message}
+            {...register("title")}
+            errorMessage={formState.errors.title?.message}
             rightBtn={
               <Button variant="ghost" disabled aria-hidden="true">
                 <TypeOutlineIcon className="min-h-5 min-w-5" />
@@ -152,8 +157,8 @@ export default function LinkEditPage(props: Route.ComponentProps) {
           />
           <FormField
             label="URL"
-            {...form.register("url")}
-            errorMessage={form.formState.errors.url?.message}
+            {...register("url")}
+            errorMessage={formState.errors.url?.message}
             fieldClassName="col-span-2"
             rightBtn={
               <Button variant="ghost" disabled aria-hidden="true">
@@ -167,7 +172,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
               Collection
             </Typography>
             <Controller
-              control={form.control}
+              control={control}
               name="collectionId"
               render={({ field: { value, name, onChange, ...selectProps } }) => (
                 <Select
@@ -210,7 +215,7 @@ export default function LinkEditPage(props: Route.ComponentProps) {
               Tag
             </Typography>
             <Controller
-              control={form.control}
+              control={control}
               name="tagId"
               render={({ field: { value, name, onChange, ...selectProps } }) => (
                 <Select
@@ -250,14 +255,14 @@ export default function LinkEditPage(props: Route.ComponentProps) {
 
           {/* TODO: add rich markdown editor */}
           <FormField
-            {...form.register("notes")}
+            {...register("notes")}
             label="Notes"
             placeholder="Relevant details or thoughts"
             variant="textarea"
             fieldClassName="col-span-2"
             className="min-h-36 resize-none"
           />
-        </Form>
+        </form>
 
         <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4">
           <LineItem title="Last Saved" Icon={SaveIcon}>

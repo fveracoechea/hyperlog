@@ -14,20 +14,20 @@ export const ErrorBoundary = PageErrorBoundary;
 export function clientLoader({}: Route.LoaderArgs) {
   return jsonHash({
     async parent() {
-      const response = await client.api.collection.parent.$get();
-      const json = await response.json();
+      const res = await client.api.collection.$get({ query: { type: "parent" } });
+      const json = await res.json();
       return json.data.collections;
     },
-    async tags() {
-      const response = await client.api.collection.shared.$get();
-      const json = await response.json();
+    async shared() {
+      const res = await client.api.collection.$get({ query: { type: "shared" } });
+      const json = await res.json();
       return json.data.collections;
     },
   });
 }
 
 export default function Collections({ loaderData }: Route.ComponentProps) {
-  const { parent, shared } = loaderData;
+  const { parent } = loaderData;
   return (
     <>
       <section className="flex flex-col gap-4">

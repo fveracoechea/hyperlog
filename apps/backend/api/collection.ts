@@ -22,26 +22,15 @@ const app = new Hono<AppEnv>()
   .use(sessionMiddleware)
   /**
    * GET parent collections
+   * TODO: handle shared collections
    */
-  .get("/parent", zValidator("query", CollectionQuerySchema), async (c) => {
+  .get("/", zValidator("query", CollectionQuerySchema), async (c) => {
     const query = c.req.valid("query");
-    const collections = await getCollections({ type: "parent", query, userId: c.var.user.id });
+    const collections = await getCollections({
+      query,
+      userId: c.var.user.id,
+    });
     return c.var.success({ collections });
-  })
-  /**
-   * GET child collections
-   */
-  .get("/child", zValidator("query", CollectionQuerySchema), async (c) => {
-    const query = c.req.valid("query");
-    const collections = await getCollections({ type: "child", query, userId: c.var.user.id });
-    return c.var.success({ collections });
-  })
-  /**
-   * TODO:
-   * GET shared collections
-   */
-  .get("/shared", (c) => {
-    return c.var.success({ collections: [] });
   })
   /**
    * GET collection details
@@ -126,4 +115,5 @@ const app = new Hono<AppEnv>()
       return c.var.success({ message: "Collection updated successfully." });
     },
   );
+
 export default app;

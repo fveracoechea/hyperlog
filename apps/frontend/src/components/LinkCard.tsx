@@ -1,5 +1,4 @@
-import { useRef } from "react";
-import { useFetcher, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 import clsx from "clsx";
 import { formatDistanceToNow } from "date-fns";
@@ -10,6 +9,7 @@ import { CollectionIcon } from "./CollectionIcon";
 import { LazyFavicon } from "./LazyFavicon";
 import { Button } from "./ui/button";
 import { Typography } from "./ui/typography";
+import { trackLinkActivity } from "../utility/link.ts";
 
 type LinkData = Route.ComponentProps["loaderData"]["recentActivity"][number];
 type LinkType =
@@ -23,28 +23,19 @@ type Props = {
 };
 
 export function LinkCard({ link, hideDetails, isLoading }: Props) {
-  const fetcher = useFetcher();
   const navigate = useNavigate();
-  const formRef = useRef<HTMLFormElement | null>(null);
-
   return (
     <a
       href={link.url}
       title={link.notes ?? ""}
       rel="noreferrer"
       target="_blank"
-      onClick={() => formRef.current?.requestSubmit()}
+      onClick={async () => await trackLinkActivity(link.id)}
       className={clsx(
         "focus-visible:ring-muted-foreground group block rounded-md focus-visible:ring-2",
         isLoading && "cursor-wait opacity-50",
       )}
     >
-      <fetcher.Form
-        method="PUT"
-        action={`/api/link/${link.id}`}
-        ref={formRef}
-        className="hidden"
-      />
       <article
         className={clsx(
           "border-border group-hover:border-primary h-full rounded-md border transition-colors",
