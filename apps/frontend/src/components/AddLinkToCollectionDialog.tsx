@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useFetcher } from "react-router";
 
 import { debounce } from "@/lib/time";
 import type { LinkItem } from "@/routes/CollectionEdit";
-import type { LinkApiData } from "@/routes/api/link";
 import clsx from "clsx";
 import { Link2OffIcon, PlusIcon } from "lucide-react";
 
@@ -23,6 +22,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Typography } from "./ui/typography";
+import { LinkListData } from "@/routes/Links.tsx";
 
 type Props = {
   links: LinkItem[];
@@ -32,7 +32,7 @@ type Props = {
 export function AddLinkToCollectionDialog(props: Props) {
   const { links, onSelect } = props;
 
-  const fetcher = useFetcher<LinkApiData>();
+  const fetcher = useFetcher<LinkListData>();
 
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<LinkItem[]>([]);
@@ -49,20 +49,21 @@ export function AddLinkToCollectionDialog(props: Props) {
   });
 
   if (links.length > 0) links.forEach((l) => params.append("exclude", l.databaseId));
-  const url = `/api/link?${params}`;
+  const url = `/links?${params}`;
 
   function fetchPaginatedLinks(page: number) {
     const searchParams = new URLSearchParams(params);
     searchParams.set("page", String(page));
     setPage(page);
-    fetcher.load(`/api/link?${searchParams}`);
+    fetcher.load(`/links?${searchParams}`);
   }
 
-  const debouncedLoad = debounce(300, (value: string) => {
-    const searchParams = new URLSearchParams(params);
-    if (value) searchParams.set("search", value);
-    fetcher.load(`/api/link?${searchParams}`);
-  });
+  const debouncedSerach = useMemo(() =>
+    debounce(350, (search: string) => {
+      const searchParams = new URLSearchParams(params);
+      if (search) searchParams.set("search", search);
+      fetcher.load(`/links?${searchParams}`);
+    }), []);
 
   return (
     <Dialog
@@ -89,7 +90,7 @@ export function AddLinkToCollectionDialog(props: Props) {
             onChange={(e) => {
               const value = e.target.value;
               setSearch(value);
-              debouncedLoad(value);
+              debouncedSerach(value);
             }}
             onClearSearch={() => {
               setSearch("");

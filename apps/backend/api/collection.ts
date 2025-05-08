@@ -97,9 +97,9 @@ const app = new Hono<AppEnv>()
   .put(
     "/:collectionId",
     zValidator("param", z.object({ collectionId: z.string().uuid() })),
-    zValidator("form", EditCollectionSchema),
+    zValidator("json", EditCollectionSchema),
     async (c) => {
-      const formData = c.req.valid("form");
+      const formData = c.req.valid("json");
       const { collectionId } = c.req.valid("param");
 
       const [message, status] = await validateCollectionAccess(collectionId, c.var.user.id);

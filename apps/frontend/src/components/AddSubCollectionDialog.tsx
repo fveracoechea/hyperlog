@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, UseFormReturn } from "react-hook-form";
 
 import { type CreateCollectionFormFields, CreateCollectionSchema } from "@/lib/zod";
 import type { SubCollectionItem } from "@/routes/CollectionEdit";
@@ -32,7 +32,7 @@ export function AddSubCollectionDialog(props: Props) {
   const [open, setOpen] = useState(false);
   const { handleSubmit, register, formState, control, reset, setError } = useForm({
     resolver,
-  });
+  }) as UseFormReturn<CreateCollectionFormFields>;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -1,5 +1,5 @@
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { data, Form, Link } from "react-router";
+import { Controller, useFieldArray, useForm, UseFormReturn } from "react-hook-form";
+import { data, Form, Link, redirect } from "react-router";
 
 import { type EditCollectionFormFields, EditCollectionSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +27,7 @@ import { Typography } from "@/components/ui/typography";
 
 import type { Route } from "./+types/CollectionEdit";
 import { client } from "../utility/honoClient.ts";
+import { useSubmit } from "react-router";
 
 export const ErrorBoundary = PageErrorBoundary;
 
@@ -52,30 +53,25 @@ export async function clientLoader({ params: { collectionId } }: Route.ClientLoa
 export type SubCollectionItem = EditCollectionFormFields["subCollections"][number];
 export type LinkItem = EditCollectionFormFields["links"][number];
 
-export async function clientAaction(
+export async function clientAction(
   { request, params: { collectionId } }: Route.ClientActionArgs,
 ) {
-  // const {
-  //   headers,
-  //   data: { user },
-  // } = await getSessionOrRedirect(request);
-  //
-  // if (request.method === "POST") {
-  //   const {
-  //     errors,
-  //     data: formData,
-  //     receivedValues: defaultValues,
-  //   } = await getValidatedFormData(request, resolver);
-  //   if (errors) return data({ errors, defaultValues }, { headers });
-  //   await editCollection(user.id, collectionId, formData);
-  //   return redirect(`/collections/${collectionId}`, { headers });
-  // }
+  const form = await request.json() as EditCollectionFormFields;
+  const res = await client.api.collection[":collectionId"].$put({
+    param: { collectionId },
+    json: form,
+  });
+  const json = await res.json();
+  if (!json.success) throw data(json.error.message, { status: res.status });
+  return redirect(`/collections/${collectionId}`);
 }
 
 export default function CollectionPage(props: Route.ComponentProps) {
   const {
     loaderData: { collection, subCollections, links },
   } = props;
+
+  const submit = useSubmit();
 
   const { control, register, formState, handleSubmit, reset } = useForm({
     resolver,
@@ -86,7 +82,11 @@ export default function CollectionPage(props: Route.ComponentProps) {
       subCollections,
       links,
     },
-  });
+  }) as UseFormReturn<EditCollectionFormFields>;
+
+  const onSubmit = handleSubmit((form) =>
+    submit(form, { method: "post", encType: "application/json", replace: true })
+  );
 
   const linksField = useFieldArray({ control, name: "links" });
   const subCollectionsField = useFieldArray({ control, name: "subCollections" });
@@ -131,7 +131,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
         id="collection-edit"
         className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(502px,1fr)] 2xl:gap-6"
         method="POST"
-        // onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
         <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4 lg:row-span-2">
           <FormField

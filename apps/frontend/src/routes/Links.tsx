@@ -12,6 +12,8 @@ import { PaginationForm } from "@/components/PaginationForm";
 import { type Route } from "./+types/Links";
 import { client } from "../utility/honoClient.ts";
 
+export type LinkListData = Route.ComponentProps["loaderData"];
+
 export const ErrorBoundary = PageErrorBoundary;
 
 export async function clientLoader({ request }: Route.LoaderArgs) {
