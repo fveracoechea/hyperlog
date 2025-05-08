@@ -21,7 +21,7 @@ import { eq } from "drizzle-orm";
 const app = new Hono<AppEnv>()
   .use(sessionMiddleware)
   /**
-   * GET parent collections
+   * GET list collections
    * TODO: handle shared collections
    */
   .get("/", zValidator("query", CollectionQuerySchema), async (c) => {
@@ -80,12 +80,15 @@ const app = new Hono<AppEnv>()
     async (c) => {
       const { collectionId } = c.req.valid("param");
 
-      const [message, status] = await validateCollectionAccess(collectionId, c.var.user.id);
-      if (message) return c.var.error({ message }, status);
+      const [message, status, collection] = await validateCollectionAccess(
+        collectionId,
+        c.var.user.id,
+      );
 
+      if (message) return c.var.error({ message }, status);
       await db.delete(schema.collection).where(eq(schema.collection.id, collectionId));
 
-      return c.var.success({ message: "Collection deleted successfully." });
+      return c.var.success({ message: "Collection deleted successfully.", collection });
     },
   )
   /**

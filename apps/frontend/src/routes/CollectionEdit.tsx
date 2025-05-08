@@ -1,8 +1,6 @@
-import { Controller, useFieldArray } from "react-hook-form";
-import { data, Form, Link, redirect } from "react-router";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { data, Form, Link } from "react-router";
 
-import { editCollection, getCollectionDetails } from "@/.server/resources/collection";
-import { getSessionOrRedirect } from "@/.server/session";
 import { type EditCollectionFormFields, EditCollectionSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,7 +13,6 @@ import {
   TrashIcon,
   Undo2Icon,
 } from "lucide-react";
-import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 
 import { AddLinkToCollectionDialog } from "@/components/AddLinkToCollectionDialog";
 import { AddSubCollectionDialog } from "@/components/AddSubCollectionDialog";
@@ -29,56 +26,50 @@ import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 
 import type { Route } from "./+types/CollectionEdit";
+import { client } from "../utility/honoClient.ts";
 
 export const ErrorBoundary = PageErrorBoundary;
 
 const resolver = zodResolver(EditCollectionSchema);
 
-export async function loader({ params: { collectionId }, request }: Route.LoaderArgs) {
-  const {
-    headers,
-    data: { user },
-  } = await getSessionOrRedirect(request);
-
-  const results = await getCollectionDetails(user.id, collectionId);
-  const links = results.links.map(({ tag: _, ...link }) => ({ ...link, databaseId: link.id }));
-  const subCollections = results.subCollections.map(
-    ({ links: _l, owner: _o, id, ...data }) => ({
-      id,
-      databaseId: id,
-      ...data,
-    }),
-  );
-
-  return data(
-    {
-      collection: results.collection,
-      subCollections,
-      links,
-    },
-    { headers },
-  );
+export async function clientLoader({ params: { collectionId } }: Route.ClientLoaderArgs) {
+  const res = await client.api.collection[":collectionId"].$get({ param: { collectionId } });
+  const json = await res.json();
+  if (!json.success) throw data(json.error.message, { status: res.status });
+  const { collection, subCollections, links } = json.data;
+  return {
+    collection,
+    links: links.map(({ tag: _, ...link }) => ({ ...link, databaseId: link.id })),
+    subCollections: subCollections.map(
+      ({ links: _l, owner: _o, ...data }) => ({
+        ...data,
+        databaseId: data.id,
+      }),
+    ),
+  };
 }
 
 export type SubCollectionItem = EditCollectionFormFields["subCollections"][number];
 export type LinkItem = EditCollectionFormFields["links"][number];
 
-export async function action({ request, params: { collectionId } }: Route.ActionArgs) {
-  const {
-    headers,
-    data: { user },
-  } = await getSessionOrRedirect(request);
-
-  if (request.method === "POST") {
-    const {
-      errors,
-      data: formData,
-      receivedValues: defaultValues,
-    } = await getValidatedFormData(request, resolver);
-    if (errors) return data({ errors, defaultValues }, { headers });
-    await editCollection(user.id, collectionId, formData);
-    return redirect(`/collections/${collectionId}`, { headers });
-  }
+export async function clientAaction(
+  { request, params: { collectionId } }: Route.ClientActionArgs,
+) {
+  // const {
+  //   headers,
+  //   data: { user },
+  // } = await getSessionOrRedirect(request);
+  //
+  // if (request.method === "POST") {
+  //   const {
+  //     errors,
+  //     data: formData,
+  //     receivedValues: defaultValues,
+  //   } = await getValidatedFormData(request, resolver);
+  //   if (errors) return data({ errors, defaultValues }, { headers });
+  //   await editCollection(user.id, collectionId, formData);
+  //   return redirect(`/collections/${collectionId}`, { headers });
+  // }
 }
 
 export default function CollectionPage(props: Route.ComponentProps) {
@@ -86,7 +77,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
     loaderData: { collection, subCollections, links },
   } = props;
 
-  const { control, register, formState, handleSubmit, reset } = useRemixForm({
+  const { control, register, formState, handleSubmit, reset } = useForm({
     resolver,
     defaultValues: {
       name: collection.name,
@@ -109,8 +100,8 @@ export default function CollectionPage(props: Route.ComponentProps) {
           iconNode={<CollectionIcon size="large" color={collection.color ?? undefined} />}
         />
 
-        <div className="flex gap-4">
-          <Button asChild variant="destructive">
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
             <Link to={`/collections/${collection.id}`} replace>
               <PencilOffIcon /> <span>Cancel Edit</span>
             </Link>
@@ -140,7 +131,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
         id="collection-edit"
         className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(520px,2fr)_minmax(502px,1fr)] 2xl:gap-6"
         method="POST"
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
       >
         <div className="border-border relative flex h-fit flex-col gap-4 rounded-md border p-4 lg:row-span-2">
           <FormField

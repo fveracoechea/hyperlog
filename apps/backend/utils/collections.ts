@@ -57,8 +57,6 @@ export function getCollections(args: {
 }
 
 export async function getCollectionDetails(userId: string, collectionId: string) {
-  let error: HTTPException | null = null;
-
   const [collection, sharedRelation] = await Promise.all([
     db.query.collection.findFirst({
       with: { owner: true, users: { with: { user: true } } },
@@ -73,14 +71,17 @@ export async function getCollectionDetails(userId: string, collectionId: string)
   ]);
 
   if (!collection) {
-    error = new HTTPException(404, { message: "Collection not found." });
-  } else if (!sharedRelation && collection.ownerId !== userId) {
-    error = new HTTPException(403, {
-      message: "You are not allowed to access this collection.",
-    });
+    return [null, new HTTPException(404, { message: "Collection not found." })] as const;
   }
 
-  if (error) return [null, error] as const;
+  if (!sharedRelation && collection.ownerId !== userId) {
+    return [
+      null,
+      new HTTPException(403, {
+        message: "You are not allowed to access this collection.",
+      }),
+    ] as const;
+  }
 
   const [subCollections, links] = await Promise.all([
     db.query.collection.findMany({
@@ -163,11 +164,11 @@ export async function validateCollectionAccess(collectionId: string, userId: str
     where: eq(schema.collection.id, collectionId),
   });
 
-  if (!collection) return ["Collection not found.", 404] as const;
+  if (!collection) return ["Collection not found.", 404, null] as const;
 
   if (collection.ownerId !== userId) {
-    return ["You are not allowed to access this collection.", 403] as const;
+    return ["You are not allowed to access this collection.", 403, null] as const;
   }
 
-  return [null, null] as const;
+  return [null, null, collection!] as const;
 }

@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { useFetcher } from "react-router";
+import { type ReactNode, useEffect, useState } from "react";
+import { Form, useFetcher, useNavigation } from "react-router";
 
 import { LoaderCircleIcon } from "lucide-react";
 
@@ -28,7 +28,7 @@ type Props = {
 export function DeleteCollectionDialog(props: Props) {
   const { collection, trigger } = props;
 
-  const fetcher = useFetcher();
+  const navigation = useNavigation();
 
   return (
     <Dialog>
@@ -52,18 +52,20 @@ export function DeleteCollectionDialog(props: Props) {
               Close
             </Button>
           </DialogClose>
-          <fetcher.Form method="DELETE">
-            {fetcher.state === "submitting" && (
+          <Form method="DELETE">
+            {navigation.state === "submitting" && (
               <div className="text-cpt-red flex h-10 w-20 items-center justify-center">
                 <LoaderCircleIcon className="h-6 w-6 animate-spin" />
               </div>
             )}
-            {fetcher.state === "idle" && (
-              <Button variant="destructive" type="submit" className="w-24">
-                Yes, Delete
-              </Button>
+            {navigation.state === "idle" && (
+              <DialogClose asChild>
+                <Button variant="destructive" type="submit" className="w-24">
+                  Yes, Delete
+                </Button>
+              </DialogClose>
             )}
-          </fetcher.Form>
+          </Form>
         </DialogFooter>
       </DialogContent>
     </Dialog>

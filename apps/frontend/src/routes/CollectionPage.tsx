@@ -1,7 +1,7 @@
 import { data, Link, redirect } from "react-router";
 
-import { deleteCollection, getCollectionDetails } from "@/.server/resources/collection";
-import { getSessionOrRedirect } from "@/.server/session";
+// import { deleteCollection } from "@/.server/resources/collection";
+// import { getSessionOrRedirect } from "@/.server/session";
 import { FoldersIcon, LinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 import { Banner, SubBanner } from "@/components/Banner";
@@ -14,27 +14,36 @@ import { PageErrorBoundary } from "@/components/PageErrorBoundary";
 import { Button } from "@/components/ui/button";
 
 import type { Route } from "./+types/CollectionPage";
+import { client } from "@/utility/honoClient.ts";
 
 export const ErrorBoundary = PageErrorBoundary;
 
-export async function loader({ params: { collectionId }, request }: Route.LoaderArgs) {
-  const {
-    headers,
-    data: { user },
-  } = await getSessionOrRedirect(request);
-
-  return data(await getCollectionDetails(user.id, collectionId), { headers });
+export async function clientLoader({ params: { collectionId } }: Route.ClientLoaderArgs) {
+  const res = await client.api.collection[":collectionId"].$get({ param: { collectionId } });
+  const json = await res.json();
+  if (!json.success) throw data(json.error.message, { status: res.status });
+  return json.data;
 }
-export async function action({ request, params: { collectionId } }: Route.ActionArgs) {
-  const {
-    headers,
-    data: { user },
-  } = await getSessionOrRedirect(request);
 
+export async function clientAction(
+  { request, params: { collectionId } }: Route.ClientActionArgs,
+) {
   if (request.method === "DELETE") {
-    await deleteCollection(user.id, collectionId);
-    return redirect(`/collections`, { headers });
+    const res = await client.api.collection[":collectionId"].$delete({
+      param: { collectionId },
+    });
+
+    const json = await res.json();
+    if (!json.success) throw data(json.error.message, { status: res.status });
+
+    if (json.data.collection.parentId) {
+      return redirect(`/collections/${json.data.collection.parentId}`);
+    }
+
+    return redirect("/collections");
   }
+
+  return null;
 }
 
 export default function CollectionPage({

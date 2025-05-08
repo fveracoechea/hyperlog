@@ -14,12 +14,12 @@ export function PageErrorBoundary({ error }: { error: unknown }) {
   if (isRouteErrorResponse(error)) {
     if (error.status === 404) {
       headline = "Page Not Found";
-      message ||=
+      message =
         "We couldn’t find what you were looking for. It might have moved or doesn’t exist";
     }
     if (error.status === 403) {
       headline = "Oops! You don’t have access.";
-      message ||= "It looks like you don’t have permission to access this resource";
+      message = "It looks like you don’t have permission to access this resource";
     }
   }
 
@@ -31,7 +31,7 @@ export function PageErrorBoundary({ error }: { error: unknown }) {
     <section className="mx-auto flex flex-1 items-center pb-10">
       <div className="flex flex-col items-center gap-4">
         <Link2OffIcon className="stroke-cpt-surface1 h-24 w-24" />
-        <div className="flex max-w-lg flex-col justify-center gap-0 text-center">
+        <div className="flex max-w-screen-sm flex-col justify-center gap-0 text-center">
           <Typography variant="large">{headline}</Typography>
           <Typography muted>{message}</Typography>
         </div>

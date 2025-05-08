@@ -56,7 +56,7 @@ export async function clientAction({ request, params: { linkId } }: Route.Loader
 
 export async function clientLoader({ params: { linkId } }: Route.LoaderArgs) {
   const res = await client.api.link[":linkId"].$get({ param: { linkId } });
-  const link = (await res.json()).data.link;
+  const link = (await res.json()).data?.link;
   if (!link) throw data(null, { status: 404 });
   return { link };
 }
