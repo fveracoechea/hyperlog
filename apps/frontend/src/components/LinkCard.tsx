@@ -54,7 +54,7 @@ export function LinkCard({ link, isLoading }: Props) {
         <div
           className={clsx(
             "relative flex flex-1 flex-col justify-between gap-4 rounded-md p-2 aspect-[1.9/1]",
-            "bg-gradient-to-b from-cpt-base/70  to-cpt-base via-0% to-65%",
+            "bg-gradient-to-b from-cpt-base/65  to-cpt-base via-0% to-65%",
           )}
         >
           <div className="flex items-start justify-between">
@@ -69,7 +69,7 @@ export function LinkCard({ link, isLoading }: Props) {
               </Typography>
             </div>
           </div>
-          <div className="flex flex-col justify-between gap-1">
+          <div className="flex flex-col justify-between gap-2">
             <Typography
               as="h4"
               className={clsx(
@@ -81,7 +81,7 @@ export function LinkCard({ link, isLoading }: Props) {
             </Typography>
 
             <div className="flex items-center gap-1.5" title="URL">
-              <LinkIcon className="stroke-muted-foreground group-hover:stroke-primary h-4 w-4" />
+              <LinkIcon className="stroke-foreground group-hover:stroke-primary h-4 w-4" />
               <Typography
                 as="span"
                 variant="small"
@@ -91,7 +91,7 @@ export function LinkCard({ link, isLoading }: Props) {
               </Typography>
             </div>
 
-            <div className="flex w-full items-center justify-between gap-4">
+            <div className="flex w-full items-start justify-between gap-4">
               <div
                 className="flex max-w-min items-center gap-1.5 overflow-x-hidden"
                 title="Collection"
