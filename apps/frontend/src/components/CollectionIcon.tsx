@@ -2,7 +2,7 @@ import type { RefAttributes } from "react";
 
 import { cva, type VariantProps } from "@/lib/cva";
 import clsx from "clsx";
-import { FolderIcon, type LucideProps } from "lucide-react";
+import { FolderIcon, FolderXIcon, type LucideProps } from "lucide-react";
 
 const styles = cva({
   variants: {
@@ -32,8 +32,15 @@ const styles = cva({
 });
 
 export function CollectionIcon(
-  props: VariantProps<typeof styles> & LucideProps & RefAttributes<SVGSVGElement>,
+  props: VariantProps<typeof styles> & LucideProps & RefAttributes<SVGSVGElement> & {
+    noCollection?: boolean;
+  },
 ) {
-  const { color, size, className } = props;
+  const { color, size, className, noCollection } = props;
+
+  if (noCollection) {
+    return <FolderXIcon {...props} className={clsx(className, styles({ color, size }))} />;
+  }
+
   return <FolderIcon {...props} className={clsx(className, styles({ color, size }))} />;
 }

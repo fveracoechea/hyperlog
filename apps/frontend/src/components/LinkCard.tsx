@@ -17,12 +17,11 @@ type LinkType =
   & Partial<Pick<LinkData, "tag" | "collection">>;
 
 type Props = {
-  hideDetails?: boolean;
   isLoading?: boolean;
   link: LinkType;
 };
 
-export function LinkCard({ link, hideDetails, isLoading }: Props) {
+export function LinkCard({ link, isLoading }: Props) {
   const navigate = useNavigate();
   return (
     <a
@@ -42,93 +41,88 @@ export function LinkCard({ link, hideDetails, isLoading }: Props) {
           "relative flex flex-col overflow-hidden",
         )}
       >
-        <img
-          role="presentation"
-          height="630"
-          width="1200"
-          loading="lazy"
+        {link.previewImage && (
+          <img
+            role="presentation"
+            loading="lazy"
+            className={clsx(
+              "absolute top-0 left-0 right-0 object-cover object-center blur-[1px]",
+            )}
+            src={link.previewImage}
+          />
+        )}
+        <div
           className={clsx(
-            "absolute inset-0 object-cover object-center blur",
-            "opacity-0 group-hover:opacity-30 group-focus-visible:opacity-30 transition-opacity",
+            "relative flex flex-1 flex-col justify-between gap-4 rounded-md p-2 aspect-[1.9/1]",
+            "bg-gradient-to-b from-cpt-base/70  to-cpt-base via-0% to-65%",
           )}
-          src={link.previewImage ?? undefined}
-        />
-        <div className="relative flex flex-1 flex-col gap-4 rounded-md p-2">
+        >
           <div className="flex items-start justify-between">
             <LazyFavicon src={link.favicon ?? undefined} width="26px" height="26px" />
 
             <div className="flex items-center gap-1.5" title="Last visit">
-              <CalendarClockIcon className="stroke-muted-foreground h-4 w-4" />
-              <Typography as="span" variant="xsmall" className="whitespace-nowrap">
+              <CalendarClockIcon className="stroke-muted-foreground  w-5 h-5" />
+              <Typography as="span" variant="small" className="whitespace-nowrap">
                 {formatDistanceToNow(link.lastVisit ?? Date.now(), {
                   addSuffix: true,
                 })}
               </Typography>
             </div>
           </div>
-          <div className="flex flex-1 flex-col justify-between gap-2">
-            <div
+          <div className="flex flex-col justify-between gap-1">
+            <Typography
+              as="h4"
               className={clsx(
-                hideDetails && "min-h-10 justify-end",
-                "flex flex-1 flex-col gap-1.5",
+                "group-hover:text-primary overflow-y-hidden text-left leading-tight",
+                "max-h-5 overflow-x-hidden overflow-ellipsis whitespace-nowrap",
               )}
             >
-              <Typography
-                as="h4"
-                className={clsx(
-                  "group-hover:text-primary overflow-y-hidden text-left leading-tight",
-                  "max-h-5 overflow-x-hidden overflow-ellipsis whitespace-nowrap",
-                )}
-              >
-                {link.title}
-              </Typography>
+              {link.title}
+            </Typography>
 
-              <div className="flex items-center gap-1.5" title="URL">
-                <LinkIcon className="stroke-muted-foreground group-hover:stroke-primary h-3.5 w-3.5" />
+            <div className="flex items-center gap-1.5" title="URL">
+              <LinkIcon className="stroke-muted-foreground group-hover:stroke-primary h-4 w-4" />
+              <Typography
+                as="span"
+                variant="small"
+                className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
+              >
+                <span>{link.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span>
+              </Typography>
+            </div>
+
+            <div className="flex w-full items-center justify-between gap-4">
+              <div
+                className="flex max-w-min items-center gap-1.5 overflow-x-hidden"
+                title="Collection"
+              >
+                <CollectionIcon
+                  size="small"
+                  noCollection={!link.collection}
+                  color={link.collection?.color ?? undefined}
+                />
                 <Typography
                   as="span"
                   variant="small"
                   className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
                 >
-                  <span>{link.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span>
+                  {link.collection?.name ?? "Unorganized"}
                 </Typography>
               </div>
-
-              {!hideDetails && link.collection && (
-                <div
-                  className="flex max-w-min items-center gap-1.5 overflow-x-hidden"
-                  title="Collection"
-                >
-                  <CollectionIcon size="small" color={link.collection.color ?? undefined} />
-                  <Typography
-                    as="span"
-                    variant="small"
-                    muted
-                    className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
-                  >
-                    {link.collection.name}
-                  </Typography>
-                </div>
-              )}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate(`/links/${link.id}`);
+                }}
+              >
+                View Details
+              </Button>
             </div>
-
-            {!hideDetails && (
-              <div className="flex w-full items-center justify-end gap-4">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-7"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    navigate(`/links/${link.id}`);
-                  }}
-                >
-                  View Details
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       </article>

@@ -97,9 +97,7 @@ export const userToCollection = t.sqliteTable(
       .notNull()
       .references(() => collection.id, { onDelete: "cascade" }),
   },
-  (table) => ({
-    uniqueUserToCollection: t.unique().on(table.userId, table.collectionId),
-  }),
+  (table) => [t.unique().on(table.userId, table.collectionId)],
 );
 
 export const usersToCollectionsRelations = relations(userToCollection, ({ one }) => ({
