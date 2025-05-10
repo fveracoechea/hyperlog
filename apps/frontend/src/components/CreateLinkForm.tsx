@@ -1,11 +1,8 @@
-import { Controller } from "react-hook-form";
-import { useFetcher } from "react-router";
+import { Controller, useForm } from "react-hook-form";
 
 import { CreateLinkSchema } from "@/lib/zod";
-import type { CollectionApiData } from "@/routes/api/collections";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleXIcon, FolderIcon, LoaderCircleIcon, PlusIcon } from "lucide-react";
-import { useRemixForm } from "remix-hook-form";
+import { CircleXIcon, LoaderCircleIcon, PlusIcon } from "lucide-react";
 
 import { CollectionIcon } from "./CollectionIcon";
 import { FormField } from "./FormField";
@@ -13,38 +10,41 @@ import { Button } from "./ui/button";
 import { DialogClose, DialogFooter } from "./ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Typography } from "./ui/typography";
+import { useLoaderData, useNavigate } from "react-router";
+import { LayoutLoaderData } from "@/routes/Layout.tsx";
+import { client } from "../utility/honoClient.ts";
+import { href } from "react-router";
 
 const resolver = zodResolver(CreateLinkSchema);
 
-export function CreateLinkForm(props: { open: boolean }) {
-  const { open } = props;
-  const link = useFetcher();
-  const collections = useFetcher<CollectionApiData>();
+export function CreateLinkForm(props: { onComplete?: () => void }) {
+  const { onComplete } = props;
+  const { ownedCollections } = useLoaderData<LayoutLoaderData>();
+  const navigate = useNavigate();
+  const {
+    register,
+    control,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({ resolver });
 
-  const { register, control, handleSubmit, setValue, getValues, formState } = useRemixForm({
-    fetcher: link,
-    resolver,
+  const onSubmit = handleSubmit(async (fields) => {
+    const res = await client.api.link.$post({ json: fields });
+    const json = await res.json();
+    if (json.error) {
+      setError(json.error.field, { message: json.error.message });
+    } else {
+      onComplete?.();
+      navigate(href("/links/:linkId", { linkId: json.data.link.id }));
+    }
   });
 
-  // Fetch data only when the modal opens
-  if (open && collections.state === "idle" && !collections.data) {
-    collections.load("/api/collections?allowSubCollections");
-  }
-
-  const errors = formState.errors;
-
   return (
-    <link.Form
+    <form
       noValidate
-      method="post"
-      action="/api/link"
-      onSubmit={(data) => {
-        const url = getValues("url");
-        if (!/^https?:\/\//.test(String(url))) {
-          setValue("url", `https://${url}`);
-        }
-        handleSubmit(data);
-      }}
+      onSubmit={onSubmit}
       className="flex flex-col gap-4"
     >
       <div className="flex flex-col gap-4">
@@ -52,7 +52,14 @@ export function CreateLinkForm(props: { open: boolean }) {
           label="URL"
           placeholder="https://example.com"
           required
-          {...register("url")}
+          {...register("url", {
+            validate(url) {
+              if (!/^https?:\/\//.test(String(url))) {
+                setValue("url", `https://${url}`);
+              }
+              return true;
+            },
+          })}
           errorMessage={errors.url?.message}
         />
         <FormField
@@ -90,7 +97,7 @@ export function CreateLinkForm(props: { open: boolean }) {
                       </div>
                     </SelectItem>
                   )}
-                  {collections.data?.collections.map((collection) => (
+                  {ownedCollections.map((collection) => (
                     <SelectItem key={collection.id} value={collection.id}>
                       <div className="flex items-center gap-2">
                         <CollectionIcon size="small" color={collection.color ?? undefined} />
@@ -118,7 +125,7 @@ export function CreateLinkForm(props: { open: boolean }) {
           </Button>
         </DialogClose>
 
-        {formState.isSubmitting
+        {isSubmitting
           ? (
             <Button disabled type="button" className="min-w-24">
               <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
@@ -131,6 +138,6 @@ export function CreateLinkForm(props: { open: boolean }) {
             </Button>
           )}
       </DialogFooter>
-    </link.Form>
+    </form>
   );
 }

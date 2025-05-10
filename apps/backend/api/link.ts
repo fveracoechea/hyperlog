@@ -45,10 +45,10 @@ const app = new Hono<AppEnv>()
   /**
    * Create Link
    */
-  .post("/", zValidator("form", CreateLinkSchema), async (c) => {
-    const formData = c.req.valid("form");
-    const linkData = await fetchLinkData(formData.url);
-    const title = formData.title || linkData.title;
+  .post("/", zValidator("json", CreateLinkSchema), async (c) => {
+    const input = c.req.valid("json");
+    const linkData = await fetchLinkData(input.url);
+    const title = input.title || linkData.title;
 
     if (!title) {
       return c.var.error(
@@ -56,14 +56,14 @@ const app = new Hono<AppEnv>()
           field: "title",
           type: "required",
           message: "No page Title found. Please provide one.",
-        },
+        } as const,
         400,
       );
     }
 
     const [link] = await db
       .insert(schema.link)
-      .values({ ...formData, ...linkData, title, ownerId: c.var.user.id })
+      .values({ ...input, ...linkData, title, ownerId: c.var.user.id })
       .returning();
 
     return c.var.success({ link });

@@ -7,7 +7,7 @@ import { CollectionIcon } from "../CollectionIcon";
 import type { ColorVariant } from "../ColorPicker";
 import { Button } from "../ui/button";
 import { Typography } from "../ui/typography";
-import type { Route } from "./../../routes/+types/Layout";
+import { LayoutLoaderData } from "@/routes/Layout.tsx";
 
 type SideNavProps = {
   type: "tags" | "collections";
@@ -56,7 +56,7 @@ function SideNav(props: SideNavProps) {
 }
 
 export function Sidebar() {
-  const data = useLoaderData<Route.ComponentProps["loaderData"]>();
+  const data = useLoaderData<LayoutLoaderData>();
   return (
     <aside
       className={clsx(
@@ -66,7 +66,7 @@ export function Sidebar() {
         "border-muted overflow-y-auto border-r border-solid",
       )}
     >
-      <SideNav type="collections" links={data.collections ?? []} />
+      <SideNav type="collections" links={data.parentCollections ?? []} />
       <SideNav type="tags" links={data.tags ?? []} />
     </aside>
   );

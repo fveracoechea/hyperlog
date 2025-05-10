@@ -37,7 +37,7 @@ export function CreateNewDialog(props: Props) {
             <TabsTrigger value="tag">Tag</TabsTrigger>
           </TabsList>
           <TabsContent value="link">
-            <CreateLinkForm open={open} />
+            <CreateLinkForm onComplete={() => setOpen(false)} />
           </TabsContent>
           <TabsContent value="collection">
             <CreateCollectionForm />

@@ -30,7 +30,12 @@ export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
 
 export function clientLoader({}: Route.ClientLoaderArgs) {
   return jsonHash({
-    async collections() {
+    async ownedCollections() {
+      const response = await client.api.collection.$get({ query: { type: "owned" } });
+      const json = await response.json();
+      return json.data.collections;
+    },
+    async parentCollections() {
       const response = await client.api.collection.$get({ query: { type: "parent" } });
       const json = await response.json();
       return json.data.collections;
@@ -42,6 +47,8 @@ export function clientLoader({}: Route.ClientLoaderArgs) {
     },
   });
 }
+
+export type LayoutLoaderData = Route.ComponentProps["loaderData"];
 
 export default function Layout() {
   return (

@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { showRoutes } from "hono/dev";
 import { StatusCode } from "hono/utils/http-status";
 import { HTTPException } from "hono/http-exception";
 
@@ -42,5 +43,7 @@ const app = new Hono<AppEnv>()
   });
 
 export type HonoApp = typeof app;
+
+showRoutes(app, { colorize: true });
 
 Deno.serve({ port: env.PORT }, app.fetch);

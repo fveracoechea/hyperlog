@@ -5,6 +5,7 @@ import { LinkCard } from "@/components/LinkCard";
 
 import type { Route } from "./+types/Home";
 import { jsonHash } from "remix-utils/json-hash";
+import { namedAction } from "remix-utils/named-action";
 import { client } from "@/utility/honoClient.ts";
 
 export function clientLoader({}: Route.ClientLoaderArgs) {
@@ -36,7 +37,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           subtitle="Your personal go-to links, saved for quick access"
         />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
-          {favorites.map((link) => <LinkCard key={link.id} link={link} hideDetails />)}
+          {favorites.map((link) => <LinkCard key={link.id} link={link} />)}
         </div>
       </section>
       <section className="flex flex-col gap-4">
