@@ -1,3 +1,5 @@
+import { FormEvent } from "react";
+
 import { Controller, useForm } from "react-hook-form";
 
 import { CreateLinkSchema } from "@/lib/zod";
@@ -17,7 +19,7 @@ import { href } from "react-router";
 
 const resolver = zodResolver(CreateLinkSchema);
 
-export function CreateLinkForm(props: { onComplete?: () => void }) {
+export function CreateLinkForm(props: { onComplete?(): void }) {
   const { onComplete } = props;
   const { ownedCollections } = useLoaderData<LayoutLoaderData>();
   const navigate = useNavigate();
@@ -29,6 +31,13 @@ export function CreateLinkForm(props: { onComplete?: () => void }) {
     setError,
     formState: { errors, isSubmitting },
   } = useForm({ resolver });
+
+  function maskURL(e: FormEvent<HTMLFormElement>) {
+    const url = new FormData(e.currentTarget).get("url") ?? "";
+    if (!/^https?:\/\//.test(String(url))) {
+      setValue("url", `https://${url}`);
+    }
+  }
 
   const onSubmit = handleSubmit(async (fields) => {
     const res = await client.api.link.$post({ json: fields });
@@ -44,7 +53,10 @@ export function CreateLinkForm(props: { onComplete?: () => void }) {
   return (
     <form
       noValidate
-      onSubmit={onSubmit}
+      onSubmit={(e) => {
+        maskURL(e);
+        onSubmit(e);
+      }}
       className="flex flex-col gap-4"
     >
       <div className="flex flex-col gap-4">
@@ -52,14 +64,7 @@ export function CreateLinkForm(props: { onComplete?: () => void }) {
           label="URL"
           placeholder="https://example.com"
           required
-          {...register("url", {
-            validate(url) {
-              if (!/^https?:\/\//.test(String(url))) {
-                setValue("url", `https://${url}`);
-              }
-              return true;
-            },
-          })}
+          {...register("url")}
           errorMessage={errors.url?.message}
         />
         <FormField

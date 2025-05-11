@@ -48,12 +48,12 @@ const app = new Hono<AppEnv>()
   /**
    * Create new collection
    */
-  .post("/", zValidator("form", CreateCollectionSchema), async (c) => {
+  .post("/", zValidator("json", CreateCollectionSchema), async (c) => {
     try {
-      const formData = c.req.valid("form");
+      const input = c.req.valid("json");
       const [collection] = await db
         .insert(schema.collection)
-        .values({ ...formData, ownerId: c.var.user.id })
+        .values({ ...input, ownerId: c.var.user.id })
         .returning();
 
       return c.var.success({ collection });

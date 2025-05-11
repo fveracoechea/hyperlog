@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ColorCodes, ColorNames } from "@/components/ColorPicker";
+import { ColorNames } from "@/components/ColorPicker";
 
 const zColor = z
   .enum([...ColorNames])
@@ -38,8 +38,9 @@ export const CreateCollectionSchema = z.object({
     .max(512, "Description must contain at most 512 characters")
     .nullable()
     .default(null),
-  // parentId: z.string().uuid().nullable().default(null),
 });
+
+export type CreateCollectionFormFields = z.infer<typeof CreateCollectionSchema>;
 
 export const EditCollectionSchema = z.object({
   name: z
@@ -70,8 +71,6 @@ export const EditCollectionSchema = z.object({
 });
 
 export type EditCollectionFormFields = z.infer<typeof EditCollectionSchema>;
-
-export type CreateCollectionFormFields = z.infer<typeof CreateCollectionSchema>;
 
 export const DeleteCollectionSchema = z.object({
   collectionId: z.string().uuid(),

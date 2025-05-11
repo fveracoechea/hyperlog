@@ -1,28 +1,46 @@
-import { Controller } from "react-hook-form";
-import { useFetcher } from "react-router";
+import { Controller, useForm, UseFormReturn } from "react-hook-form";
+import { href, useNavigate } from "react-router";
 
 import { CreateCollectionSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircleIcon, PlusIcon } from "lucide-react";
-import { useRemixForm } from "remix-hook-form";
 
 import { ColorPicker } from "./ColorPicker";
 import { FormField } from "./FormField";
 import { Button } from "./ui/button";
 import { DialogClose, DialogFooter } from "./ui/dialog";
+import { client } from "@/utility/honoClient.ts";
+import { CreateCollectionFormFields } from "@hyperlog/schemas";
+import { useRevalidator } from "react-router";
 
 const resolver = zodResolver(CreateCollectionSchema);
 
-export function CreateCollectionForm() {
-  const fetcher = useFetcher();
-  const { register, control, handleSubmit, formState } = useRemixForm({ fetcher, resolver });
+export function CreateCollectionForm(props: { onComplete?(): void }) {
+  const { onComplete } = props;
+
+  const navigate = useNavigate();
+  const revalidator = useRevalidator();
+
+  const { register, setError, control, handleSubmit, formState: { errors, isSubmitting } } =
+    useForm({ resolver }) as UseFormReturn<CreateCollectionFormFields>;
+
+  const onSubmit = handleSubmit(async (fields) => {
+    const res = await client.api.collection.$post({ json: fields });
+    const json = await res.json();
+    if (json.error) {
+      setError("name", { message: json.error.message });
+    } else {
+      onComplete?.();
+      navigate(href("/collections/:collectionId", { collectionId: json.data.collection.id }));
+      revalidator.revalidate();
+    }
+  });
 
   return (
-    <fetcher.Form
+    <form
       noValidate
       method="POST"
-      action="/api/collections"
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       className="flex flex-col gap-4"
     >
       <div className="flex flex-col gap-4">
@@ -31,14 +49,14 @@ export function CreateCollectionForm() {
           required
           placeholder="e.g. Recipes"
           {...register("name")}
-          errorMessage={formState.errors.name?.message}
+          errorMessage={errors.name?.message}
         />
 
         <Controller
           control={control}
           name="color"
           render={({ field }) => {
-            return <ColorPicker {...field} value={field.value ?? undefined} />;
+            return <ColorPicker {...field} value={field.value} />;
           }}
         />
 
@@ -57,7 +75,7 @@ export function CreateCollectionForm() {
           </Button>
         </DialogClose>
 
-        {formState.isSubmitting
+        {isSubmitting
           ? (
             <Button disabled type="button" className="min-w-28">
               <LoaderCircleIcon className="min-h-5 min-w-5 animate-spin" />
@@ -70,6 +88,6 @@ export function CreateCollectionForm() {
             </Button>
           )}
       </DialogFooter>
-    </fetcher.Form>
+    </form>
   );
 }
