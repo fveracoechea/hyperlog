@@ -3,7 +3,6 @@ import { sql } from "drizzle-orm";
 
 import { AppEnv } from "@/utils/types.ts";
 import { db } from "@/db/db.ts";
-import { HTTPException } from "hono/http-exception";
 
 const app = new Hono<AppEnv>().get("/", async (ctx) => {
   let connected = false;

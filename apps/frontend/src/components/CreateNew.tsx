@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { CreateTagForm } from "./CreateTagForm.tsx";
 
 type Props = {
   trigger: ReactNode;
@@ -40,9 +41,11 @@ export function CreateNewDialog(props: Props) {
             <CreateLinkForm onComplete={() => setOpen(false)} />
           </TabsContent>
           <TabsContent value="collection">
-            <CreateCollectionForm />
+            <CreateCollectionForm onComplete={() => setOpen(false)} />
           </TabsContent>
-          <TabsContent value="tag">new tag</TabsContent>
+          <TabsContent value="tag">
+            <CreateTagForm onComplete={() => setOpen(false)} />
+          </TabsContent>
         </Tabs>
       </DialogContent>
     </Dialog>

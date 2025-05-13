@@ -16,13 +16,17 @@ import { useLoaderData, useNavigate } from "react-router";
 import { LayoutLoaderData } from "@/routes/Layout.tsx";
 import { client } from "../utility/honoClient.ts";
 import { href } from "react-router";
+import { useRevalidator } from "react-router";
 
 const resolver = zodResolver(CreateLinkSchema);
 
 export function CreateLinkForm(props: { onComplete?(): void }) {
   const { onComplete } = props;
   const { ownedCollections } = useLoaderData<LayoutLoaderData>();
+
   const navigate = useNavigate();
+  const revalidator = useRevalidator();
+
   const {
     register,
     control,
@@ -47,6 +51,7 @@ export function CreateLinkForm(props: { onComplete?(): void }) {
     } else {
       onComplete?.();
       navigate(href("/links/:linkId", { linkId: json.data.link.id }));
+      revalidator.revalidate();
     }
   });
 
