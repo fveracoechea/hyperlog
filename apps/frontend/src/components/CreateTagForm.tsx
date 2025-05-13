@@ -14,7 +14,7 @@ export function CreateTagForm(props: { onComplete?(): void }) {
 
   const { handleSubmit, register, formState: { isSubmitting } } = useForm({});
 
-  const onSubmit = handleSubmit(async () => {
+  const onSubmit = handleSubmit(() => {
     onComplete?.();
     navigate(href("/tags/:tagId", { tagId: "" }));
     revalidator.revalidate();
