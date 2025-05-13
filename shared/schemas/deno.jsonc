@@ -1,0 +1,5 @@
+{
+  "name": "@hyperlog/schemas",
+  "version": "0.0.1",
+  "exports": "./_main.ts"
+}

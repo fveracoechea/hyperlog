@@ -1,8 +1,0 @@
-
-.react-router/
-node_modules/
-public/
-dist/
-build/
-deployment/
-drizzle/
