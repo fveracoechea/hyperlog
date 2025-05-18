@@ -1,7 +1,5 @@
 import { data, Link, redirect } from "react-router";
 
-// import { deleteCollection } from "@/.server/resources/collection";
-// import { getSessionOrRedirect } from "@/.server/session";
 import { FoldersIcon, LinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 import { Banner, SubBanner } from "@/components/Banner";
@@ -51,12 +49,14 @@ export default function CollectionPage({
 }: Route.ComponentProps) {
   return (
     <>
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-4">
         <Banner
           title={collection.name}
           subtitle={collection.description}
+          parent={collection.parentCollection?.name}
           iconNode={<CollectionIcon size="large" color={collection.color ?? undefined} />}
         />
+
         <div className="flex gap-2">
           <GoBackButton />
 

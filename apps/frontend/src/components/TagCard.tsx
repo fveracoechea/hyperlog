@@ -1,26 +1,26 @@
-import { href, Link, useNavigation } from "react-router";
+import { Link, useNavigation } from "react-router";
 
 import clsx from "clsx";
 import { formatDate } from "date-fns";
-import { CalendarIcon, LinkIcon } from "lucide-react";
+import { CalendarIcon, LinkIcon, TagIcon } from "lucide-react";
 
 import { Typography } from "@/components/ui/typography";
 
-import type { Route } from "../routes/+types/Collections";
-import { CollectionIcon } from "./CollectionIcon";
+import type { Route } from "../routes/+types/Tags";
+import { href } from "react-router";
 
-type CollectionType = Omit<
-  Route.ComponentProps["loaderData"]["parent"][number],
+type TagType = Omit<
+  Route.ComponentProps["loaderData"]["tags"][number],
   "links" | "users"
 >;
 
-export function CollectionCard(props: { collection: CollectionType; linkCount?: number }) {
-  const { collection, linkCount } = props;
+export function TagCard(props: { tag: TagType; linkCount?: number }) {
+  const { tag, linkCount } = props;
   const navigation = useNavigation();
   return (
     <Link
-      key={collection.id}
-      to={href("/collections/:collectionId", { collectionId: collection.id })}
+      key={tag.id}
+      to={href("/tags/:tagId", { tagId: tag.id })}
       className={clsx(
         "focus-visible:ring-muted-foreground group rounded-md focus-visible:ring-2",
         navigation.state === "loading" && "cursor-wait opacity-50",
@@ -33,7 +33,7 @@ export function CollectionCard(props: { collection: CollectionType; linkCount?: 
         )}
       >
         <div className="flex justify-between">
-          <CollectionIcon size="medium" color={collection.color ?? undefined} />
+          <TagIcon />
           {!!linkCount && linkCount > 0 && (
             <div className="flex items-center gap-2" title="Number of links">
               <LinkIcon className="h-4 w-4" />
@@ -43,12 +43,12 @@ export function CollectionCard(props: { collection: CollectionType; linkCount?: 
         </div>
 
         <Typography variant="base" className="group-hover:text-primary">
-          {collection.name}
+          {tag.name}
         </Typography>
         <div className="flex w-fit items-center gap-2" title="Last modified">
           <CalendarIcon className="h-4 w-4" />
           <Typography variant="small">
-            {formatDate(collection.updatedAt ?? new Date(), "PP")}
+            {formatDate(tag.updatedAt ?? new Date(), "PP")}
           </Typography>
         </div>
       </article>

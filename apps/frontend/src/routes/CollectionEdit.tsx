@@ -97,6 +97,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
         <Banner
           title={collection.name}
           subtitle={collection.description}
+          parent={collection.parentCollection?.name}
           iconNode={<CollectionIcon size="large" color={collection.color ?? undefined} />}
         />
 

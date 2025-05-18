@@ -7,6 +7,7 @@ import { zValidator } from "@hono/zod-validator";
 import { HTTPException } from "hono/http-exception";
 
 import { CreateTagSchema } from "@hyperlog/schemas";
+import { z } from "zod";
 
 const app = new Hono<AppEnv>()
   .use(sessionMiddleware)
@@ -16,8 +17,25 @@ const app = new Hono<AppEnv>()
   .get("/", async (c) => {
     const tags = await db.query.tag.findMany({
       where: eq(schema.tag.ownerId, c.var.user.id),
+      with: { links: { columns: { id: true } } },
     });
     return c.var.success({ tags });
+  })
+  /**
+   * GET
+   * Tag Details by Id
+   */
+  .get("/:tagId", zValidator("param", z.object({ tagId: z.string() })), async (c) => {
+    const { tagId } = c.req.valid("param");
+
+    const tag = await db.query.tag.findFirst({
+      where: eq(schema.tag.id, tagId),
+      with: { links: { with: { collection: true } } },
+    });
+
+    if (!tag) return c.var.error({ message: "Tag not found" }, 404);
+
+    return c.var.success({ tag });
   })
   /**
    * POST

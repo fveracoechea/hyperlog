@@ -59,7 +59,7 @@ export function getCollections(args: {
 export async function getCollectionDetails(userId: string, collectionId: string) {
   const [collection, sharedRelation] = await Promise.all([
     db.query.collection.findFirst({
-      with: { owner: true, users: { with: { user: true } } },
+      with: { owner: true, parentCollection: true, users: { with: { user: true } } },
       where: eq(schema.collection.id, collectionId),
     }),
     db.query.userToCollection.findFirst({

@@ -9,12 +9,18 @@ type Props = {
   iconNode?: ReactNode;
   title: string;
   subtitle?: string | null;
+  parent?: string | null;
 };
 
 export function Banner(props: Props) {
-  const { title, Icon, subtitle, iconNode } = props;
+  const { title, parent, Icon, subtitle, iconNode } = props;
   return (
     <header className="flex flex-col gap-2">
+      {parent && (
+        <Typography variant="small" muted className="pb-4">
+          Collections / {parent}
+        </Typography>
+      )}
       <div className="flex items-start gap-2">
         {Icon && <Icon className="stroke-primary h-7 w-7" />}
         {iconNode}
@@ -23,7 +29,7 @@ export function Banner(props: Props) {
         </Typography>
       </div>
       {subtitle && (
-        <Typography variant="small" muted>
+        <Typography variant="base" muted>
           {subtitle}
         </Typography>
       )}

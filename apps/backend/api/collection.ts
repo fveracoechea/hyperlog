@@ -37,7 +37,7 @@ const app = new Hono<AppEnv>()
    */
   .get(
     "/:collectionId",
-    zValidator("param", z.object({ collectionId: z.string().uuid() })),
+    zValidator("param", z.object({ collectionId: z.string() })),
     async (c) => {
       const { collectionId } = c.req.valid("param");
       const [result, error] = await getCollectionDetails(c.var.user.id, collectionId);
