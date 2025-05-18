@@ -3,8 +3,8 @@ import type { ExtractTablesWithRelations } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql/node";
 import type { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 
-import { env } from "@/utils/env.ts";
-import * as schema from "@/db/schema.ts";
+import { env } from "../utils/env.ts";
+import * as schema from "./schema.ts";
 
 export * as schema from "./schema.ts";
 

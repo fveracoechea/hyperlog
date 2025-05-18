@@ -5,6 +5,12 @@ import { LoaderCircleIcon, PlusIcon } from "lucide-react";
 import { DialogClose, DialogFooter } from "./ui/dialog.tsx";
 import { Button } from "./ui/button.tsx";
 import { FormField } from "./FormField.tsx";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { CreateTagSchema } from "@hyperlog/schemas";
+import { client } from "../utility/honoClient.ts";
+
+const resolver = zodResolver(CreateTagSchema);
 
 export function CreateTagForm(props: { onComplete?(): void }) {
   const { onComplete } = props;
@@ -12,11 +18,21 @@ export function CreateTagForm(props: { onComplete?(): void }) {
   const navigate = useNavigate();
   const revalidator = useRevalidator();
 
-  const { handleSubmit, register, formState: { isSubmitting } } = useForm({});
+  const { setError, handleSubmit, register, formState: { isSubmitting, errors } } = useForm({
+    resolver,
+  });
 
-  const onSubmit = handleSubmit(() => {
+  const onSubmit = handleSubmit(async (fields) => {
+    const response = await client.api.tag.$post({ json: fields });
+    const json = await response.json();
+
+    if (!json.success) {
+      setError("name", { message: json.error.message });
+      return;
+    }
+
     onComplete?.();
-    navigate(href("/tags/:tagId", { tagId: "" }));
+    navigate(href("/tags/:tagId", { tagId: json.data.tag.id }));
     revalidator.revalidate();
   });
 
@@ -26,15 +42,16 @@ export function CreateTagForm(props: { onComplete?(): void }) {
         <FormField
           label="Name"
           required
-          placeholder="e.g. Recipes"
+          placeholder="e.g. Productivity"
+          errorMessage={errors.name?.message}
           {...register("name")}
         />
-
         <FormField
           variant="textarea"
           label="Description"
           className="resize-none"
           placeholder="The purpose of this tag"
+          errorMessage={errors.description?.message}
           {...register("description")}
         />
       </div>

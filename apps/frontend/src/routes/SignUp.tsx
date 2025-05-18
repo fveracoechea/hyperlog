@@ -1,6 +1,6 @@
 import { Form, redirect, useNavigation } from "react-router";
 
-import { authClient } from "@/lib/authClient.client";
+import { authClient } from "@/utility/authClient";
 import { SignupSchema } from "@/lib/zod";
 import clsx from "clsx";
 import { LoaderCircleIcon, Unlink, UserRoundPlus } from "lucide-react";
@@ -81,7 +81,7 @@ export default function SignUp({ actionData }: Route.ComponentProps) {
               <Alert variant="destructive">{message}</Alert>
             )}
 
-            <Button className="mt-1">
+            <Button type="submit" className="mt-1">
               {navigation.state === "loading"
                 ? <LoaderCircleIcon className="animate-spin" />
                 : (

@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { ColorNames } from "@/components/ColorPicker";
-
+import { ColorNames } from "@hyperlog/schemas";
 import { db, schema } from "@/db/db.ts";
 
 // type InsertUser = typeof schema.user.$inferInsert;

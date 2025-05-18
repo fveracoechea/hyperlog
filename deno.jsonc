@@ -4,12 +4,13 @@
     "sloppy-imports"
   ],
   "workspace": [
-    "./apps/*",
+    "./apps/frontend",
+    "./apps/backend",
     "./shared/*"
   ],
   "tasks": {
-    "frontend:dev": "deno task --cwd apps/frontend dev",
-    "backend:dev": "deno task --cwd apps/backend dev",
+    "frontend:dev": "deno task -f @hyperlog/frontend dev",
+    "backend:dev": "deno task -f @hyperlog/backend dev",
     "dev": "deno task backend:dev & deno task frontend:dev"
   },
   "lint": {

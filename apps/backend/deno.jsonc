@@ -2,19 +2,21 @@
   "name": "@hyperlog/backend",
   "version": "0.0.1",
   "exports": "./main.ts",
+  "tasks": {
+    "start": "deno run --allow-net main.ts",
+    "dev": "deno run --env -A --watch main.ts",
+    "db:seed": "deno --env -A scripts/seed.ts",
+    "db:auth": "deno run -A npm:@better-auth/cli generate --config api/auth.ts --output db/auth-schema.ts"
+  },
   "imports": {
     "@/": "./",
+    "@faker-js/faker": "npm:@faker-js/faker@^9.8.0",
     "@hono/zod-validator": "npm:@hono/zod-validator@^0.5.0",
     "@libsql/client": "npm:@libsql/client@^0.15.4",
     "better-auth": "npm:better-auth@^1.2.7",
     "cheerio": "npm:cheerio@^1.0.0",
     "drizzle-kit": "npm:drizzle-kit@^0.31.0",
-    "drizzle-orm": "npm:drizzle-orm@^0.43.1"
-  },
-  "tasks": {
-    "start": "deno run --allow-net main.ts",
-    "dev": "deno run --env -A --watch main.ts",
-    "db:kit": "deno --env -A --node-modules-dir npm:drizzle-kit",
-    "db:seed": "deno --env -A scripts/seed.ts"
+    "drizzle-orm": "npm:drizzle-orm@^0.43.1",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.3"
   }
 }

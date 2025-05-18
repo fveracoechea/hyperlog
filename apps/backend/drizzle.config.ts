@@ -1,6 +1,5 @@
 import { defineConfig } from "drizzle-kit";
-
-import { env } from "@/utils/env.ts";
+import process from "node:process";
 
 export default defineConfig({
   out: "./drizzle",
@@ -8,6 +7,6 @@ export default defineConfig({
   dialect: "sqlite",
   casing: "snake_case",
   dbCredentials: {
-    url: `file:${env.DB_FILENAME}`,
+    url: `file:${process.env.DB_FILENAME}`,
   },
 });

@@ -114,6 +114,7 @@ export const tag = t.sqliteTable(
     id,
     name: t.text().notNull(),
     order: t.integer().notNull().default(1),
+    description: t.text(),
     ownerId: t
       .text()
       .notNull()
