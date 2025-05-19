@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useFetcher } from "react-router";
 
 import { debounce } from "@/lib/time";
-import type { LinkItem } from "@/routes/CollectionEdit";
 import clsx from "clsx";
 import { Link2OffIcon, PlusIcon } from "lucide-react";
 
@@ -24,12 +23,18 @@ import {
 import { Typography } from "./ui/typography";
 import { LinkListData } from "@/routes/Links.tsx";
 
+type LinkItem = {
+  databaseId: string;
+  title: string;
+  favicon: string | null;
+};
+
 type Props = {
   links: LinkItem[];
   onSelect(link: LinkItem): void;
 };
 
-export function AddLinkToCollectionDialog(props: Props) {
+export function AddLinkDialog(props: Props) {
   const { links, onSelect } = props;
 
   const fetcher = useFetcher<LinkListData>();

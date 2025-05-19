@@ -11,6 +11,7 @@ export default [
     route("collections/:collectionId/edit", "./routes/CollectionEdit.tsx"),
     route("tags", "./routes/Tags.tsx"),
     route("tags/:tagId", "./routes/TagPage.tsx"),
+    route("tags/:tagId/edit", "./routes/TagEdit.tsx"),
   ]),
 
   layout("./routes/PlublicLayout.tsx", [

@@ -22,7 +22,7 @@ export default function TagPage({ loaderData }: Route.ComponentProps) {
   const { tag } = loaderData;
   return (
     <>
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-4">
         <Banner
           title={tag.name}
           subtitle={tag.description}
@@ -38,7 +38,7 @@ export default function TagPage({ loaderData }: Route.ComponentProps) {
           </Button>
 
           <Button size="sm" variant="outline" asChild>
-            <Link to={href("/tags/:tagId", { tagId: tag.id })} replace>
+            <Link to={href("/tags/:tagId/edit", { tagId: tag.id })} replace>
               <PencilIcon />
               <span>Edit tag</span>
             </Link>

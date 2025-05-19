@@ -12,3 +12,15 @@ export const CreateTagSchema = z.object({
 });
 
 export type CreateTagSchemaType = z.infer<typeof CreateTagSchema>;
+
+export const EditTagSchema = CreateTagSchema.extend({
+  links: z
+    .object({
+      databaseId: z.string().uuid(),
+      title: z.string(),
+      favicon: z.string().nullable(),
+    })
+    .array(),
+});
+
+export type EditTagSchemaType = z.infer<typeof EditTagSchema>;

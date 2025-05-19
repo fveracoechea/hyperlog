@@ -14,8 +14,8 @@ import {
   Undo2Icon,
 } from "lucide-react";
 
-import { AddLinkToCollectionDialog } from "@/components/AddLinkToCollectionDialog";
 import { AddSubCollectionDialog } from "@/components/AddSubCollectionDialog";
+import { AddLinkDialog } from "@/components/AddLinkDialog";
 import { Banner } from "@/components/Banner";
 import { CollectionIcon } from "@/components/CollectionIcon";
 import { ColorPicker } from "@/components/ColorPicker";
@@ -191,7 +191,7 @@ export default function CollectionPage(props: Route.ComponentProps) {
               ))}
             </ul>
             <div className="flex justify-end pt-4">
-              <AddLinkToCollectionDialog
+              <AddLinkDialog
                 links={linksField.fields}
                 onSelect={(value) => linksField.append(value)}
               />

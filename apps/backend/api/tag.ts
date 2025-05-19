@@ -6,8 +6,10 @@ import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { HTTPException } from "hono/http-exception";
 
-import { CreateTagSchema } from "@hyperlog/schemas";
+import { CreateTagSchema, EditTagSchema } from "@hyperlog/schemas";
 import { z } from "zod";
+import { updateTagLinks, validateTagAccess } from "../utils/tags.ts";
+import { Result } from "../utils/result.ts";
 
 const app = new Hono<AppEnv>()
   .use(sessionMiddleware)
@@ -43,11 +45,12 @@ const app = new Hono<AppEnv>()
    */
   .post("/", zValidator("json", CreateTagSchema), async (c) => {
     try {
+      const user = c.get("user");
       const input = c.req.valid("json");
 
       const [tag] = await db
         .insert(schema.tag)
-        .values({ ...input, ownerId: c.var.user.id })
+        .values({ ...input, ownerId: user.id })
         .returning();
 
       return c.var.success({ tag });
@@ -64,6 +67,35 @@ const app = new Hono<AppEnv>()
       console.error(error);
       throw new HTTPException(500, { cause: error });
     }
-  });
+  })
+  /**
+   * PUT
+   * Edit Tag
+   */
+  .put(
+    "/:tagId",
+    zValidator("param", z.object({ tagId: z.string().uuid() })),
+    zValidator("json", EditTagSchema),
+    async (c) => {
+      const user = c.get("user");
+      const { tagId } = c.req.valid("param");
+      const input = c.req.valid("json");
+
+      const tagResult = await validateTagAccess(tagId, user);
+      if (tagResult.error) return c.json(Result.err(tagResult.error), tagResult.error.status);
+
+      await db.transaction(async (tx) => {
+        const { name, description, links } = input;
+
+        await tx.update(schema.tag)
+          .set({ name, description })
+          .where(eq(schema.tag.id, tagId));
+
+        await updateTagLinks(tx, tagId, links);
+      });
+
+      return c.json(Result.ok({ message: "Tag updated successfully" }));
+    },
+  );
 
 export default app;

@@ -7,6 +7,7 @@ import { isNonNullable } from "@hyperlog/helpers";
 
 import { db, schema, TransactionType } from "@/db/db.ts";
 import { zStringArray } from "@hyperlog/schemas";
+import { Result } from "./result.ts";
 
 /**
  * - parent: collections with a null parent-id
@@ -164,11 +165,11 @@ export async function validateCollectionAccess(collectionId: string, userId: str
     where: eq(schema.collection.id, collectionId),
   });
 
-  if (!collection) return ["Collection not found.", 404, null] as const;
+  if (!collection) return Result.apiErr(404, "Collection not found.");
 
   if (collection.ownerId !== userId) {
-    return ["You are not allowed to access this collection.", 403, null] as const;
+    return Result.apiErr(403, "You are not allowed to access this collection.");
   }
 
-  return [null, null, collection!] as const;
+  return Result.ok(collection);
 }
