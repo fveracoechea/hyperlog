@@ -8,10 +8,10 @@ import { EditTagSchemaType } from "@hyperlog/schemas";
 export async function validateTagAccess(tagId: string, user: AuthUser) {
   const tag = await db.query.tag.findFirst({ where: eq(schema.tag.id, tagId) });
 
-  if (!tag) return Result.apiErr(404, "Tag not Found.");
+  if (!tag) return Result.responseErr(404, "Tag not Found.");
 
   if (tag.ownerId !== user.id) {
-    return Result.apiErr(403, "You are not allowed to access this record.");
+    return Result.responseErr(403, "You are not allowed to access this record.");
   }
 
   return Result.ok(tag);

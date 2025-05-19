@@ -3,44 +3,45 @@ import { ContentfulStatusCode } from "hono/utils/http-status";
 export type Success<T> = {
   success: true;
   data: T;
-  error?: never;
+  error: null;
 };
 
 export type Failure<E> = {
   success: false;
-  data?: never;
+  data: null;
   error: E;
 };
 
-export type ResultType<T, E = Error> = Success<T> | Failure<E>;
+export type ResultType<T, E> = Success<T> | Failure<E>;
 
 export const Result = {
   async tryCatch<T, E = Error>(promise: Promise<T>): Promise<ResultType<T, E>> {
     try {
       const data = await promise;
-      return { data, error: undefined, success: true };
+      return { data, error: null, success: true };
     } catch (error) {
-      return { data: undefined, error: error as E, success: false };
+      return { data: null, error: error as E, success: false };
     }
   },
   ok<T>(data: T): Success<T> {
     return {
       data,
       success: true,
-      error: undefined,
+      error: null,
     };
   },
-  err<E = Error>(error: E): Failure<E> {
+  err<E>(error: E): Failure<E> {
     return {
       success: false,
-      data: undefined,
+      data: null,
       error,
     };
   },
-  apiErr<S extends ContentfulStatusCode, M extends string>(
-    status: S,
+  responseErr<S extends ContentfulStatusCode, M extends string, D = null>(
+    code: S,
     message: M,
-  ): Failure<{ status: S; message: M }> {
-    return Result.err({ status, message });
+    details?: D,
+  ): Failure<{ code: S; message: M; details: D }> {
+    return Result.err({ code, message, details: details ?? (null as D) });
   },
 };

@@ -165,10 +165,10 @@ export async function validateCollectionAccess(collectionId: string, userId: str
     where: eq(schema.collection.id, collectionId),
   });
 
-  if (!collection) return Result.apiErr(404, "Collection not found.");
+  if (!collection) return Result.responseErr(404, "Collection not found.");
 
   if (collection.ownerId !== userId) {
-    return Result.apiErr(403, "You are not allowed to access this collection.");
+    return Result.responseErr(403, "You are not allowed to access this collection.");
   }
 
   return Result.ok(collection);
