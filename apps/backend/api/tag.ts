@@ -9,7 +9,6 @@ import { HTTPException } from "hono/http-exception";
 import { CreateTagSchema, EditTagSchema } from "@hyperlog/schemas";
 import { z } from "zod";
 import { updateTagLinks, validateTagAccess } from "../utils/tags.ts";
-import { Result } from "../utils/result.ts";
 
 const app = new Hono<AppEnv>()
   .use(sessionMiddleware)
@@ -81,8 +80,8 @@ const app = new Hono<AppEnv>()
       const { tagId } = c.req.valid("param");
       const input = c.req.valid("json");
 
-      const tagResult = await validateTagAccess(tagId, user);
-      if (tagResult.error) return c.json(Result.err(tagResult.error), tagResult.error.status);
+      const { error } = await validateTagAccess(tagId, user);
+      if (error) return c.var.error(error, error.code);
 
       await db.transaction(async (tx) => {
         const { name, description, links } = input;
@@ -94,7 +93,26 @@ const app = new Hono<AppEnv>()
         await updateTagLinks(tx, tagId, links);
       });
 
-      return c.json(Result.ok({ message: "Tag updated successfully" }));
+      return c.var.success({ message: "Tag updated successfully" });
+    },
+  )
+  /**
+   * DELETE
+   * delete tag
+   */
+  .delete(
+    "/:tagId",
+    zValidator("param", z.object({ tagId: z.string().uuid() })),
+    async (c) => {
+      const user = c.get("user");
+      const { tagId } = c.req.valid("param");
+
+      const { error } = await validateTagAccess(tagId, user);
+      if (error) return c.var.error(error, error.code);
+
+      await db.delete(schema.tag).where(eq(schema.tag.id, tagId));
+
+      return c.var.success({ message: "Tag updated successfully" });
     },
   );
 

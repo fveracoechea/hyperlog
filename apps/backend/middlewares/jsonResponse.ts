@@ -1,29 +1,16 @@
 import { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 import { ContentfulStatusCode } from "hono/utils/http-status";
+import { Result } from "../utils/result.ts";
 
 function makeSuccessResponseHandler(ctx: Context) {
   return <D, S extends ContentfulStatusCode>(data: D, status?: S) =>
-    ctx.json(
-      {
-        success: true,
-        data,
-        error: null,
-      },
-      status,
-    );
+    ctx.json(Result.ok(data), status);
 }
 
 function makeErrorResponseHandler(ctx: Context) {
   return <E, S extends ContentfulStatusCode>(error: E, status?: S) =>
-    ctx.json(
-      {
-        success: false,
-        data: null,
-        error,
-      },
-      status,
-    );
+    ctx.json(Result.err(error), status);
 }
 
 export type ErrorResponseHandler = ReturnType<typeof makeErrorResponseHandler>;

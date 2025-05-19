@@ -18,15 +18,15 @@ import { Typography } from "./ui/typography";
 
 type Props = {
   trigger: ReactNode;
-  collection: {
+  tag: {
     id: string;
     name: string;
     description?: string | null;
   };
 };
 
-export function DeleteCollectionDialog(props: Props) {
-  const { collection, trigger } = props;
+export function DeleteTagDialog(props: Props) {
+  const { tag, trigger } = props;
 
   const navigation = useNavigation();
 
@@ -37,14 +37,12 @@ export function DeleteCollectionDialog(props: Props) {
         <DialogHeader>
           <DialogTitle>Delete Collection</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this collection?
+            Are you sure you want to delete this tag?
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2 py-2">
-          <Typography>{collection.name}</Typography>
-          {collection.description && (
-            <Typography variant="small">{collection.description}</Typography>
-          )}
+          <Typography>{tag.name}</Typography>
+          {tag.description && <Typography variant="small">{tag.description}</Typography>}
         </div>
         <DialogFooter>
           <DialogClose asChild>

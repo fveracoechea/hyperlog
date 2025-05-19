@@ -1,5 +1,5 @@
 import type { Route } from "./+types/TagPage";
-import { data, Link } from "react-router";
+import { data, Link, redirect } from "react-router";
 
 import { LinkIcon, PencilIcon, TagIcon, TrashIcon } from "lucide-react";
 
@@ -10,12 +10,23 @@ import { GoBackButton } from "@/components/GoBackButton.tsx";
 
 import { client } from "@/utility/honoClient";
 import { href } from "react-router";
+import { DeleteTagDialog } from "../components/DeleteTagDialog.tsx";
 
 export async function clientLoader({ params: { tagId } }: Route.ClientLoaderArgs) {
   const response = await client.api.tag[":tagId"].$get({ param: { tagId } });
   const json = await response.json();
   if (!json.success) throw data(null, { status: response.status });
   return json.data;
+}
+
+export async function clientAction({ params: { tagId }, request }: Route.ClientActionArgs) {
+  if (request.method === "DELETE") {
+    const res = await client.api.tag[":tagId"].$delete({ param: { tagId } });
+    const json = await res.json();
+    if (!json.success) throw data(json.error.message, { status: res.status });
+
+    return redirect(href("/tags"));
+  }
 }
 
 export default function TagPage({ loaderData }: Route.ComponentProps) {
@@ -31,12 +42,15 @@ export default function TagPage({ loaderData }: Route.ComponentProps) {
 
         <div className="flex gap-2">
           <GoBackButton />
-
-          <Button variant="outline" size="sm">
-            <TrashIcon />
-            <span>Delete tag</span>
-          </Button>
-
+          <DeleteTagDialog
+            tag={tag}
+            trigger={
+              <Button variant="outline" size="sm">
+                <TrashIcon />
+                <span>Delete tag</span>
+              </Button>
+            }
+          />
           <Button size="sm" variant="outline" asChild>
             <Link to={href("/tags/:tagId/edit", { tagId: tag.id })} replace>
               <PencilIcon />

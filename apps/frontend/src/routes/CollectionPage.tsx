@@ -1,4 +1,4 @@
-import { data, Link, redirect } from "react-router";
+import { data, href, Link, redirect } from "react-router";
 
 import { FoldersIcon, LinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 
@@ -35,10 +35,12 @@ export async function clientAction(
     if (!json.success) throw data(json.error.message, { status: res.status });
 
     if (json.data.collection.parentId) {
-      return redirect(`/collections/${json.data.collection.parentId}`);
+      return redirect(
+        href("/collections/:collectionId", { collectionId: json.data.collection.parentId }),
+      );
     }
 
-    return redirect("/collections");
+    return redirect(href("/collections"));
   }
 
   return null;
