@@ -14,6 +14,7 @@ import { Typography } from "@/components/ui/typography";
 import { CreateNewDialog } from "../CreateNew";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "./ThemeToggle";
+import { href } from "react-router";
 
 export function Header() {
   const { pathname } = useLocation();
@@ -24,7 +25,7 @@ export function Header() {
         "border-muted sticky top-0 z-10 border-b border-solid",
       )}
     >
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-8 w-full">
         <div className="flex gap-2">
           <Unlink className="text-primary" />
           <Typography as="h1" variant="title">
@@ -59,9 +60,7 @@ export function Header() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-      </div>
 
-      <div className="flex w-1/2 items-center justify-end gap-2">
         <Button
           size="sm"
           variant="outline"
@@ -69,16 +68,21 @@ export function Header() {
         >
           <SearchIcon />
           <Typography variant="small" muted className="flex-1 text-left">
-            Search
+            search
           </Typography>
           <span className="bg-cpt-crust rounded-md px-2">
             <Typography variant="xsmall">⌘ K</Typography>
           </span>
         </Button>
+      </div>
+
+      <div className="flex w-1/2 items-center justify-end gap-4">
         <ThemeToggle />
-        <Button variant="ghost" size="sm">
-          <UserCircleIcon className="stroke-cpt-flamingo min-h-5 min-w-5" />
-          <span>My Account</span>
+        <Button variant="ghost" size="sm" asChild>
+          <NavLink to={href("/account")}>
+            <UserCircleIcon className="stroke-cpt-flamingo min-w-5 min-h-5" />
+            <span>Account</span>
+          </NavLink>
         </Button>
         <CreateNewDialog
           key={pathname}

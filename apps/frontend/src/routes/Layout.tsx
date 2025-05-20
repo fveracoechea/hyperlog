@@ -32,18 +32,15 @@ export function clientLoader({}: Route.ClientLoaderArgs) {
   return jsonHash({
     async ownedCollections() {
       const response = await client.api.collection.$get({ query: { type: "owned" } });
-      const json = await response.json();
-      return json.data.collections;
+      return (await response.json()).data.collections;
     },
     async parentCollections() {
       const response = await client.api.collection.$get({ query: { type: "parent" } });
-      const json = await response.json();
-      return json.data.collections;
+      return (await response.json()).data.collections;
     },
     async tags() {
       const response = await client.api.tag.$get();
-      const json = await response.json();
-      return json.data.tags;
+      return (await response.json()).data.tags;
     },
   });
 }

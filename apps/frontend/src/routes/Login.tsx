@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-sloppy-imports
 import { Form, redirect, useNavigation } from "react-router";
 import { parseFormData } from "remix-hook-form";
 
@@ -69,7 +68,7 @@ export default function Login({ actionData }: Route.ComponentProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Form method="POST" className="flex flex-col gap-4" noValidate>
+          <Form method="POST" className="flex flex-col gap-4" noValidate viewTransition>
             {/* {loaderData.info && <Alert variant='info'>{loaderData.info.message}</Alert>} */}
             <FormField
               label="Email"

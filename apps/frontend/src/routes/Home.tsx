@@ -5,7 +5,6 @@ import { LinkCard } from "@/components/LinkCard";
 
 import type { Route } from "./+types/Home";
 import { jsonHash } from "remix-utils/json-hash";
-import { namedAction } from "remix-utils/named-action";
 import { client } from "@/utility/honoClient.ts";
 
 export function clientLoader({}: Route.ClientLoaderArgs) {

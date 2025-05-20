@@ -1,4 +1,4 @@
-import { index, layout, route, type RouteConfig } from "@react-router/dev/routes";
+import { index, layout, prefix, route, type RouteConfig } from "@react-router/dev/routes";
 
 export default [
   layout("./routes/Layout.tsx", { id: "layout" }, [
@@ -12,6 +12,12 @@ export default [
     route("tags", "./routes/Tags.tsx"),
     route("tags/:tagId", "./routes/TagPage.tsx"),
     route("tags/:tagId/edit", "./routes/TagEdit.tsx"),
+  ]),
+
+  ...prefix("account", [
+    layout("./routes/AccountLayout.tsx", { id: "account" }, [
+      index("./routes/AccountPage.tsx"),
+    ]),
   ]),
 
   layout("./routes/PlublicLayout.tsx", [
