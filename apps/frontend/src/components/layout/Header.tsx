@@ -1,7 +1,7 @@
-import { NavLink, useLocation } from "react-router";
+import { href, NavLink, useNavigation } from "react-router";
 
 import clsx from "clsx";
-import { PlusIcon, SearchIcon, Unlink, UserCircleIcon } from "lucide-react";
+import { PlusIcon, UnlinkIcon, UserCircleIcon } from "lucide-react";
 
 import {
   NavigationMenu,
@@ -14,10 +14,11 @@ import { Typography } from "@/components/ui/typography";
 import { CreateNewDialog } from "../CreateNew";
 import { Button } from "../ui/button";
 import { ThemeToggle } from "./ThemeToggle";
-import { href } from "react-router";
 
 export function Header() {
-  const { pathname } = useLocation();
+  const navigation = useNavigation();
+  const { pathname } = navigation.location ?? {};
+
   return (
     <header
       className={clsx(
@@ -27,7 +28,7 @@ export function Header() {
     >
       <div className="flex items-center gap-8 w-full">
         <div className="flex gap-2">
-          <Unlink className="text-primary" />
+          <UnlinkIcon className="text-primary" />
           <Typography as="h1" variant="title">
             Hyperlog
           </Typography>
@@ -61,22 +62,21 @@ export function Header() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <Button
-          size="sm"
-          variant="outline"
-          className="h-[30px] w-full min-w-[150px] max-w-64 items-center justify-start px-2"
-        >
-          <SearchIcon />
-          <Typography variant="small" muted className="flex-1 text-left">
-            search
-          </Typography>
-          <span className="bg-cpt-crust rounded-md px-2">
-            <Typography variant="xsmall">⌘ K</Typography>
-          </span>
-        </Button>
+        {/* {navigation.state !== "idle" && ( */}
+        {/*   <div className="loader  w-full min-w-[150px] max-w-60" /> */}
+        {/* )} */}
       </div>
 
-      <div className="flex w-1/2 items-center justify-end gap-4">
+      <div className="flex w-1/2 items-center justify-end gap-2">
+        <CreateNewDialog
+          key={pathname}
+          trigger={
+            <Button variant="ghost" size="sm">
+              <PlusIcon className="min-h-5 min-w-5 stroke-primary" />
+              <span>Create New</span>
+            </Button>
+          }
+        />
         <ThemeToggle />
         <Button variant="ghost" size="sm" asChild>
           <NavLink to={href("/account")}>
@@ -84,15 +84,6 @@ export function Header() {
             <span>Account</span>
           </NavLink>
         </Button>
-        <CreateNewDialog
-          key={pathname}
-          trigger={
-            <Button size="sm">
-              <PlusIcon className="min-h-5 min-w-5" />
-              <span>Create New</span>
-            </Button>
-          }
-        />
       </div>
     </header>
   );

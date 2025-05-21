@@ -20,6 +20,8 @@ export const ColorNames = [
 
 export type ColorName = (typeof ColorNames)[number] | null;
 
+export const zIdQueryParam = z.string().uuid().optional().catch(undefined);
+
 export const zStringArray = z
   .string()
   .array()

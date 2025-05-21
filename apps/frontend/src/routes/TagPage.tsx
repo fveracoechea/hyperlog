@@ -62,7 +62,7 @@ export default function TagPage({ loaderData }: Route.ComponentProps) {
 
       <div className="flex flex-col gap-4">
         <SubBanner title="Links" Icon={LinkIcon} />
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
+        <div className="grid-auto-fill">
           {tag.links.map((link) => <LinkCard key={link.id} link={link} />)}
         </div>
       </div>

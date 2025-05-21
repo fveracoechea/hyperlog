@@ -8,7 +8,12 @@ import { AppEnv } from "@/utils/types.ts";
 import { sessionMiddleware } from "@/middlewares/session.ts";
 import { paginationHelper } from "@/utils/pagination.ts";
 
-import { CreateLinkSchema, EditLinkSchema, PaginationSchema } from "@hyperlog/schemas";
+import {
+  CreateLinkSchema,
+  EditLinkSchema,
+  PaginationSchema,
+  zIdQueryParam,
+} from "@hyperlog/schemas";
 import { fetchLinkData, validateLinkAccess } from "@/utils/links.ts";
 
 const app = new Hono<AppEnv>()
@@ -140,30 +145,37 @@ const app = new Hono<AppEnv>()
   /**
    * Get paginated links
    */
-  .get("/", zValidator("query", PaginationSchema), async (c) => {
-    const searchParams = c.req.valid("query");
+  .get(
+    "/",
+    zValidator("query", PaginationSchema.extend({ tag: zIdQueryParam })),
+    async (c) => {
+      const searchParams = c.req.valid("query");
 
-    const where = [eq(schema.link.ownerId, c.var.user.id)];
-    if (searchParams.exclude) where.push(notInArray(schema.link.id, searchParams.exclude));
+      const where = [eq(schema.link.ownerId, c.var.user.id)];
 
-    const args = paginationHelper({
-      table: "link",
-      searchableFields: ["title", "url"],
-      searchParams,
-      where,
-    });
+      if (searchParams.exclude) where.push(notInArray(schema.link.id, searchParams.exclude));
 
-    const results = await db.query.link.findMany({
-      ...args,
-      with: {
-        tag: true,
-        collection: true,
-      },
-    });
+      if (searchParams.tag) where.push(eq(schema.link.tagId, searchParams.tag));
 
-    return c.var.success({
-      totalRecords: Number(results.at(0)?.totalRecords ?? 0),
-      links: results.map(({ totalRecords: _, ...data }) => data),
-    });
-  });
+      const args = paginationHelper({
+        table: "link",
+        searchableFields: ["title", "url"],
+        searchParams,
+        where,
+      });
+
+      const results = await db.query.link.findMany({
+        ...args,
+        with: {
+          tag: true,
+          collection: true,
+        },
+      });
+
+      return c.var.success({
+        totalRecords: Number(results.at(0)?.totalRecords ?? 0),
+        links: results.map(({ totalRecords: _, ...data }) => data),
+      });
+    },
+  );
 export default app;

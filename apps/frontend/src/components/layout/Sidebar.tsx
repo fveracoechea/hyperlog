@@ -1,7 +1,7 @@
 import { NavLink, useLoaderData } from "react-router";
 
 import clsx from "clsx";
-import { TagIcon } from "lucide-react";
+import { SearchIcon, TagIcon } from "lucide-react";
 
 import { CollectionIcon } from "../CollectionIcon";
 import type { ColorVariant } from "../ColorPicker";
@@ -61,11 +61,24 @@ export function Sidebar() {
     <aside
       className={clsx(
         "hidden lg:flex",
-        "bg-cpt-mantle z-20 flex-col gap-4",
-        "sticky top-[62px] h-[calc(100vh-62px)] w-64 p-4 2xl:w-72",
+        "bg-cpt-mantle z-20 flex-col gap-6",
+        "sticky top-[62px] h-[calc(100vh-62px)] w-64 py-6 px-4 2xl:w-72",
         "border-muted overflow-y-auto border-r border-solid",
       )}
     >
+      <Button
+        size="sm"
+        variant="outline"
+        className="h-[30px] w-full min-w-[150px] max-w-64 items-center justify-start px-2"
+      >
+        <SearchIcon />
+        <Typography variant="small" muted className="flex-1 text-left">
+          search
+        </Typography>
+        <span className="bg-cpt-crust rounded-md px-2">
+          <Typography variant="xsmall">⌘ K</Typography>
+        </span>
+      </Button>
       <SideNav type="collections" links={data.parentCollections ?? []} />
       <SideNav type="tags" links={data.tags ?? []} />
     </aside>

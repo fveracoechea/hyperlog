@@ -1,4 +1,4 @@
-import { Tag } from "lucide-react";
+import { TagsIcon } from "lucide-react";
 
 import { Banner } from "@/components/Banner";
 import { TagCard } from "@/components/TagCard";
@@ -18,11 +18,11 @@ export default function Tags({ loaderData }: Route.ComponentProps) {
     <>
       <section className="flex flex-col gap-4">
         <Banner
-          Icon={Tag}
+          Icon={TagsIcon}
           title="Tags"
           subtitle="Easily group and filter links for quicker access"
         />
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
+        <div className="grid-auto-fill">
           {tags.map((tag) => (
             <TagCard
               key={tag.id}

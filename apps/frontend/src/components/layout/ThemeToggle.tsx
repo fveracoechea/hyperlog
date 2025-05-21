@@ -9,8 +9,8 @@ export function ThemeToggle() {
   return (
     <Button variant="ghost" size="sm" onClick={() => setTheme(isDark ? "light" : "dark")}>
       {isDark
-        ? <Moon className="stroke-cpt-flamingo group-hover:stroke-cpt-blue min-h-5 min-w-5" />
-        : <Sun className="stroke-cpt-flamingo group-hover:stroke-cpt-blue min-h-5 min-w-5" />}
+        ? <Moon className="stroke-cpt-mauve group-hover:stroke-cpt-blue min-h-5 min-w-5" />
+        : <Sun className="stroke-cpt-mauve group-hover:stroke-cpt-blue min-h-5 min-w-5" />}
       <span>Theme</span>
     </Button>
   );

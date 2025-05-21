@@ -33,7 +33,7 @@ export function TagCard(props: { tag: TagType; linkCount?: number }) {
         )}
       >
         <div className="flex justify-between">
-          <TagIcon />
+          <TagIcon className="w-5" />
           {!!linkCount && linkCount > 0 && (
             <div className="flex items-center gap-2" title="Number of links">
               <LinkIcon className="h-4 w-4" />

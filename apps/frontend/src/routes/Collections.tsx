@@ -37,7 +37,7 @@ export default function Collections({ loaderData }: Route.ComponentProps) {
           Icon={FoldersIcon}
         />
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
+        <div className="grid-auto-fill">
           {parent.map((collection) => (
             <CollectionCard
               key={collection.id}
@@ -55,7 +55,7 @@ export default function Collections({ loaderData }: Route.ComponentProps) {
           Icon={FolderOpenIcon}
         />
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4">
+        <div className="grid-auto-fill">
           <div className="border-border flex flex-col gap-2 rounded-md border p-4">
             <Typography muted>Coming Soon!</Typography>
             <Typography variant="small" muted>

@@ -141,6 +141,7 @@
   * {
     outline: none;
     border-color: var(--border);
+    @apply border-border outline-ring/50;
   }
 
   html {
@@ -148,46 +149,43 @@
   }
 
   body {
-    @apply bg-cpt-mantle text-foreground transition-colors;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+    @apply bg-cpt-mantle text-foreground transition-colors bg-background;
   }
 
   .loader {
     width: 100%;
-    height: 4.8px;
+    height: 4px;
     display: inline-block;
     position: relative;
     overflow: hidden;
     @apply bg-muted rounded-sm;
   }
+
   .loader::after {
     content: "";
-    width: 96px;
-    height: 4.8px;
+    width: 20%;
+    height: 4px;
     position: absolute;
     top: 0;
     left: 0;
     box-sizing: border-box;
-    animation: hitZak 1s linear infinite alternate;
+    animation: animloader 0.8s linear infinite;
     @apply bg-muted-foreground rounded-sm;
   }
 
-  @keyframes hitZak {
+  @keyframes animloader {
     0% {
       left: 0;
-      transform: translateX(-1%);
+      transform: translateX(-100%);
     }
     100% {
       left: 100%;
-      transform: translateX(-99%);
+      transform: translateX(0%);
     }
+  }
+
+  .grid-auto-fill {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(min(338px, 100%), 1fr));
   }
 }
