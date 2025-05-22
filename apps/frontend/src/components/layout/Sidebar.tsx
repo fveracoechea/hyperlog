@@ -18,7 +18,7 @@ function SideNav(props: SideNavProps) {
   const { links, type } = props;
   return (
     <nav className="flex flex-col gap-1">
-      <Typography as="h3" variant="base">
+      <Typography as="h3" variant="small" muted>
         {type === "collections" && "Collections"}
         {type === "tags" && "Tags"}
       </Typography>
@@ -67,17 +67,17 @@ export function Sidebar() {
       )}
     >
       <Button
-        size="sm"
         variant="outline"
-        className="h-[30px] w-full min-w-[150px] max-w-64 items-center justify-start px-2"
+        size="sm"
+        className="w-full  max-w-64 items-center justify-start"
       >
-        <SearchIcon />
-        <Typography variant="small" muted className="flex-1 text-left">
-          search
+        <SearchIcon className="min-h-5 min-w-5 stroke-muted-foreground" />
+        <Typography variant="small" muted className="flex-1 text-left leading-normal">
+          Search
         </Typography>
-        <span className="bg-cpt-crust rounded-md px-2">
-          <Typography variant="xsmall">⌘ K</Typography>
-        </span>
+        <Typography variant="xsmall" className="bg-cpt-crust rounded-md px-2 py-1">
+          ⌘ K
+        </Typography>
       </Button>
       <SideNav type="collections" links={data.parentCollections ?? []} />
       <SideNav type="tags" links={data.tags ?? []} />
