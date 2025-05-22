@@ -67,9 +67,9 @@ export function Sidebar() {
       )}
     >
       <Button
-        variant="outline"
         size="sm"
-        className="w-full  max-w-64 items-center justify-start"
+        variant="outline"
+        className="w-full max-w-64 items-center min-h-9"
       >
         <SearchIcon className="min-h-5 min-w-5 stroke-muted-foreground" />
         <Typography variant="small" muted className="flex-1 text-left leading-normal">
