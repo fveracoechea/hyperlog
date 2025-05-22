@@ -63,15 +63,11 @@ export function PaginationButton(
 // TODO: ADD SorBy and Direction dropdowns
 export function PaginationForm(props: { params: PaginationSchemaType; totalRecords: number }) {
   const { params, totalRecords } = props;
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigation = useNavigation();
 
   const loading = navigation.state === "loading";
   const lastPage = Math.ceil(totalRecords / params.pageSize);
-
-  const isSearching = navigation.state !== "idle" &&
-    (new URLSearchParams(navigation.location.search).has("search") ||
-      typeof params.search !== "undefined");
 
   function getPaginationLink(page: number) {
     const pagination = new URLSearchParams(searchParams);
@@ -79,25 +75,13 @@ export function PaginationForm(props: { params: PaginationSchemaType; totalRecor
     return `/links?${pagination}`;
   }
 
-  function onClearSearch() {
-    searchParams.delete("search");
-    searchParams.set("page", "1");
-    setSearchParams(searchParams);
-  }
-
   return (
-    <div className="flex gap-5">
-      <Form className="flex flex-1 gap-4">
-        <div className="w-1/2 min-w-80 max-w-screen-sm">
-          <SearchInput
-            key={params.search}
-            loading={isSearching}
-            defaultValue={params.search || ""}
-            placeholder="Search by Title or URL"
-            onClearSearch={onClearSearch}
-          />
-        </div>
-      </Form>
+    <div className="flex gap-5 items-center justify-between  py-0">
+      <div>
+        <Typography>
+          {totalRecords} results found.
+        </Typography>
+      </div>
       <div className="flex items-center gap-0">
         <PaginationButton
           variant="first"

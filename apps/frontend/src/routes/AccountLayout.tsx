@@ -6,7 +6,7 @@ export default function AccountLayout() {
   return (
     <>
       <Header />
-      <div className="flex flex-1 flex-col justify-between">
+      <div className="flex flex-1 flex-col justify-between min-h-[calc(100vh-62px)]">
         <main className="bg-background xlg:p-8 flex flex-1 flex-col gap-10 p-4 lg:p-6">
           <Outlet />
         </main>

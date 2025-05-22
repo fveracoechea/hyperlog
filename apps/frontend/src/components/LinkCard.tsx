@@ -18,10 +18,12 @@ type LinkType =
 
 type Props = {
   isLoading?: boolean;
+  showImage?: boolean;
   link: LinkType;
 };
 
-export function LinkCard({ link, isLoading }: Props) {
+export function LinkCard(props: Props) {
+  const { link, isLoading, showImage } = props;
   const navigate = useNavigate();
   return (
     <a
@@ -41,7 +43,7 @@ export function LinkCard({ link, isLoading }: Props) {
           "relative flex flex-col overflow-hidden",
         )}
       >
-        {link.previewImage && (
+        {showImage && link.previewImage && (
           <img
             role="presentation"
             loading="lazy"
@@ -53,8 +55,9 @@ export function LinkCard({ link, isLoading }: Props) {
         )}
         <div
           className={clsx(
-            "relative flex flex-1 flex-col justify-between gap-4 rounded-md p-2 aspect-[1.9/1]",
-            "bg-gradient-to-b from-cpt-base/65  to-cpt-base via-0% to-65%",
+            showImage &&
+              "aspect-[1.9/1] bg-gradient-to-b from-cpt-base/65  to-cpt-base via-0% to-65%",
+            "relative flex flex-1 flex-col justify-between gap-5 rounded-md p-2",
           )}
         >
           <div className="flex items-start justify-between">
@@ -69,7 +72,7 @@ export function LinkCard({ link, isLoading }: Props) {
               </Typography>
             </div>
           </div>
-          <div className="flex flex-col justify-between gap-2">
+          <div className="flex flex-col justify-between gap-2.5">
             <Typography
               as="h4"
               className={clsx(
@@ -81,8 +84,9 @@ export function LinkCard({ link, isLoading }: Props) {
             </Typography>
 
             <div className="flex items-center gap-1.5" title="URL">
-              <LinkIcon className="stroke-foreground group-hover:stroke-primary h-4 w-4" />
+              <LinkIcon className="stroke-muted-foreground h-4 w-4" />
               <Typography
+                muted
                 as="span"
                 variant="small"
                 className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
@@ -102,18 +106,19 @@ export function LinkCard({ link, isLoading }: Props) {
                   color={link.collection?.color ?? undefined}
                 />
                 <Typography
+                  muted
                   as="span"
                   variant="small"
-                  className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
+                  className="overflow-x-hidden overflow-ellipsis whitespace-nowrap leading-normal"
                 >
                   {link.collection?.name ?? "Unorganized"}
                 </Typography>
               </div>
               <Button
                 type="button"
-                variant="outline"
+                variant="dark"
                 size="sm"
-                className="h-7"
+                className="h-6 text-muted-foreground hover:text-foreground"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

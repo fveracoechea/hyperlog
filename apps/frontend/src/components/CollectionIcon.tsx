@@ -39,7 +39,12 @@ export function CollectionIcon(
   const { color, size, className, noCollection } = props;
 
   if (noCollection) {
-    return <FolderXIcon {...props} className={clsx(className, styles({ color, size }))} />;
+    return (
+      <FolderXIcon
+        {...props}
+        className={clsx("stroke-muted-foreground", className, styles({ size }))}
+      />
+    );
   }
 
   return <FolderIcon {...props} className={clsx(className, styles({ color, size }))} />;
