@@ -28,7 +28,7 @@ export default function AccountPage({}: Route.ComponentProps) {
           dolorem hic eveniet nesciunt labore itaque et perspiciatis, assumenda aliquid cum
           ipsum? Eius voluptates ea non, alias libero optio!
         </Typography>
-        <div className="flex gap-4">
+        <div className="flex gap-4 justify-end">
           <Button variant="outline" className="w-fit">Cancel Subscription</Button>
           <Button className="w-fit">Upgrade to Pro</Button>
         </div>
@@ -57,9 +57,14 @@ export default function AccountPage({}: Route.ComponentProps) {
           variant="destructive"
           Icon={TriangleAlertIcon}
           title="Danger Zone"
-          subtitle="This will permanently delete your account all associated data."
+          subtitle="Please proceed with caution. Once deleted, your data cannot be recovered."
         />
-        <Button variant="outline" className="w-fit">Delete Account</Button>
+        <Typography>
+          Permanently delete your account and all associated data, including saved links,
+          collections, and tags. This action is irreversible. If you're sure you want to
+          continue, click the button below.
+        </Typography>
+        <Button variant="outline" className="w-fit self-end">Delete Account</Button>
       </div>
     </>
   );

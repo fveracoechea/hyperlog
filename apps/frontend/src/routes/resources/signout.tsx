@@ -14,7 +14,7 @@ export function SignOutButton() {
 
   return (
     <fetcher.Form method="post" action={href("/resources/signout")} className="w-full">
-      <Button variant="secondary" type="submit" className="w-full">
+      <Button variant="outline" type="submit" className="w-full">
         {fetcher.state !== "idle"
           ? <LoaderCircleIcon className="animate-spin" />
           : <LogOutIcon />}
