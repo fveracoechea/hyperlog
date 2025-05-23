@@ -1,7 +1,7 @@
 import { href, NavLink, useNavigation } from "react-router";
 
 import clsx from "clsx";
-import { LoaderCircleIcon, PlusIcon, UnlinkIcon, UserCircleIcon } from "lucide-react";
+import { PlusIcon, UnlinkIcon, UserCircleIcon } from "lucide-react";
 
 import {
   NavigationMenu,
@@ -26,7 +26,7 @@ export function Header() {
         "border-muted sticky top-0 z-10 border-b border-solid",
       )}
     >
-      <div className="flex items-center gap-8 w-full">
+      <div className="flex w-full items-center gap-8">
         <div className="flex gap-2">
           <UnlinkIcon className="text-primary" />
           <Typography as="h1" variant="title">
@@ -76,7 +76,7 @@ export function Header() {
         <ThemeToggle />
         <Button variant="ghost" size="sm" asChild>
           <NavLink to={href("/settings/account")} viewTransition>
-            <UserCircleIcon className="stroke-cpt-flamingo min-w-5 min-h-5" />
+            <UserCircleIcon className="min-h-5 min-w-5 stroke-cpt-flamingo" />
             <span>Account</span>
           </NavLink>
         </Button>

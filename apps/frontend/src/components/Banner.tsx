@@ -40,7 +40,7 @@ export function Banner(props: Props) {
 export function SubBanner(props: Props) {
   const { title, Icon, subtitle, iconNode } = props;
   return (
-    <header>
+    <header className="flex flex-col gap-2">
       <div className="flex items-center gap-1.5">
         {Icon && <Icon className="stroke-primary h-5 w-5" />}
         {iconNode}

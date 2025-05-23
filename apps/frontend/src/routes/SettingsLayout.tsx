@@ -13,6 +13,7 @@ import { SignOutButton } from "@/routes/resources/signout";
 import { PageErrorBoundary } from "@/components/PageErrorBoundary.tsx";
 
 import type { Route } from "./+types/AccountLayout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const ErrorBoundary = PageErrorBoundary;
 
@@ -67,7 +68,9 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
                     />
                   )
                   : <CircleUserIcon className="w-32 h-32 stroke-cpt-surface0" />}
-                <Typography variant="title" className="mt-2">{user.name}</Typography>
+                <Typography variant="large" className="mt-2 leading-tight">
+                  {user.name}
+                </Typography>
                 <Typography variant="base" muted>{user.email}</Typography>
                 <span className="border border-border rounded-md px-2 py-0.5 text-sm bg-cpt-mantle">
                   Subscription Plan
@@ -155,7 +158,17 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
               </div>
               <SignOutButton />
             </aside>
-            <div className="flex-[3] bg-cpt-mantle w-full">
+            <div className="flex-[3] w-full flex flex-col gap-10">
+              <Tabs defaultValue="account">
+                <TabsList>
+                  <TabsTrigger value="account">Account</TabsTrigger>
+                  <TabsTrigger value="customization">Customization</TabsTrigger>
+                  <TabsTrigger value="ai">AI Features</TabsTrigger>
+                  <TabsTrigger value="history">History & Sync</TabsTrigger>
+                  <TabsTrigger value="contact">Contact Us</TabsTrigger>
+                </TabsList>
+              </Tabs>
+
               <Outlet />
             </div>
           </div>

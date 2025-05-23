@@ -122,7 +122,7 @@ export function AddLinkDialog(props: Props) {
               fetcher.data.links.map((link) => (
                 <li
                   key={link.id}
-                  className="even:bg-cpt-mantle flex items-center gap-2 rounded-md p-2"
+                  className="flex items-center gap-2 rounded-md p-2 even:bg-cpt-mantle"
                 >
                   <LazyFavicon width="26px" height="26px" src={link.favicon ?? undefined} />
                   <Typography
