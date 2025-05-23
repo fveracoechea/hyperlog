@@ -17,7 +17,6 @@ const app = new Hono<AppEnv>()
    */
   .get("/stats", async (c) => {
     const user = c.get("user");
-    console.log(user);
 
     const [links, collections, tags] = await Promise.all([
       db.$count(schema.link, eq(schema.link.ownerId, user.id)),
