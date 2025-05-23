@@ -12,7 +12,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Typography } from "@/components/ui/typography";
 
 import type { Route } from "./+types/SignUp";
-import { client } from "../utility/honoClient.ts";
 
 export async function clientAction({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -27,8 +26,8 @@ export async function clientAction({ request }: Route.ActionArgs) {
 }
 
 export async function clientLoader({}: Route.ClientLoaderArgs) {
-  const response = await client.api.whoami.$get();
-  if (response.ok) return redirect("/");
+  const { error } = await authClient.getSession();
+  if (error) return redirect("/");
   return null;
 }
 

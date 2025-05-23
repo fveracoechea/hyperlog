@@ -15,7 +15,6 @@ import { Typography } from "@/components/ui/typography";
 
 import type { Route } from "./+types/Login";
 import { PageErrorBoundary } from "@/components/PageErrorBoundary.tsx";
-import { client } from "../utility/honoClient.ts";
 
 export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
   return (
@@ -31,8 +30,8 @@ export function ErrorBoundary(props: Route.ErrorBoundaryProps) {
 }
 
 export async function clientLoader({}: Route.ClientLoaderArgs) {
-  const response = await client.api.whoami.$get();
-  if (response.ok) return redirect("/");
+  const { error } = await authClient.getSession();
+  if (error) return redirect("/");
   return null;
 }
 

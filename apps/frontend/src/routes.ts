@@ -14,6 +14,10 @@ export default [
     route("tags/:tagId/edit", "./routes/TagEdit.tsx"),
   ]),
 
+  ...prefix("resources", [
+    route("signout", "./routes/resources/signout.tsx"),
+  ]),
+
   ...prefix("account", [
     layout("./routes/AccountLayout.tsx", { id: "account" }, [
       index("./routes/AccountPage.tsx"),

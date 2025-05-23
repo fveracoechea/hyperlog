@@ -8,6 +8,7 @@ import { Typography } from "../components/ui/typography.tsx";
 import { CircleUserIcon, LogOutIcon } from "lucide-react";
 import { Button } from "../components/ui/button.tsx";
 import { client } from "../utility/honoClient.ts";
+import { SignOutButton } from "./resources/signout.tsx";
 
 export function clientLoader({}: Route.ClientLoaderArgs) {
   return jsonHash({
@@ -118,10 +119,7 @@ export default function AccountPage({ loaderData }: Route.ComponentProps) {
           />
         </div>
 
-        <Button variant="outline">
-          <LogOutIcon />
-          <span>Sign Out</span>
-        </Button>
+        <SignOutButton />
       </aside>
       <div className="flex-[3] bg-cpt-mantle w-full">
       </div>
