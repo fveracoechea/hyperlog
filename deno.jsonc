@@ -1,0 +1,50 @@
+{
+  "nodeModulesDir": "auto",
+  "unstable": [
+    "sloppy-imports"
+  ],
+  "workspace": [
+    "./apps/frontend",
+    "./apps/backend",
+    "./shared/*"
+  ],
+  "tasks": {
+    "frontend:dev": "deno task -f @hyperlog/frontend dev",
+    "backend:dev": "deno task -f @hyperlog/backend dev",
+    "dev": "deno task backend:dev & deno task frontend:dev"
+  },
+  "lint": {
+    "include": [
+      "apps/",
+      "shared/"
+    ],
+    "rules": {
+      "tags": [
+        "react",
+        "recommended"
+      ],
+      "exclude": ["no-sloppy-imports"]
+    }
+  },
+  "fmt": {
+    "include": [
+      "apps/",
+      "shared/"
+    ],
+    "useTabs": false,
+    "lineWidth": 95,
+    "indentWidth": 2,
+    "singleQuote": false,
+    "proseWrap": "always",
+    "semiColons": true
+  },
+  "imports": {
+    "@react-router/dev": "npm:@react-router/dev@^7.5.3",
+    "react-router": "npm:react-router@^7.5.3",
+    "zod": "npm:zod@^3.24.2",
+    "hono": "npm:hono@^4.7.8",
+    "@std/path": "jsr:@std/path@^1.0.9",
+    "@std/http": "jsr:@std/http@^1.0.15",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.3"
+  }
+}

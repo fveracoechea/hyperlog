@@ -1,0 +1,38 @@
+{
+  "name": "@hyperlog/frontend",
+  "tasks": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "reveal": "react-router reveal",
+    "format": "deno fmt",
+    "lint": "deno lint",
+    "start": "deno run -A ./server.production.ts",
+    "typecheck": {
+      "command": "deno check --node-modules-dir=auto '**/*'",
+      "dependencies": [
+        "typegen"
+      ]
+    },
+    "typegen": "react-router typegen"
+  },
+  "compilerOptions": {
+    "lib": [
+      "deno.window",
+      "dom"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "jsxImportSourceTypes": "@types/react",
+    "rootDirs": [
+      ".",
+      "./.react-router/types"
+    ],
+    "types": [
+      "vite/client"
+    ]
+  },
+  "imports": {
+    "@/": "./src/"
+  },
+  "exports": "./vite.config.ts"
+}

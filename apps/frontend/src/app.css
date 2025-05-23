@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Fira Sans";
+  font-display: swap;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  src: url(/fonts/FiraSans-Light.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-display: swap;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  src: url(/fonts/FiraSans-Regular.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-display: swap;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  src: url(/fonts/FiraSans-Medium.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-display: swap;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  src: url(/fonts/FiraSans-SemiBold.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-display: swap;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/FiraSans-MediumItalic.woff2") format("woff2");
+}
+
+@layer base {
+  :root {
+    /* @apply cpt-latte; */
+
+    --background: 220, 23%, 95%; /* base */
+    --foreground: 234, 16%, 35%; /* text */
+
+    --muted: 223 16% 83%; /* surface0 */
+    --muted-foreground: 233 10% 47%; /* subtext0 */
+
+    --popover: 220 22% 92%; /* mantle */
+    --popover-foreground: 234, 16%, 35%; /* text */
+
+    --card: 220 22% 92%; /* mantle */
+    --card-foreground: 234, 16%, 35%; /* text */
+
+    --border: 225 14% 77%; /* surface1 */
+    --input: 225 14% 77%; /* surface1 */
+
+    --primary: 220 91% 54%; /* blue */
+    --primary-foreground: 220, 23%, 95%; /* base */
+
+    --secondary: 223 16% 83%; /* surface0 */
+    --secondary-foreground: 234, 16%, 35%; /* text */
+
+    --accent: 223 16% 83%; /* surface0 */
+    --accent-foreground: 234, 16%, 35%; /* text */
+
+    --destructive: 347 87% 44%; /* red */
+    --destructive-foreground: 220 22% 92%; /* mantle */
+
+    --ring: 234, 16%, 35%; /* text */
+
+    --radius: 0.5rem;
+
+    --chart-1: 0 60% 67%; /* flamingo */
+    --chart-2: 266 85% 58%; /* mauve */
+    --chart-3: 220 91% 54%; /* blue */
+    --chart-4: 35 77% 49%; /* yellow */
+    --chart-5: 109 58% 40%; /* green */
+  }
+
+  .dark {
+    @apply cpt-mocha;
+
+    --background: 240, 21%, 15%; /* base */
+    --foreground: 226, 64%, 88%; /* text */
+
+    --muted: 237 16% 23%; /* surface0 */
+    --muted-foreground: 228 24% 72%; /* subtext0 */
+
+    --popover: 240 21% 12%; /* mantle */
+    --popover-foreground: 226 64% 88%; /* text */
+
+    --card: 240 21% 12%; /* mantle */
+    --card-foreground: 226 64% 88%; /* text */
+
+    --border: 234 13% 31%; /* surface1 */
+    --input: 234 13% 31%; /* surface1 */
+
+    --primary: 217 92% 76%; /* BLUE */
+    --primary-foreground: 240, 21%, 15%; /* base */
+
+    --secondary: 237 16% 23%; /* surface0 */
+    --secondary-foreground: 226 64% 88%; /* text */
+
+    --accent: 237 16% 23%; /* surface0 */
+    --accent-foreground: 226 64% 88%; /* text */
+
+    --destructive: 343 81% 75%; /* red */
+    --destructive-foreground: 240 21% 12%; /* mantle */
+
+    --ring: 226 64% 88%; /* text */
+
+    --radius: 0.5rem;
+
+    --chart-1: 0 50% 88%; /* flamingo */
+    --chart-2: 267 84% 81%; /* mauve */
+    --chart-3: 217 92% 76%; /* blue */
+    --chart-4: 41 86% 83%; /* yellow */
+    --chart-5: 115 54% 76%; /* green */
+  }
+
+  ::spelling-error,
+  ::grammar-error {
+    @apply text-inherit underline-offset-4;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: hsl(var(--destructive));
+  }
+
+  * {
+    outline: none;
+    border-color: var(--border);
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    font-family: "Fira Sans", sans-serif;
+  }
+
+  body {
+    @apply bg-cpt-mantle text-foreground transition-colors bg-background;
+  }
+
+  .loader {
+    width: 100%;
+    height: 4px;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    @apply bg-muted rounded-sm;
+  }
+
+  .loader::after {
+    content: "";
+    width: 20%;
+    height: 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    animation: animloader 0.8s linear infinite;
+    @apply bg-muted-foreground rounded-sm;
+  }
+
+  @keyframes animloader {
+    0% {
+      left: 0;
+      transform: translateX(-100%);
+    }
+    100% {
+      left: 100%;
+      transform: translateX(0%);
+    }
+  }
+
+  .grid-auto-fill {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(min(338px, 100%), 1fr));
+  }
+}
