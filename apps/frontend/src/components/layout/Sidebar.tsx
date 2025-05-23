@@ -76,9 +76,14 @@ export function Sidebar() {
         <Typography variant="small" muted className="flex-1 text-left leading-normal">
           Search
         </Typography>
-        <Typography variant="xsmall" className="bg-cpt-crust rounded-md px-2 py-1">
-          ⌘ K
-        </Typography>
+        <span className="flex gap-1">
+          <Typography variant="xsmall" className="bg-cpt-crust rounded-md py-1 px-2">
+            Ctrl
+          </Typography>
+          <Typography variant="xsmall" className="bg-cpt-crust rounded-md py-1 px-2">
+            K
+          </Typography>
+        </span>
       </Button>
       <SideNav type="collections" links={data.parentCollections ?? []} />
       <SideNav type="tags" links={data.tags ?? []} />
