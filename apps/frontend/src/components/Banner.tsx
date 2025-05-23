@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { LucideProps } from "lucide-react";
 
 import { Typography } from "@/components/ui/typography";
+import clsx from "npm:clsx@^2.1.1";
 
 type Props = {
   Icon?: React.FunctionComponent<LucideProps & React.RefAttributes<SVGSVGElement>>;
@@ -10,6 +11,7 @@ type Props = {
   title: string;
   subtitle?: string | null;
   parent?: string | null;
+  variant?: "default" | "destructive";
 };
 
 export function Banner(props: Props) {
@@ -38,11 +40,18 @@ export function Banner(props: Props) {
 }
 
 export function SubBanner(props: Props) {
-  const { title, Icon, subtitle, iconNode } = props;
+  const { title, Icon, subtitle, iconNode, variant = "default" } = props;
   return (
     <header className="flex flex-col gap-2">
       <div className="flex items-center gap-1.5">
-        {Icon && <Icon className="stroke-primary h-5 w-5" />}
+        {Icon && (
+          <Icon
+            className={clsx(
+              "h-5 w-5",
+              variant === "default" ? "stroke-primary" : "stroke-destructive",
+            )}
+          />
+        )}
         {iconNode}
         <Typography as="h3" muted variant="title">
           {title}

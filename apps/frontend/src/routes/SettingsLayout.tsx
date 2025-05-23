@@ -67,7 +67,7 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
                       alt="Profile picture"
                     />
                   )
-                  : <CircleUserIcon className="w-32 h-32 stroke-cpt-surface0" />}
+                  : <CircleUserIcon className="w-32 h-32 stroke-cpt-surface1" />}
                 <Typography variant="large" className="mt-2 leading-tight">
                   {user.name}
                 </Typography>
@@ -163,8 +163,7 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
                 <TabsList>
                   <TabsTrigger value="account">Account</TabsTrigger>
                   <TabsTrigger value="customization">Customization</TabsTrigger>
-                  <TabsTrigger value="ai">AI Features</TabsTrigger>
-                  <TabsTrigger value="history">History & Sync</TabsTrigger>
+                  <TabsTrigger value="ai" disabled>AI Features</TabsTrigger>
                   <TabsTrigger value="contact">Contact Us</TabsTrigger>
                 </TabsList>
               </Tabs>
