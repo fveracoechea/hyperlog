@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LoaderCircleIcon, LogOutIcon } from "lucide-react";
 
 export async function clientAction() {
+  document.startViewTransition();
   await authClient.signOut();
   return redirect(href("/login"));
 }

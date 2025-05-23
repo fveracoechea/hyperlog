@@ -5,10 +5,12 @@ import { authClient } from "../utility/authClient.ts";
 import { redirect } from "react-router";
 import { href } from "react-router";
 import { Typography } from "../components/ui/typography.tsx";
-import { CircleUserIcon, LogOutIcon } from "lucide-react";
-import { Button } from "../components/ui/button.tsx";
+import { CircleUserIcon } from "lucide-react";
 import { client } from "../utility/honoClient.ts";
 import { SignOutButton } from "./resources/signout.tsx";
+import { PageErrorBoundary } from "../components/PageErrorBoundary.tsx";
+
+export const ErrorBoundary = PageErrorBoundary;
 
 export function clientLoader({}: Route.ClientLoaderArgs) {
   return jsonHash({

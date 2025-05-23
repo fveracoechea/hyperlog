@@ -79,7 +79,7 @@ export function Header() {
         />
         <ThemeToggle />
         <Button variant="ghost" size="sm" asChild>
-          <NavLink to={href("/account")}>
+          <NavLink to={href("/account")} viewTransition>
             <UserCircleIcon className="stroke-cpt-flamingo min-w-5 min-h-5" />
             <span>Account</span>
           </NavLink>
