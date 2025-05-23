@@ -8,12 +8,14 @@ import collection from "./collection.ts";
 import link from "./link.ts";
 import tag from "./tag.ts";
 import whoami from "./whoami.ts";
+import { sessionMiddleware } from "../middlewares/session.ts";
 
 const app = new Hono<AppEnv>()
   // Public routes
   .route("/auth", auth)
   .route("/healthcheck", healthcheck)
   // Private routes
+  .use(sessionMiddleware)
   .route("/whoami", whoami)
   .route("/tag", tag)
   .route("/link", link)

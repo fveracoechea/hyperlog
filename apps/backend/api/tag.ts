@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 import { AppEnv } from "@/utils/types.ts";
-import { sessionMiddleware } from "@/middlewares/session.ts";
 import { db, isSQLiteErrorCode, schema } from "@/db/db.ts";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
@@ -11,7 +10,6 @@ import { z } from "zod";
 import { updateTagLinks, validateTagAccess } from "../utils/tags.ts";
 
 const app = new Hono<AppEnv>()
-  .use(sessionMiddleware)
   /**
    * List all tags
    */

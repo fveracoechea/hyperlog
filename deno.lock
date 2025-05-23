@@ -59,7 +59,7 @@
     "npm:react@^19.1.0": "19.1.0",
     "npm:remix-hook-form@^7.0.1": "7.0.1_react@19.1.0_react-dom@19.1.0__react@19.1.0_react-hook-form@7.56.2__react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0",
     "npm:remix-themes@^2.0.4": "2.0.4_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_react@19.1.0_react-dom@19.1.0__react@19.1.0",
-    "npm:remix-utils@^8.5.0": "8.5.0_react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_zod@3.24.3_react-dom@19.1.0__react@19.1.0",
+    "npm:remix-utils@^8.7.0": "8.7.0_react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_zod@3.24.3_react-dom@19.1.0__react@19.1.0",
     "npm:tailwind-merge@^2.6.0": "2.6.0",
     "npm:tailwindcss-animate@^1.0.7": "1.0.7_tailwindcss@3.4.17__postcss@8.5.3",
     "npm:tailwindcss@^3.4.17": "3.4.17_postcss@8.5.3",
@@ -3345,8 +3345,8 @@
         "react-router"
       ]
     },
-    "remix-utils@8.5.0_react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_zod@3.24.3_react-dom@19.1.0__react@19.1.0": {
-      "integrity": "sha512-Wf9OGSJveBaVHKptbEgxc+DwKRUUGOH+aiaBlsrAA2b4F+gNtCkvaZzA7Tp+1esBElRcRvMZQq/0aSSWFMP18A==",
+    "remix-utils@8.7.0_react@19.1.0_react-router@7.5.3__react@19.1.0__react-dom@19.1.0___react@19.1.0_zod@3.24.3_react-dom@19.1.0__react@19.1.0": {
+      "integrity": "sha512-oRumofsYFaxHyPtqLuYe3g2nQi4SMYjCoebaeed0gYHIOKBiPPYdNP6cgmQbFjQQ5pwXV+uQiKLqO6pM9ep3VA==",
       "dependencies": [
         "react",
         "react-router",
@@ -3902,7 +3902,8 @@
           "npm:better-auth@^1.2.7",
           "npm:cheerio@1",
           "npm:drizzle-kit@0.31",
-          "npm:drizzle-orm@~0.43.1"
+          "npm:drizzle-orm@~0.43.1",
+          "npm:remix-utils@^8.7.0"
         ]
       },
       "apps/frontend": {
@@ -3943,7 +3944,7 @@
             "npm:react@^19.1.0",
             "npm:remix-hook-form@^7.0.1",
             "npm:remix-themes@^2.0.4",
-            "npm:remix-utils@^8.5.0",
+            "npm:remix-utils@^8.7.0",
             "npm:tailwind-merge@^2.6.0",
             "npm:tailwindcss-animate@^1.0.7",
             "npm:tailwindcss@^3.4.17",

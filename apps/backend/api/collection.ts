@@ -4,7 +4,6 @@ import { zValidator } from "@hono/zod-validator";
 import { CreateCollectionSchema, EditCollectionSchema } from "@hyperlog/schemas";
 
 import { AppEnv } from "@/utils/types.ts";
-import { sessionMiddleware } from "@/middlewares/session.ts";
 import {
   CollectionQuerySchema,
   getCollectionDetails,
@@ -19,7 +18,6 @@ import { HTTPException } from "hono/http-exception";
 import { eq } from "drizzle-orm";
 
 const app = new Hono<AppEnv>()
-  .use(sessionMiddleware)
   /**
    * GET list collections
    * TODO: handle shared collections

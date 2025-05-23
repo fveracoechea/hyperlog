@@ -17,6 +17,7 @@
     "cheerio": "npm:cheerio@^1.0.0",
     "drizzle-kit": "npm:drizzle-kit@^0.31.0",
     "drizzle-orm": "npm:drizzle-orm@^0.43.1",
-    "@std/dotenv": "jsr:@std/dotenv@^0.225.3"
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.3",
+    "remix-utils": "npm:remix-utils@^8.7.0"
   }
 }

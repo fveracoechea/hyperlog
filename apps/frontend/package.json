@@ -27,7 +27,7 @@
     "react-hook-form": "^7.56.2",
     "remix-hook-form": "^7.0.1",
     "remix-themes": "^2.0.4",
-    "remix-utils": "^8.5.0",
+    "remix-utils": "^8.7.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",

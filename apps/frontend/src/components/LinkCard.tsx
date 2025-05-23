@@ -57,22 +57,27 @@ export function LinkCard(props: Props) {
           className={clsx(
             showImage &&
               "aspect-[1.9/1] bg-gradient-to-b from-cpt-base/65  to-cpt-base via-0% to-65%",
-            "relative flex flex-1 flex-col justify-between gap-5 rounded-md p-2",
+            "relative flex flex-1 flex-col justify-between gap-6 rounded-md p-2",
           )}
         >
           <div className="flex items-start justify-between">
             <LazyFavicon src={link.favicon ?? undefined} width="26px" height="26px" />
 
-            <div className="flex items-center gap-1.5" title="Last visit">
-              <CalendarClockIcon className="stroke-muted-foreground  w-5 h-5" />
-              <Typography as="span" variant="small" className="whitespace-nowrap">
-                {formatDistanceToNow(link.lastVisit ?? Date.now(), {
-                  addSuffix: true,
-                })}
-              </Typography>
-            </div>
+            <Button
+              type="button"
+              variant="dark"
+              size="sm"
+              className="h-[26px] text-muted-foreground hover:text-foreground"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate(`/links/${link.id}`);
+              }}
+            >
+              View Details
+            </Button>
           </div>
-          <div className="flex flex-col justify-between gap-2.5">
+          <div className="flex flex-col justify-between gap-2">
             <Typography
               as="h4"
               className={clsx(
@@ -114,19 +119,6 @@ export function LinkCard(props: Props) {
                   {link.collection?.name ?? "Unorganized"}
                 </Typography>
               </div>
-              <Button
-                type="button"
-                variant="dark"
-                size="sm"
-                className="h-6 text-muted-foreground hover:text-foreground"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  navigate(`/links/${link.id}`);
-                }}
-              >
-                View Details
-              </Button>
             </div>
           </div>
         </div>

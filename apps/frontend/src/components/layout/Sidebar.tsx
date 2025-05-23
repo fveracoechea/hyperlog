@@ -29,6 +29,7 @@ function SideNav(props: SideNavProps) {
               variant="ghost"
               size="sm"
               className="[&.active]:text-primary text-muted-foreground flex flex-1 items-center justify-start gap-2 text-sm 2xl:text-base"
+              title={link.name}
               asChild
             >
               <NavLink to={`/${type}/${link.id}`}>
@@ -43,7 +44,7 @@ function SideNav(props: SideNavProps) {
                     )}
                   />
                 )}
-                <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit">
+                <span className="overflow-hidden overflow-ellipsis whitespace-pre text-inherit font-normal">
                   {link.name}
                 </span>
               </NavLink>

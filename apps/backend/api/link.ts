@@ -5,7 +5,6 @@ import { zValidator } from "@hono/zod-validator";
 
 import { db, schema } from "@/db/db.ts";
 import { AppEnv } from "@/utils/types.ts";
-import { sessionMiddleware } from "@/middlewares/session.ts";
 import { paginationHelper } from "@/utils/pagination.ts";
 
 import {
@@ -17,7 +16,6 @@ import {
 import { fetchLinkData, validateLinkAccess } from "@/utils/links.ts";
 
 const app = new Hono<AppEnv>()
-  .use(sessionMiddleware)
   /**
    * List all Favories
    */
