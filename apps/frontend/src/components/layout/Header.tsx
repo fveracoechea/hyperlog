@@ -1,7 +1,7 @@
 import { href, NavLink, useNavigation } from "react-router";
 
 import clsx from "clsx";
-import { PlusIcon, UnlinkIcon, UserCircleIcon } from "lucide-react";
+import { LoaderCircleIcon, PlusIcon, UnlinkIcon, UserCircleIcon } from "lucide-react";
 
 import {
   NavigationMenu,
@@ -38,33 +38,29 @@ export function Header() {
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to={href("/")} viewTransition>Home</NavLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <NavLink to="/links">Links</NavLink>
+                <NavLink to={href("/links")} viewTransition>Links</NavLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <NavLink to="/collections">Collections</NavLink>
+                <NavLink to={href("/collections")} viewTransition>Collections</NavLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <NavLink to="/tags">Tags</NavLink>
+                <NavLink to={href("/tags")} viewTransition>Tags</NavLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-
-        {/* {navigation.state !== "idle" && ( */}
-        {/*   <div className="loader  w-full min-w-[150px] max-w-60" /> */}
-        {/* )} */}
       </div>
 
       <div className="flex w-1/2 items-center justify-end gap-2">
@@ -79,7 +75,7 @@ export function Header() {
         />
         <ThemeToggle />
         <Button variant="ghost" size="sm" asChild>
-          <NavLink to={href("/account")} viewTransition>
+          <NavLink to={href("/settings/account")} viewTransition>
             <UserCircleIcon className="stroke-cpt-flamingo min-w-5 min-h-5" />
             <span>Account</span>
           </NavLink>

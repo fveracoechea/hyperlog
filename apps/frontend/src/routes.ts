@@ -18,9 +18,9 @@ export default [
     route("signout", "./routes/resources/signout.tsx"),
   ]),
 
-  ...prefix("account", [
-    layout("./routes/AccountLayout.tsx", { id: "account" }, [
-      index("./routes/AccountPage.tsx"),
+  ...prefix("settings", [
+    layout("./routes/SettingsLayout.tsx", { id: "settings" }, [
+      route("account", "./routes/AccountPage.tsx"),
     ]),
   ]),
 
