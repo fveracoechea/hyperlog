@@ -13,7 +13,12 @@ import {
   PaginationSchema,
   zIdQueryParam,
 } from "@hyperlog/schemas";
-import { fetchLinkData, validateLinkAccess } from "@/utils/links.ts";
+import {
+  fetchLinkData,
+  importBookmars,
+  validateHtmlImportFile,
+  validateLinkAccess,
+} from "@/utils/links.ts";
 
 const app = new Hono<AppEnv>()
   /**
@@ -175,5 +180,22 @@ const app = new Hono<AppEnv>()
         links: results.map(({ totalRecords: _, ...data }) => data),
       });
     },
+  )
+  /**
+   * POST
+   * Parse bookmark html export file
+   */
+  .post(
+    "/import/parse",
+    zValidator("form", z.object({ file: z.instanceof(File) })),
+    async (c) => {
+      const { file } = c.req.valid("form");
+
+      const { error } = validateHtmlImportFile(file);
+      if (error) return c.var.error(error, error.code);
+
+      return c.var.success(await importBookmars(file), 200);
+    },
   );
+
 export default app;

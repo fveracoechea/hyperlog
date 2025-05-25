@@ -16,6 +16,7 @@ export default [
 
   ...prefix("resources", [
     route("signout", "./routes/resources/signout.tsx"),
+    route("import-bookmarks", "./routes/resources/importBookmarks.tsx"),
   ]),
 
   ...prefix("settings", [

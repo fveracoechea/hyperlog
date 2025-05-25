@@ -1,9 +1,10 @@
 import { Route } from "../../.react-router/types/src/routes/+types/AccountPage.ts";
 import { PageErrorBoundary } from "@/components/PageErrorBoundary.tsx";
 import { SubBanner } from "../components/Banner.tsx";
-import { ImportIcon, RocketIcon, TriangleAlertIcon, UploadIcon } from "lucide-react";
+import { RocketIcon, TriangleAlertIcon } from "lucide-react";
 import { Button } from "../components/ui/button.tsx";
 import { Typography } from "../components/ui/typography.tsx";
+import { ImportBookmarks } from "./resources/importBookmarks.tsx";
 
 export const ErrorBoundary = PageErrorBoundary;
 
@@ -21,7 +22,10 @@ export default function AccountPage({}: Route.ComponentProps) {
           subtitle="Your current plan and billing information."
         />
         <Typography muted>
-          lorem ipsum dolor sit amet, consectetur adipiscing elit. Don..t have a plan?
+          lorem ipsum dolor sit amet, consectetur adipiscing elit
+          <Typography className="text-foreground" variant="title">
+            &nbsp;$7.99/<span className="text-base">month</span>
+          </Typography>
         </Typography>
         <Typography muted>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates ipsam quibusdam
@@ -34,21 +38,7 @@ export default function AccountPage({}: Route.ComponentProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <SubBanner
-          Icon={ImportIcon}
-          title="Import Bookmarks"
-          subtitle="Import your links and bookmarks from other browsers."
-        />
-
-        <Button
-          variant="outline"
-          className="!p-8 h-fit rounded-md border border-border border-dashed flex items-center justify-center flex-col gap-2"
-        >
-          <UploadIcon className="min-w-6 min-h-6 stroke-muted-foreground" />
-          <Typography muted variant="small">Drag-and-drop or click to upload</Typography>
-        </Button>
-      </div>
+      <ImportBookmarks />
 
       <hr />
 
