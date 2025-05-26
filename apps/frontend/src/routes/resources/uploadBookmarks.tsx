@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link2OffIcon } from "lucide-react";
+import { ImportIcon, Link2OffIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -39,9 +39,14 @@ export function UploadBookmarks({ response }: UploadBookmarksProps) {
       <Accordion type="single" collapsible>
         <section className="flex flex-col gap-4 p-4 rounded-md bg-cpt-mantle max-w-full overflow-x-hidden">
           <header className="flex justify-between gap-8 flex-wrap">
-            <Typography as="h4">
-              Found {data.foldersFound} collections and a total of {data.linksFound} bookmarks
-            </Typography>
+            <div className="flex flex-col gap-0">
+              <Typography variant="base">
+                Select what collections you want to save to your account
+              </Typography>
+              <Typography variant="small" muted>
+                Found {data.foldersFound} collections and a total of {data.linksFound} links
+              </Typography>
+            </div>
 
             <Button variant="outline" size="xs" onClick={onSelectAll}>Select All</Button>
           </header>
@@ -107,7 +112,10 @@ export function UploadBookmarks({ response }: UploadBookmarksProps) {
           })}
         </section>
       </Accordion>
-      <Button className="w-fit self-end">Save Bookmarks</Button>
+      <Button className="w-fit self-end">
+        <ImportIcon />
+        <span>Save Bookmarks</span>
+      </Button>
     </>
   );
 }
