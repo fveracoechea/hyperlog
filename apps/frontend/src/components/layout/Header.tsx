@@ -38,25 +38,25 @@ export function Header() {
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <NavLink to={href("/")} viewTransition>Home</NavLink>
+                <NavLink to={href("/")}>Home</NavLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <NavLink to={href("/links")} viewTransition>Links</NavLink>
+                <NavLink to={href("/links")}>Links</NavLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <NavLink to={href("/collections")} viewTransition>Collections</NavLink>
+                <NavLink to={href("/collections")}>Collections</NavLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <NavLink to={href("/tags")} viewTransition>Tags</NavLink>
+                <NavLink to={href("/tags")}>Tags</NavLink>
               </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>

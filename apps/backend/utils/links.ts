@@ -79,6 +79,7 @@ type Bookmark = {
   url: string;
   title?: string;
   folderName?: string;
+  icon?: string;
 };
 
 function parseBookmarks(
@@ -104,8 +105,9 @@ function parseBookmarks(
 
     if ($first.is("A")) {
       const url = $first.attr("href");
+      const icon = $first.attr("icon");
       const title = $first.text().trim();
-      if (url) bookmarks.push({ url, folderName, title });
+      if (url) bookmarks.push({ url, folderName, title, icon });
       return;
     }
   });
@@ -124,9 +126,9 @@ export async function importBookmars(file: File) {
 
   for (const bookmark of bookmaks) {
     if (!bookmark.folderName || bookmark.folderName === "Bookmarks bar") {
-      const elements = groupedBookmakrs["__"] ?? [];
+      const elements = groupedBookmakrs["__NO_FOLDER__"] ?? [];
       elements.push(bookmark);
-      groupedBookmakrs["__"] = elements;
+      groupedBookmakrs["__NO_FOLDER__"] = elements;
       continue;
     }
 

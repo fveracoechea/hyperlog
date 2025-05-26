@@ -13,7 +13,7 @@ import { SignOutButton } from "@/routes/resources/signout";
 import { PageErrorBoundary } from "@/components/PageErrorBoundary.tsx";
 
 import type { Route } from "./+types/AccountLayout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const ErrorBoundary = PageErrorBoundary;
 
@@ -54,8 +54,8 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
       <Header />
       <div className="flex flex-1 flex-col justify-between min-h-[calc(100vh-62px)]">
         <main className="bg-background xlg:p-8 flex flex-1 flex-col gap-10 p-4 lg:p-6">
-          <div className="flex flex-1 max-w-screen-xl w-full mx-auto gap-4">
-            <aside className="flex-1 flex flex-col gap-6 w-full p-4">
+          <div className="grid grid-cols-[308px,1fr] max-w-screen-xl w-full mx-auto gap-4 overflow-x-hidden">
+            <aside className="flex flex-col gap-6 p-4">
               <div className="flex flex-col justify-center items-center text-center gap-2">
                 {user.image
                   ? (
@@ -79,7 +79,6 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
 
               <div className="flex flex-col gap-4 w-full rounded-md px-4 py-2 border border-border">
                 <Typography muted variant="small" as="h4">Usage Stats</Typography>
-
                 <ul className="flex flex-col gap-2">
                   <ListItem title="Links" detail={stats.count.links} />
                   <ListItem title="Collections" detail={stats.count.collections} />
@@ -91,7 +90,6 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
                 <Typography muted variant="small" className="pb-2" as="h4">
                   Keyboard Shortcuts
                 </Typography>
-                {/* ⌘ */}
                 <ListItem
                   title="Search"
                   detail={
@@ -101,6 +99,7 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
                         className="bg-cpt-crust rounded-md py-1 px-2"
                       >
                         Ctrl
+                        {/* ⌘ */}
                       </Typography>
                       <Typography
                         variant="xsmall"
@@ -158,7 +157,7 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
               </div>
               <SignOutButton />
             </aside>
-            <div className="flex-[3] w-full flex flex-col gap-10">
+            <div className="flex-1 flex flex-col gap-10 overflow-x-hidden">
               <Tabs defaultValue="account">
                 <TabsList>
                   <TabsTrigger value="account">Account</TabsTrigger>
@@ -167,7 +166,6 @@ export default function SettingsLayout({ loaderData }: Route.ComponentProps) {
                   <TabsTrigger value="contact">Contact Us</TabsTrigger>
                 </TabsList>
               </Tabs>
-
               <Outlet />
             </div>
           </div>
