@@ -75,17 +75,25 @@ const app = new Hono<AppEnv>()
   .delete(
     "/:collectionId",
     zValidator("param", z.object({ collectionId: z.string().uuid() })),
+    zValidator("json", z.object({ deleteLinks: z.boolean().optional() })),
     async (c) => {
       const { collectionId } = c.req.valid("param");
+      const { deleteLinks } = c.req.valid("json");
 
       const result = await validateCollectionAccess(
         collectionId,
         c.var.user.id,
       );
 
-      if (result.error) return c.var.error(result.error, result.error.status);
+      if (result.error) return c.var.error(result.error, result.error.code);
 
-      await db.delete(schema.collection).where(eq(schema.collection.id, collectionId));
+      await db.transaction(async (tx) => {
+        if (deleteLinks) {
+          await tx.delete(schema.link).where(eq(schema.link.collectionId, collectionId));
+        }
+
+        await tx.delete(schema.collection).where(eq(schema.collection.id, collectionId));
+      });
 
       return c.var.success({
         message: "Collection deleted successfully.",
@@ -105,7 +113,7 @@ const app = new Hono<AppEnv>()
       const { collectionId } = c.req.valid("param");
 
       const result = await validateCollectionAccess(collectionId, c.var.user.id);
-      if (result.error) return c.var.error(result.error, result.error.status);
+      if (result.error) return c.var.error(result.error, result.error.code);
 
       await db.transaction(async (tx) => {
         const { subCollections, links, ...edit } = formData;

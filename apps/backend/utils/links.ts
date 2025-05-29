@@ -1,13 +1,17 @@
 import * as cheerio from "cheerio";
 import type { Cheerio, CheerioAPI } from "cheerio";
-import { db, schema } from "@/db/db.ts";
+import { db, schema, TransactionType } from "@/db/db.ts";
 import { eq } from "drizzle-orm";
 import { Result } from "./result.ts";
 
-export async function fetchLinkData(url: string) {
+export async function fetchLinkData(url: string, signal?: AbortSignal) {
   const { origin } = new URL(url);
+
   try {
-    const $ = await cheerio.fromURL(url);
+    const $ = await cheerio.fromURL(url, {
+      // @ts-expect-error cheerio
+      requestOptions: { signal },
+    });
 
     const title = $('meta[property="og:title"]').attr("content") || $("title").text() || null;
 
@@ -62,6 +66,8 @@ export async function validateLinkAccess(linkId: string, userId: string) {
  * 25 MB in bytes
  */
 export const HMLT_MAX_SIZE = 25 * 1024 * 1024;
+
+export const NO_FOLDER_KEY = "__NO_FOLDER__" as const;
 
 export function validateHtmlImportFile(file: File) {
   if (file.size > HMLT_MAX_SIZE) {
@@ -125,10 +131,12 @@ export async function importBookmars(file: File) {
   const groupedBookmakrs: Record<string, Bookmark[]> = {};
 
   for (const bookmark of bookmaks) {
+    if (!URL.canParse(bookmark.url)) continue;
+
     if (!bookmark.folderName || bookmark.folderName === "Bookmarks bar") {
-      const elements = groupedBookmakrs["__NO_FOLDER__"] ?? [];
+      const elements = groupedBookmakrs[NO_FOLDER_KEY] ?? [];
       elements.push(bookmark);
-      groupedBookmakrs["__NO_FOLDER__"] = elements;
+      groupedBookmakrs[NO_FOLDER_KEY] = elements;
       continue;
     }
 
@@ -140,4 +148,48 @@ export async function importBookmars(file: File) {
   }
 
   return { foldersFound: folders.size, linksFound: bookmaks.length, groupedBookmakrs };
+}
+
+export async function saveBookmarks(args: {
+  tx: TransactionType;
+  ownerId: string;
+  entries: [string, { url: string; title?: string }[]][];
+}) {
+  const { tx, ownerId, entries } = args;
+
+  const collectionValues = entries
+    .map(([name]) => ({ name, ownerId }))
+    .filter((c) => (c.name && c.name !== NO_FOLDER_KEY));
+
+  const collections = await tx
+    .insert(schema.collection)
+    .values(collectionValues)
+    .onConflictDoNothing({
+      target: [schema.collection.name, schema.collection.parentId, schema.collection.ownerId],
+    })
+    .returning();
+
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), 5500);
+
+  await tx.insert(schema.link).values(
+    await Promise.all(
+      entries.map(([collectionName, bookmarks]) => {
+        return bookmarks.map(async (bookmark) => {
+          const linkData = await fetchLinkData(bookmark.url, controller.signal);
+          const title = bookmark.title || linkData.title || "Untitled";
+          const collectionId = collections.find((c) => c.name === collectionName)?.id;
+
+          return {
+            ...linkData,
+            url: bookmark.url,
+            ownerId,
+            collectionId,
+            title,
+          };
+        });
+      })
+        .flat(),
+    ),
+  );
 }

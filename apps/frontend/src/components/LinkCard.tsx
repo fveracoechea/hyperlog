@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router";
 
 import clsx from "clsx";
-import { formatDistanceToNow } from "date-fns";
-import { CalendarClockIcon, LinkIcon } from "lucide-react";
+import { LinkIcon } from "lucide-react";
 
 import type { Route } from "../routes/+types/Home";
 import { CollectionIcon } from "./CollectionIcon";
@@ -82,21 +81,24 @@ export function LinkCard(props: Props) {
               as="h4"
               className={clsx(
                 "group-hover:text-primary overflow-y-hidden text-left leading-tight",
-                "max-h-5 overflow-x-hidden overflow-ellipsis whitespace-nowrap",
+                "max-h-5 overflow-x-hidden overflow-ellipsis whitespace-nowrap max-w-80",
               )}
             >
               {link.title}
             </Typography>
 
-            <div className="flex items-center gap-1.5" title="URL">
+            <div
+              className="flex items-center gap-1.5 max-w-full overflow-x-hidden"
+              title="URL"
+            >
               <LinkIcon className="stroke-muted-foreground h-4 w-4" />
               <Typography
                 muted
                 as="span"
                 variant="small"
-                className="overflow-x-hidden overflow-ellipsis whitespace-nowrap"
+                className="overflow-x-hidden overflow-ellipsis whitespace-nowrap max-w-80"
               >
-                <span>{link.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span>
+                {link.url.replace(/^https?:\/\//, "").replace(/\/$/, "").substring(0, 50)}
               </Typography>
             </div>
 

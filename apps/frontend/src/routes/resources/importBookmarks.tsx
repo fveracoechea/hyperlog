@@ -55,43 +55,45 @@ export function ImportBookmarks() {
         subtitle="Import your links and bookmarks from other browsers."
       />
 
-      {(state === "idle" && response?.data) ? <UploadBookmarks response={response} /> : (
-        <Button
-          variant="outline"
-          onClick={dropzone.triggerFileInpuClick}
-          className={clsx(
-            "!p-8 h-fit rounded-md border border-border border-dashed flex items-center justify-center flex-col gap-2",
-            dropzone.status === "dragging" && "border-primary",
-          )}
-          role="region"
-          aria-live="polite"
-          aria-describedby="instructions"
-          {...dropzone.containerProps}
-        >
-          {state === "submitting"
-            ? (
-              <LoaderCircleIcon className="min-w-6 min-h-6 stroke-muted-foreground animate-spin" />
-            )
-            : (
-              <UploadIcon
-                className={clsx(
-                  "transition-colors min-w-6 min-h-6 stroke-muted-foreground",
-                  dropzone.status === "dragging" && "stroke-primary",
-                )}
-              />
+      {(state === "idle" && response?.data)
+        ? <UploadBookmarks bookmarks={response.data} />
+        : (
+          <Button
+            variant="outline"
+            onClick={dropzone.triggerFileInpuClick}
+            className={clsx(
+              "!p-8 h-fit rounded-md border border-border border-dashed flex items-center justify-center flex-col gap-2",
+              dropzone.status === "dragging" && "border-primary",
             )}
+            role="region"
+            aria-live="polite"
+            aria-describedby="instructions"
+            {...dropzone.containerProps}
+          >
+            {state === "submitting"
+              ? (
+                <LoaderCircleIcon className="min-w-6 min-h-6 stroke-muted-foreground animate-spin" />
+              )
+              : (
+                <UploadIcon
+                  className={clsx(
+                    "transition-colors min-w-6 min-h-6 stroke-muted-foreground",
+                    dropzone.status === "dragging" && "stroke-primary",
+                  )}
+                />
+              )}
 
-          <Typography muted variant="small" id="instructions">
-            Drag-and-drop or click to upload
-          </Typography>
-
-          {response?.error && state === "idle" && (
-            <Typography variant="small" className="text-destructive text-right">
-              {response.error?.message}
+            <Typography muted variant="small" id="instructions">
+              Drag-and-drop or click to upload
             </Typography>
-          )}
-        </Button>
-      )}
+
+            {response?.error && state === "idle" && (
+              <Typography variant="small" className="text-destructive text-right">
+                {response.error?.message}
+              </Typography>
+            )}
+          </Button>
+        )}
     </div>
   );
 }

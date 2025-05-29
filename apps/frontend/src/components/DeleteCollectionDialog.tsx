@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Typography } from "./ui/typography";
+import { Checkbox } from "./ui/checkbox.tsx";
 
 type Props = {
   trigger: ReactNode;
@@ -34,25 +35,30 @@ export function DeleteCollectionDialog(props: Props) {
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete Collection</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete this collection?
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex flex-col gap-2 py-2">
-          <Typography>{collection.name}</Typography>
-          {collection.description && (
-            <Typography variant="small">{collection.description}</Typography>
-          )}
-        </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="ghost">
-              Close
-            </Button>
-          </DialogClose>
-          <Form method="DELETE" replace>
+        <Form method="DELETE" replace className="flex flex-col gap-4">
+          <DialogHeader>
+            <DialogTitle>Delete Collection</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this collection?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col py-2">
+            <Typography variant="large">{collection.name}</Typography>
+            {collection.description && <Typography muted>{collection.description}</Typography>}
+            <Typography
+              as="label"
+              className="flex items-end gap-2 justify-start mt-6 select-none"
+            >
+              <Checkbox name="delete" />
+              <span className="leading-none">Delete all links in this collection.</span>
+            </Typography>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="ghost">
+                Close
+              </Button>
+            </DialogClose>
             {navigation.state === "submitting" && (
               <div className="text-cpt-red flex h-10 w-20 items-center justify-center">
                 <LoaderCircleIcon className="h-6 w-6 animate-spin" />
@@ -65,8 +71,8 @@ export function DeleteCollectionDialog(props: Props) {
                 </Button>
               </DialogClose>
             )}
-          </Form>
-        </DialogFooter>
+          </DialogFooter>
+        </Form>
       </DialogContent>
     </Dialog>
   );

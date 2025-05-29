@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ImportIcon, Link2OffIcon } from "lucide-react";
+import { CheckIcon, ImportIcon, Link2OffIcon, LoaderCircleIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -10,13 +10,27 @@ import { Checkbox } from "../../components/ui/checkbox.tsx";
 import { Typography } from "../../components/ui/typography.tsx";
 import { BookmarksSuccessResponse } from "./importBookmarks.tsx";
 import { Button } from "../../components/ui/button.tsx";
+import { Route } from "./+types/uploadBookmarks";
+import { client } from "@/utility/honoClient.ts";
+import { href, useFetcher } from "react-router";
+
+const NO_FOLDER_KEY = "__NO_FOLDER__" as const;
+
+export async function clientAction({ request }: Route.ClientActionArgs) {
+  const { data } = await request.json();
+  const response = await client.api.link.import.save.$post({ json: { data } });
+  return await response.json();
+}
 
 type UploadBookmarksProps = {
-  response: BookmarksSuccessResponse;
+  bookmarks: BookmarksSuccessResponse["data"];
 };
 
-export function UploadBookmarks({ response }: UploadBookmarksProps) {
-  const { data } = response;
+export function UploadBookmarks({ bookmarks }: UploadBookmarksProps) {
+  const fetcher = useFetcher<typeof clientAction>();
+
+  const error = fetcher.data?.error;
+  const data = fetcher.data?.data;
 
   const [selected, setSelected] = useState(new Set<string>());
 
@@ -30,8 +44,38 @@ export function UploadBookmarks({ response }: UploadBookmarksProps) {
   }
 
   function onSelectAll() {
-    const allFolders = new Set(Object.keys(data.groupedBookmakrs));
+    const allFolders = new Set(Object.keys(bookmarks.groupedBookmakrs));
     setSelected(allFolders.add("Unorganized"));
+  }
+
+  function uploadBookmarks() {
+    const record: Record<string, { url: string; title?: string }[]> = {};
+
+    selected.forEach((folderName) => {
+      const folder = !folderName || folderName === "Unorganized" ? NO_FOLDER_KEY : folderName;
+
+      const bookmarksInFolder = bookmarks.groupedBookmakrs[folder] || [];
+
+      record[folder] = bookmarksInFolder.map(({ url, title }) => ({
+        url,
+        title,
+      }));
+    });
+
+    fetcher.submit({ data: record }, {
+      method: "post",
+      action: href("/resources/upload-bookmarks"),
+      encType: "application/json",
+    });
+  }
+
+  if (fetcher.state === "idle" && data) {
+    return (
+      <div className="p-10 flex flex-col gap-4 items-center justify-center rounded-md bg-cpt-mantle">
+        <CheckIcon className="text-cpt-green w-6 h-6" />
+        <Typography className="text-cpt-green text-center">{data.message}</Typography>
+      </div>
+    );
   }
 
   return (
@@ -44,17 +88,18 @@ export function UploadBookmarks({ response }: UploadBookmarksProps) {
                 Select what collections you want to save to your account
               </Typography>
               <Typography variant="small" muted>
-                Found {data.foldersFound} collections and a total of {data.linksFound} links
+                Found {bookmarks.foldersFound} collections and a total of{" "}
+                {bookmarks.linksFound} links
               </Typography>
             </div>
 
             <Button variant="outline" size="xs" onClick={onSelectAll}>Select All</Button>
           </header>
 
-          {Object.entries(data.groupedBookmakrs).map(([folderName, bookmarks]) => {
+          {Object.entries(bookmarks.groupedBookmakrs).map(([folderName, bookmarks]) => {
             if (bookmarks.length === 0) return null;
 
-            const collection = (!folderName || folderName === "__NO_FOLDER__")
+            const collection = (!folderName || folderName === NO_FOLDER_KEY)
               ? "Unorganized"
               : folderName;
 
@@ -112,9 +157,21 @@ export function UploadBookmarks({ response }: UploadBookmarksProps) {
           })}
         </section>
       </Accordion>
-      <Button className="w-fit self-end">
-        <ImportIcon />
-        <span>Save Bookmarks</span>
+      {fetcher.state === "idle" && error && (
+        <div className="text-right">
+          <Typography className="text-destructive text-right">
+            {error.message ||
+              "We ran into an unexpected issue. Please try again later. If the issue persists, contact support."}
+          </Typography>
+        </div>
+      )}
+      <Button className="w-fit self-end" onClick={uploadBookmarks}>
+        {fetcher.state === "submitting"
+          ? <LoaderCircleIcon className="animate-spin" />
+          : <ImportIcon />}
+        {fetcher.state === "submitting"
+          ? <span>Saving Bookmarks</span>
+          : <span>Save Bookmarks</span>}
       </Button>
     </>
   );

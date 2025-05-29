@@ -27,8 +27,11 @@ export async function clientAction(
   { request, params: { collectionId } }: Route.ClientActionArgs,
 ) {
   if (request.method === "DELETE") {
+    const deleteLinks = Boolean((await request.formData()).get("delete"));
+
     const res = await client.api.collection[":collectionId"].$delete({
       param: { collectionId },
+      json: { deleteLinks },
     });
 
     const json = await res.json();

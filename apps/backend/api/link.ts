@@ -16,9 +16,11 @@ import {
 import {
   fetchLinkData,
   importBookmars,
+  saveBookmarks,
   validateHtmlImportFile,
   validateLinkAccess,
 } from "@/utils/links.ts";
+import { Result } from "../utils/result.ts";
 
 const app = new Hono<AppEnv>()
   /**
@@ -195,6 +197,50 @@ const app = new Hono<AppEnv>()
       if (error) return c.var.error(error, error.code);
 
       return c.var.success(await importBookmars(file), 200);
+    },
+  )
+  /**
+   * POST
+   * Save bookmarks from HTML import
+   */
+  .post(
+    "/import/save",
+    zValidator(
+      "json",
+      z.object({
+        data: z.record(
+          z.string(),
+          z.object({
+            url: z.string().url(),
+            title: z.string().optional(),
+          }).array(),
+        ),
+      }),
+    ),
+    async (c) => {
+      const user = c.get("user");
+      const input = c.req.valid("json");
+
+      const entries = Object.entries(input.data);
+      if (entries.length < 1) {
+        return c.var.error({ message: "No bookmarks to import." }, 400);
+      }
+
+      const { error } = await Result.tryCatch(db.transaction(async (tx) => {
+        await saveBookmarks({ tx, entries, ownerId: user.id });
+        return true;
+      }));
+
+      if (error) {
+        console.warn("ERROR SAVING BOOKMARKS IMPORT");
+        console.error(error);
+        return c.var.error({
+          message:
+            "We ran into an unexpected issue. Please try again later. If the issue persists, contact support.",
+        }, 500);
+      }
+
+      return c.var.success({ message: "Bookmarks imported successfully." });
     },
   );
 
