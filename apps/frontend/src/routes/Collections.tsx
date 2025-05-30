@@ -8,6 +8,7 @@ import { Typography } from "@/components/ui/typography";
 import { client } from "@/utility/honoClient.ts";
 
 import type { Route } from "./+types/Collections";
+import { NoCollections } from "../components/EmptyState.tsx";
 
 export const ErrorBoundary = PageErrorBoundary;
 
@@ -37,15 +38,19 @@ export default function Collections({ loaderData }: Route.ComponentProps) {
           Icon={FoldersIcon}
         />
 
-        <div className="grid-auto-fill">
-          {parent.map((collection) => (
-            <CollectionCard
-              key={collection.id}
-              collection={collection}
-              linkCount={collection.links.length}
-            />
-          ))}
-        </div>
+        {parent.length > 0
+          ? (
+            <div className="grid-auto-fill">
+              {parent.map((collection) => (
+                <CollectionCard
+                  key={collection.id}
+                  collection={collection}
+                  linkCount={collection.links.length}
+                />
+              ))}
+            </div>
+          )
+          : <NoCollections />}
       </section>
 
       <section className="flex flex-col gap-4">

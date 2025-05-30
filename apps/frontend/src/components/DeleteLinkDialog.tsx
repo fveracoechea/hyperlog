@@ -43,7 +43,7 @@ export function DeleteLinkDialog(props: Props) {
           <DialogDescription>Are you sure you want to delete this link?</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2 py-2">
-          <Typography>{title}</Typography>
+          <Typography variant="large">{title}</Typography>
           <Typography variant="small">{url}</Typography>
         </div>
         <DialogFooter>

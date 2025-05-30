@@ -41,7 +41,7 @@ export function DeleteTagDialog(props: Props) {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2 py-2">
-          <Typography>{tag.name}</Typography>
+          <Typography variant="large">{tag.name}</Typography>
           {tag.description && <Typography variant="small">{tag.description}</Typography>}
         </div>
         <DialogFooter>

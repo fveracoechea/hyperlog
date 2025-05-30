@@ -15,6 +15,7 @@ import { PageErrorBoundary } from "@/components/PageErrorBoundary";
 import { PaginationForm } from "@/components/PaginationForm";
 import { client } from "../utility/honoClient.ts";
 import { Button } from "../components/ui/button.tsx";
+import { NoLinks } from "../components/EmptyState.tsx";
 
 export type LinkListData = Route.ComponentProps["loaderData"];
 
@@ -42,38 +43,49 @@ export default function Links({ loaderData }: Route.ComponentProps) {
   const [_, setSearchParams] = useSearchParams();
 
   return (
-    <section className="flex flex-col gap-6">
-      <Banner title="Links" Icon={LinkIcon} subtitle="All links from every collection" />
+    <>
+      <section className="flex flex-col gap-6">
+        <Banner title="Links" Icon={LinkIcon} subtitle="All links from every collection" />
 
-      <div className="flex gap-2 flex-wrap">
-        {tags.map((tag) => {
-          const isActive = tag.id === params.tag;
-          return (
-            <Button
-              key={tag.id}
-              size="sm"
-              variant="outline"
-              className={clsx(isActive && "border-muted-foreground border-2")}
-              onClick={() => {
-                const newParams = new URLSearchParams();
-                if (!isActive) newParams.set("tag", tag.id);
-                setSearchParams(newParams);
-              }}
-            >
-              {isActive && <CheckIcon className="stroke-foreground" />}
-              <span>{tag.name}</span>
-            </Button>
-          );
-        })}
-      </div>
+        <div className="flex gap-2 flex-wrap">
+          {tags.map((tag) => {
+            const isActive = tag.id === params.tag;
+            return (
+              <Button
+                key={tag.id}
+                size="sm"
+                variant="outline"
+                className={clsx(isActive && "border-muted-foreground border-2")}
+                onClick={() => {
+                  const newParams = new URLSearchParams();
+                  if (!isActive) newParams.set("tag", tag.id);
+                  setSearchParams(newParams);
+                }}
+              >
+                {isActive && <CheckIcon className="stroke-foreground" />}
+                <span>{tag.name}</span>
+              </Button>
+            );
+          })}
+        </div>
 
-      <PaginationForm totalRecords={totalRecords} params={params} />
-
-      <div className="grid-auto-fill">
-        {links.map((link) => (
-          <LinkCard isLoading={navigation.state === "loading"} key={link.id} link={link} />
-        ))}
-      </div>
-    </section>
+        <div className="flex flex-col gap-4">
+          <PaginationForm totalRecords={totalRecords} params={params} />
+          {links.length > 0
+            ? (
+              <div className="grid-auto-fill">
+                {links.map((link) => (
+                  <LinkCard
+                    isLoading={navigation.state === "loading"}
+                    key={link.id}
+                    link={link}
+                  />
+                ))}
+              </div>
+            )
+            : <NoLinks />}
+        </div>
+      </section>
+    </>
   );
 }

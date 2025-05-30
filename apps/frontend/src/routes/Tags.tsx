@@ -5,6 +5,7 @@ import { TagCard } from "@/components/TagCard";
 
 import type { Route } from "./+types/Tags";
 import { client } from "../utility/honoClient.ts";
+import { NoTags } from "../components/EmptyState.tsx";
 
 export async function clientLoader({}: Route.ClientActionArgs) {
   const response = await client.api.tag.$get();
@@ -22,15 +23,19 @@ export default function Tags({ loaderData }: Route.ComponentProps) {
           title="Tags"
           subtitle="Easily group and filter links for quicker access"
         />
-        <div className="grid-auto-fill">
-          {tags.map((tag) => (
-            <TagCard
-              key={tag.id}
-              tag={tag}
-              linkCount={tag.links.length}
-            />
-          ))}
-        </div>
+        {tags.length > 0
+          ? (
+            <div className="grid-auto-fill">
+              {tags.map((tag) => (
+                <TagCard
+                  key={tag.id}
+                  tag={tag}
+                  linkCount={tag.links.length}
+                />
+              ))}
+            </div>
+          )
+          : <NoTags />}
       </section>
     </>
   );

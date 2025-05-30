@@ -6,6 +6,7 @@ import { LinkCard } from "@/components/LinkCard";
 import type { Route } from "./+types/Home";
 import { jsonHash } from "remix-utils/json-hash";
 import { client } from "@/utility/honoClient.ts";
+import { NoFavorites, NoLinks } from "@/components/EmptyState";
 
 export function clientLoader({}: Route.ClientLoaderArgs) {
   return jsonHash({
@@ -35,9 +36,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           title="Favorites"
           subtitle="Your personal go-to links, saved for quick access"
         />
-        <div className="grid-auto-fill">
-          {favorites.map((link) => <LinkCard key={link.id} link={link} />)}
-        </div>
+        {favorites.length > 0
+          ? (
+            <div className="grid-auto-fill">
+              {favorites.map((link) => <LinkCard key={link.id} link={link} />)}
+            </div>
+          )
+          : <NoFavorites />}
       </section>
       <section className="flex flex-col gap-4">
         <Banner
@@ -45,9 +50,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           title="Recent Activity"
           subtitle="Revisit your latest discoveries, recently visited links appear here"
         />
-        <div className="grid-auto-fill">
-          {recents.map((link) => <LinkCard key={link.id} link={link} />)}
-        </div>
+        {recents.length > 0
+          ? (
+            <div className="grid-auto-fill">
+              {recents.map((link) => <LinkCard key={link.id} link={link} />)}
+            </div>
+          )
+          : <NoLinks />}
       </section>
     </>
   );

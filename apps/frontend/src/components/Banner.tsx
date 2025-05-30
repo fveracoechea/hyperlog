@@ -19,7 +19,7 @@ export function Banner(props: Props) {
   return (
     <header className="flex flex-col gap-2">
       {parent && (
-        <Typography variant="small" muted className="pb-4">
+        <Typography variant="base" muted className="pb-4">
           Collections / {parent}
         </Typography>
       )}

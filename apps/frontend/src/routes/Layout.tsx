@@ -54,7 +54,7 @@ export default function Layout() {
       <div className="flex">
         <Sidebar />
         <div className="flex flex-1 flex-col justify-between">
-          <main className="bg-background xlg:p-8 flex flex-1 flex-col gap-10 p-4 lg:p-6">
+          <main className="bg-background xlg:p-8 flex flex-1 flex-col gap-10 p-4 lg:gap-12 lg:p-6">
             <Outlet />
           </main>
           <Footer />

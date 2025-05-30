@@ -67,7 +67,7 @@ export function Header() {
         <CreateNewDialog
           key={pathname}
           trigger={
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" id="create-new-button">
               <PlusIcon className="min-h-5 min-w-5 stroke-primary" />
               <span>Create New</span>
             </Button>
