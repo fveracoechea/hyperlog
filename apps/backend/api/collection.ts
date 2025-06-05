@@ -19,7 +19,8 @@ import { eq } from "drizzle-orm";
 
 const app = new Hono<AppEnv>()
   /**
-   * GET list collections
+   * GET
+   * Retrieve all collections for the user
    * TODO: handle shared collections
    */
   .get("/", zValidator("query", CollectionQuerySchema), async (c) => {
@@ -31,20 +32,28 @@ const app = new Hono<AppEnv>()
     return c.var.success({ collections });
   })
   /**
-   * GET collection details
+   * GET
+   * Retrieve collection details by ID
    */
   .get(
     "/:collectionId",
     zValidator("param", z.object({ collectionId: z.string() })),
+    zValidator(
+      "query",
+      z.object({ tag: z.string().optional() }).optional(),
+    ),
     async (c) => {
       const { collectionId } = c.req.valid("param");
-      const [result, error] = await getCollectionDetails(c.var.user.id, collectionId);
+      const { tag } = c.req.valid("query") ?? {};
+
+      const [result, error] = await getCollectionDetails(c.var.user.id, collectionId, tag);
       if (error) return c.var.error({ message: error.message }, error.status);
       return c.var.success(result);
     },
   )
   /**
-   * Create new collection
+   * POST
+   * Create a new collection
    */
   .post("/", zValidator("json", CreateCollectionSchema), async (c) => {
     try {
@@ -70,7 +79,8 @@ const app = new Hono<AppEnv>()
     }
   })
   /**
-   * Delete collection
+   * DELETE
+   * Delete a collection by ID
    */
   .delete(
     "/:collectionId",
@@ -102,7 +112,8 @@ const app = new Hono<AppEnv>()
     },
   )
   /**
-   * Edit collection
+   * PUT
+   * Edit a collection by ID
    */
   .put(
     "/:collectionId",

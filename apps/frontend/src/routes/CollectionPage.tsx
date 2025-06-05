@@ -1,6 +1,6 @@
-import { data, href, Link, redirect } from "react-router";
+import { data, href, Link, redirect, useSearchParams } from "react-router";
 
-import { FoldersIcon, LinkIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { CheckIcon, FoldersIcon, LinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 import { Banner, SubBanner } from "@/components/Banner";
 import { CollectionCard } from "@/components/CollectionCard";
@@ -13,14 +13,31 @@ import { Button } from "@/components/ui/button";
 
 import type { Route } from "./+types/CollectionPage";
 import { client } from "@/utility/honoClient.ts";
+import { jsonHash } from "remix-utils/json-hash";
+import clsx from "clsx";
 
 export const ErrorBoundary = PageErrorBoundary;
 
-export async function clientLoader({ params: { collectionId } }: Route.ClientLoaderArgs) {
-  const res = await client.api.collection[":collectionId"].$get({ param: { collectionId } });
-  const json = await res.json();
-  if (!json.success) throw data(json.error.message, { status: res.status });
-  return json.data;
+export function clientLoader({ params: { collectionId }, request }: Route.ClientLoaderArgs) {
+  const searchParams = new URL(request.url).searchParams;
+  const tag = searchParams.get("tag") ?? undefined;
+
+  return jsonHash({
+    tagId: tag,
+    async collection() {
+      const args = { param: { collectionId }, query: { tag } };
+      const res = await client.api.collection[":collectionId"].$get(args);
+      const json = await res.json();
+      if (!json.success) throw data(json.error.message, { status: res.status });
+      return json.data;
+    },
+    async tags() {
+      const args = { param: { collectionId } };
+      const res = await client.api.tag.collection[":collectionId"].$get(args);
+      const json = await res.json();
+      return json.success ? json.data.tags : [];
+    },
+  });
 }
 
 export async function clientAction(
@@ -49,9 +66,9 @@ export async function clientAction(
   return null;
 }
 
-export default function CollectionPage({
-  loaderData: { collection, subCollections, links },
-}: Route.ComponentProps) {
+export default function CollectionPage({ loaderData }: Route.ComponentProps) {
+  const { collection: { collection, subCollections, links }, tags, tagId } = loaderData;
+  const [_, setSearchParams] = useSearchParams();
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -101,8 +118,35 @@ export default function CollectionPage({
 
       <div className="flex flex-col gap-4">
         <SubBanner title="Links" Icon={LinkIcon} />
+
+        {tags.length > 0 && (
+          <div className="flex gap-2 flex-wrap">
+            {tags.map((tag) => {
+              const isActive = tag.id === tagId;
+              return (
+                <Button
+                  key={tag.id}
+                  size="sm"
+                  variant="outline"
+                  className={clsx(isActive && "border-muted-foreground border-2")}
+                  onClick={() => {
+                    const newParams = new URLSearchParams();
+                    if (!isActive) newParams.set("tag", tag.id);
+                    setSearchParams(newParams);
+                  }}
+                >
+                  {isActive && <CheckIcon className="stroke-foreground" />}
+                  <span>{tag.name}</span>
+                </Button>
+              );
+            })}
+          </div>
+        )}
+
         <div className="grid-auto-fill">
-          {links.map((link) => <LinkCard key={link.id} link={{ ...link, collection }} />)}
+          {links.map((link) => (
+            <LinkCard key={link.id} link={{ ...link, collection }} noCollection />
+          ))}
         </div>
       </div>
     </>

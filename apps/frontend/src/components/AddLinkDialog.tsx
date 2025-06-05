@@ -43,7 +43,7 @@ export function AddLinkDialog(props: Props) {
   const [selected, setSelected] = useState<LinkItem[]>([]);
   const [page, setPage] = useState(1);
 
-  const totalRecords = fetcher.data?.totalRecords ?? 1;
+  const totalRecords = fetcher.data?.links.totalRecords ?? 1;
   const loading = fetcher.state === "loading";
   const pageSize = 12;
   const lastPage = Math.ceil(totalRecords / pageSize);
@@ -109,7 +109,7 @@ export function AddLinkDialog(props: Props) {
               fetcher.state === "loading" && "cursor-wait opacity-50",
             )}
           >
-            {(fetcher.data?.links ?? []).length < 1 && (
+            {(fetcher.data?.links.links ?? []).length < 1 && (
               <li className="flex items-center gap-2 px-4 py-2">
                 <Link2OffIcon className="stroke-cpt-overlay0" />
                 <Typography variant="small" muted>
@@ -119,7 +119,7 @@ export function AddLinkDialog(props: Props) {
             )}
 
             {fetcher.data &&
-              fetcher.data.links.map((link) => (
+              fetcher.data.links.links.map((link) => (
                 <li
                   key={link.id}
                   className="flex items-center gap-2 rounded-md p-2 even:bg-cpt-mantle"

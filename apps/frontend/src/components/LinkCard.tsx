@@ -18,11 +18,12 @@ type LinkType =
 type Props = {
   isLoading?: boolean;
   showImage?: boolean;
+  noCollection?: boolean;
   link: LinkType;
 };
 
 export function LinkCard(props: Props) {
-  const { link, isLoading, showImage } = props;
+  const { link, isLoading, showImage, noCollection } = props;
   const navigate = useNavigate();
   return (
     <a
@@ -101,8 +102,7 @@ export function LinkCard(props: Props) {
                 {link.url.replace(/^https?:\/\//, "").replace(/\/$/, "").substring(0, 50)}
               </Typography>
             </div>
-
-            <div className="flex w-full items-start justify-between gap-4">
+            {!noCollection && (
               <div
                 className="flex max-w-min items-center gap-1.5 overflow-x-hidden"
                 title="Collection"
@@ -121,7 +121,7 @@ export function LinkCard(props: Props) {
                   {link.collection?.name ?? "Unorganized"}
                 </Typography>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </article>

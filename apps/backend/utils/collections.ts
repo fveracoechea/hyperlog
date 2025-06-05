@@ -57,7 +57,11 @@ export function getCollections(args: {
   });
 }
 
-export async function getCollectionDetails(userId: string, collectionId: string) {
+export async function getCollectionDetails(
+  userId: string,
+  collectionId: string,
+  tagId?: string,
+) {
   const [collection, sharedRelation] = await Promise.all([
     db.query.collection.findFirst({
       with: { owner: true, parentCollection: true, users: { with: { user: true } } },
@@ -91,9 +95,10 @@ export async function getCollectionDetails(userId: string, collectionId: string)
       where: and(eq(schema.collection.parentId, collectionId)),
     }),
     db.query.link.findMany({
-      with: { tag: true },
       orderBy: desc(schema.link.createdAt),
-      where: eq(schema.link.collectionId, collectionId),
+      where: tagId
+        ? and(eq(schema.link.collectionId, collectionId), eq(schema.link.tagId, tagId))
+        : eq(schema.link.collectionId, collectionId),
     }),
   ]);
 

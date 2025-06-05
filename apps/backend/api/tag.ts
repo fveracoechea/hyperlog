@@ -37,6 +37,31 @@ const app = new Hono<AppEnv>()
     return c.var.success({ tag });
   })
   /**
+   * GET
+   * get all tags in a collection
+   */
+  .get(
+    "/collection/:collectionId",
+    zValidator("param", z.object({ collectionId: z.string() })),
+    async (c) => {
+      const { collectionId } = c.req.valid("param");
+
+      const tagMap = new Map<string, typeof schema.tag.$inferSelect>();
+
+      const links = await db.query.link.findMany({
+        where: eq(schema.link.collectionId, collectionId),
+        with: { tag: true },
+      });
+
+      for (const { tag } of links) {
+        if (!tag || tagMap.has(tag.id)) continue;
+        tagMap.set(tag.id, tag);
+      }
+
+      return c.var.success({ tags: Array.from(tagMap.values()) });
+    },
+  )
+  /**
    * POST
    * Create Tag
    */
