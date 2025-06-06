@@ -15,10 +15,11 @@ import { client } from "@/utility/honoClient.ts";
 import { href, useFetcher } from "react-router";
 
 const NO_FOLDER_KEY = "__NO_FOLDER__" as const;
+type BookmarkRecord = Record<string, { url: string; title?: string }[]>;
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
-  const { data } = await request.json();
-  const response = await client.api.link.import.save.$post({ json: { data } });
+  const { record } = await request.json();
+  const response = await client.api.link.import.save.$post({ json: { record } });
   return await response.json();
 }
 
@@ -49,7 +50,7 @@ export function UploadBookmarks({ bookmarks }: UploadBookmarksProps) {
   }
 
   function uploadBookmarks() {
-    const record: Record<string, { url: string; title?: string }[]> = {};
+    const record: BookmarkRecord = {};
 
     selected.forEach((folderName) => {
       const folder = !folderName || folderName === "Unorganized" ? NO_FOLDER_KEY : folderName;
@@ -62,7 +63,7 @@ export function UploadBookmarks({ bookmarks }: UploadBookmarksProps) {
       }));
     });
 
-    fetcher.submit({ data: record }, {
+    fetcher.submit({ record }, {
       method: "post",
       action: href("/resources/upload-bookmarks"),
       encType: "application/json",

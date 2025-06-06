@@ -4,49 +4,7 @@ import { db, schema, TransactionType } from "@/db/db.ts";
 import { eq } from "drizzle-orm";
 import { Result } from "./result.ts";
 
-export async function fetchLinkData(url: string, signal?: AbortSignal) {
-  const { origin } = new URL(url);
-
-  try {
-    const $ = await cheerio.fromURL(url, {
-      // @ts-expect-error cheerio
-      requestOptions: { signal },
-    });
-
-    const title = $('meta[property="og:title"]').attr("content") || $("title").text() || null;
-
-    const descriptionNode = $('head meta[property="og:description"]') ||
-      $('head meta[name="description"]');
-
-    const image = $('head meta[property="og:image"]').attr("content") ||
-      $('head meta[property="twitter:image"]').attr("content");
-
-    // Look for favicon link tags
-    let faviconUrl = $('link[rel="icon"]').attr("href") ||
-      $('link[rel="shortcut icon"]').attr("href");
-
-    // Ensure the URL is absolute
-    if (faviconUrl && !faviconUrl.startsWith("http")) {
-      faviconUrl = new URL(faviconUrl, origin).href;
-    }
-
-    return {
-      title,
-      favicon: faviconUrl || `${origin}/favicon.ico`,
-      previewImage: image ? (image.startsWith("http") ? image : `${origin}${image}`) : null,
-      description: descriptionNode.attr("content") ?? null,
-    };
-  } catch (error) {
-    console.warn("ERROR LOADING LINK DATA  ", url);
-    console.error(error);
-    return {
-      title: null,
-      favicon: `${origin}/favicon.ico`,
-      previewImage: null,
-      description: null,
-    };
-  }
-}
+import { BookmarkImportType } from "@hyperlog/schemas";
 
 export async function validateLinkAccess(linkId: string, userId: string) {
   const link = await db.query.link.findFirst({
@@ -90,12 +48,12 @@ type Bookmark = {
 
 function parseBookmarks(
   $: CheerioAPI,
-  node: Cheerio<Element>,
+  // deno-lint-ignore no-explicit-any
+  node: Cheerio<any>,
   bookmarks: Bookmark[],
   folders: Set<string>,
   folderName?: string,
 ) {
-  // @ts-expect-error cheerio
   node.children("DT").each((_index, dt) => {
     const $dt = $(dt);
     const $first = $dt.children().first();
@@ -153,43 +111,35 @@ export async function importBookmars(file: File) {
 export async function saveBookmarks(args: {
   tx: TransactionType;
   ownerId: string;
-  entries: [string, { url: string; title?: string }[]][];
+  links: BookmarkImportType;
 }) {
-  const { tx, ownerId, entries } = args;
+  const { tx, ownerId, links } = args;
 
-  const collectionValues = entries
-    .map(([name]) => ({ name, ownerId }))
-    .filter((c) => (c.name && c.name !== NO_FOLDER_KEY));
+  const collectionSet = new Set<string>();
+  links.forEach(({ collectionName }) => {
+    if (collectionName && collectionName !== NO_FOLDER_KEY) {
+      collectionSet.add(collectionName);
+    }
+  });
 
   const collections = await tx
     .insert(schema.collection)
-    .values(collectionValues)
+    .values(Array.from(collectionSet).map((name) => ({ name, ownerId })))
     .onConflictDoNothing({
       target: [schema.collection.name, schema.collection.parentId, schema.collection.ownerId],
     })
     .returning();
 
-  const controller = new AbortController();
-  setTimeout(() => controller.abort(), 5500);
-
   await tx.insert(schema.link).values(
-    await Promise.all(
-      entries.map(([collectionName, bookmarks]) => {
-        return bookmarks.map(async (bookmark) => {
-          const linkData = await fetchLinkData(bookmark.url, controller.signal);
-          const title = bookmark.title || linkData.title || "Untitled";
-          const collectionId = collections.find((c) => c.name === collectionName)?.id;
-
-          return {
-            ...linkData,
-            url: bookmark.url,
-            ownerId,
-            collectionId,
-            title,
-          };
-        });
-      })
-        .flat(),
-    ),
+    links.map((bookmark) => {
+      const title = bookmark.title || "Untitled";
+      const collectionId = collections.find((c) => c.name === bookmark.collectionName)?.id;
+      return {
+        url: bookmark.url,
+        ownerId,
+        collectionId,
+        title,
+      };
+    }),
   );
 }

@@ -7,7 +7,8 @@
     "dev": "deno run --env -A --watch main.ts",
     "db:seed": "deno --env -A scripts/seed.ts",
     "db:auth": "deno run -A npm:@better-auth/cli generate --config api/auth.ts --output db/auth-schema.ts",
-    "db:push": "deno run -A npm:drizzle-kit push"
+    "db:push": "deno run -A npm:drizzle-kit push",
+    "db:delete:content": "deno --env -A scripts/delete-content.ts"
   },
   "imports": {
     "@/": "./",

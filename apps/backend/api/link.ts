@@ -8,13 +8,15 @@ import { AppEnv } from "@/utils/types.ts";
 import { paginationHelper } from "@/utils/pagination.ts";
 
 import {
+  BookmarkImportSchema,
   CreateLinkSchema,
   EditLinkSchema,
   PaginationSchema,
   zIdQueryParam,
 } from "@hyperlog/schemas";
+
+import { fetchLinkData } from "@hyperlog/helpers";
 import {
-  fetchLinkData,
   importBookmars,
   saveBookmarks,
   validateHtmlImportFile,
@@ -208,26 +210,46 @@ const app = new Hono<AppEnv>()
     zValidator(
       "json",
       z.object({
-        data: z.record(
+        record: z.record(
           z.string(),
-          z.object({
+          z.array(z.object({
             url: z.string().url(),
             title: z.string().optional(),
-          }).array(),
+          })),
         ),
       }),
     ),
     async (c) => {
       const user = c.get("user");
-      const input = c.req.valid("json");
+      const { record } = c.req.valid("json");
 
-      const entries = Object.entries(input.data);
+      const entries = Object.entries(record);
       if (entries.length < 1) {
         return c.var.error({ message: "No bookmarks to import." }, 400);
       }
 
+      const controller = new AbortController();
+      setTimeout(() => controller.abort(), 5000);
+
+      const links = await Promise.all(
+        entries.map(([collectionName, bookmarks]) => {
+          return bookmarks.map(async (bookmark) => {
+            const linkData = await fetchLinkData(bookmark.url, controller.signal);
+            const title = bookmark.title || linkData.title || "Untitled";
+
+            return {
+              ...linkData,
+              url: bookmark.url,
+              title,
+              collectionName,
+            };
+          });
+        })
+          .flat(),
+      );
+
       const { error } = await Result.tryCatch(db.transaction(async (tx) => {
-        await saveBookmarks({ tx, entries, ownerId: user.id });
+        await saveBookmarks({ tx, links, ownerId: user.id });
         return true;
       }));
 
