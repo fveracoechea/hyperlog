@@ -7,11 +7,15 @@ export async function fetchLinkData(url: string, signal?: AbortSignal) {
   const { origin } = new URL(url);
 
   try {
-    const $ = await cheerio.fromURL(url, {
-      // @ts-expect-error cheerio
-      requestOptions: { signal },
+    const res = await fetch(url, {
+      signal,
+      headers: {
+        "Accept": "text/html",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      },
     });
-
+    const $ = cheerio.load(await res.text());
     const title = $('meta[property="og:title"]').attr("content") || $("title").text() || null;
 
     const descriptionNode = $('head meta[property="og:description"]') ||
@@ -37,7 +41,7 @@ export async function fetchLinkData(url: string, signal?: AbortSignal) {
     };
   } catch (error) {
     if (error instanceof Error) {
-      console.log("Error fetching link data:");
+      console.log("LINK METADATA ERROR");
       console.log(error.message);
     }
     return {

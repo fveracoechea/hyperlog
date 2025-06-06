@@ -9,6 +9,7 @@ import apiRoutes from "@/api/_main.ts";
 import { AppEnv } from "@/utils/types.ts";
 import { jsonResponseMiddleware } from "@/middlewares/jsonResponse.ts";
 import { env } from "@/utils/env.ts";
+import { listenQueue } from "./utils/kv.ts";
 
 const app = new Hono<AppEnv>()
   .use("*", jsonResponseMiddleware)
@@ -46,4 +47,10 @@ export type HonoApp = typeof app;
 
 showRoutes(app, { colorize: true });
 
-Deno.serve({ port: env.PORT }, app.fetch);
+Deno.serve({
+  port: env.PORT,
+  onListen({ hostname, port }) {
+    console.log(`Server is running at ${hostname}:${port}`);
+    listenQueue();
+  },
+}, app.fetch);

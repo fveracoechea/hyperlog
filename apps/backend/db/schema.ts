@@ -40,6 +40,7 @@ export const link = t.sqliteTable("link", {
   collectionId: t.text().references(() => collection.id, { onDelete: "set null" }),
   tagId: t.text().references(() => tag.id, { onDelete: "set null" }),
   notes: t.text(),
+  status: t.text().$type<"pending" | "active">().default("active").notNull(),
   ownerId: t
     .text()
     .notNull()

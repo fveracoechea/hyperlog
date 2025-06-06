@@ -8,7 +8,6 @@ import { AppEnv } from "@/utils/types.ts";
 import { paginationHelper } from "@/utils/pagination.ts";
 
 import {
-  BookmarkImportSchema,
   CreateLinkSchema,
   EditLinkSchema,
   PaginationSchema,
@@ -32,7 +31,11 @@ const app = new Hono<AppEnv>()
     const links = await db.query.link.findMany({
       orderBy: desc(schema.link.views),
       with: { collection: true },
-      where: and(eq(schema.link.ownerId, c.var.user.id), eq(schema.link.isPinned, true)),
+      where: and(
+        eq(schema.link.ownerId, c.var.user.id),
+        eq(schema.link.status, "active"),
+        eq(schema.link.isPinned, true),
+      ),
     });
     return c.var.success({ links });
   })
@@ -158,7 +161,7 @@ const app = new Hono<AppEnv>()
     async (c) => {
       const searchParams = c.req.valid("query");
 
-      const where = [eq(schema.link.ownerId, c.var.user.id)];
+      const where = [eq(schema.link.ownerId, c.var.user.id), eq(schema.link.status, "active")];
 
       if (searchParams.exclude) where.push(notInArray(schema.link.id, searchParams.exclude));
 
@@ -231,25 +234,8 @@ const app = new Hono<AppEnv>()
       const controller = new AbortController();
       setTimeout(() => controller.abort(), 5000);
 
-      const links = await Promise.all(
-        entries.map(([collectionName, bookmarks]) => {
-          return bookmarks.map(async (bookmark) => {
-            const linkData = await fetchLinkData(bookmark.url, controller.signal);
-            const title = bookmark.title || linkData.title || "Untitled";
-
-            return {
-              ...linkData,
-              url: bookmark.url,
-              title,
-              collectionName,
-            };
-          });
-        })
-          .flat(),
-      );
-
       const { error } = await Result.tryCatch(db.transaction(async (tx) => {
-        await saveBookmarks({ tx, links, ownerId: user.id });
+        await saveBookmarks({ tx, record, ownerId: user.id });
         return true;
       }));
 

@@ -1,7 +1,8 @@
 {
   "nodeModulesDir": "auto",
   "unstable": [
-    "sloppy-imports"
+    "sloppy-imports",
+    "kv"
   ],
   "workspace": [
     "./apps/frontend",

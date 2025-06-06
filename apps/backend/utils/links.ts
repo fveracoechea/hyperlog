@@ -3,8 +3,9 @@ import type { Cheerio, CheerioAPI } from "cheerio";
 import { db, schema, TransactionType } from "@/db/db.ts";
 import { eq } from "drizzle-orm";
 import { Result } from "./result.ts";
+import { kv, LinkImportQueueType } from "./kv.ts";
 
-import { BookmarkImportType } from "@hyperlog/schemas";
+type LinkInsertType = typeof schema.link.$inferInsert;
 
 export async function validateLinkAccess(linkId: string, userId: string) {
   const link = await db.query.link.findFirst({
@@ -111,35 +112,47 @@ export async function importBookmars(file: File) {
 export async function saveBookmarks(args: {
   tx: TransactionType;
   ownerId: string;
-  links: BookmarkImportType;
+  record: Record<string, { url: string; title?: string }[]>;
 }) {
-  const { tx, ownerId, links } = args;
+  const { tx, ownerId, record } = args;
 
-  const collectionSet = new Set<string>();
-  links.forEach(({ collectionName }) => {
-    if (collectionName && collectionName !== NO_FOLDER_KEY) {
-      collectionSet.add(collectionName);
-    }
-  });
+  const entries = Object.entries(record);
+  const newCollections = entries.filter(([name]) => name !== NO_FOLDER_KEY).map(([name]) => ({
+    name,
+    ownerId,
+  }));
 
   const collections = await tx
     .insert(schema.collection)
-    .values(Array.from(collectionSet).map((name) => ({ name, ownerId })))
+    .values(
+      newCollections,
+    )
     .onConflictDoNothing({
       target: [schema.collection.name, schema.collection.parentId, schema.collection.ownerId],
     })
     .returning();
 
-  await tx.insert(schema.link).values(
-    links.map((bookmark) => {
+  const newLinks = entries.map(([collectionName, bookmarks]) => {
+    const collectionId = collections.find((c) => c.name === collectionName)?.id;
+    return bookmarks.map((bookmark): LinkInsertType => {
       const title = bookmark.title || "Untitled";
-      const collectionId = collections.find((c) => c.name === bookmark.collectionName)?.id;
       return {
-        url: bookmark.url,
+        title,
         ownerId,
         collectionId,
-        title,
+        url: bookmark.url,
+        status: "pending",
       };
-    }),
-  );
+    });
+  });
+
+  const links = await tx.insert(schema.link).values(newLinks.flat()).returning();
+
+  await Promise.all(links.map(async ({ id, url, title }) => {
+    const message: LinkImportQueueType = {
+      type: "linkImport",
+      data: { id, url, title },
+    };
+    await kv.enqueue(message);
+  }));
 }
