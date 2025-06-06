@@ -39,6 +39,7 @@ export function listenQueue() {
         const metadata = await fetchLinkData(url);
         await db.update(schema.link)
           .set({
+            status: "active",
             title: title === "Untitled" ? metadata.title || title : title,
             favicon: metadata.favicon,
             previewImage: metadata.previewImage,

@@ -23,6 +23,14 @@ function SideNav(props: SideNavProps) {
         {type === "tags" && "Tags"}
       </Typography>
       <ul className="flex flex-col gap-0">
+        {links.length < 1 && (
+          <li>
+            <Typography muted>
+              {type === "collections" && "No collections found"}
+              {type === "tags" && "No tags found"}
+            </Typography>
+          </li>
+        )}
         {links.map((link) => (
           <li key={link.id}>
             <Button
