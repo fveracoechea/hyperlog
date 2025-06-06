@@ -1,7 +1,7 @@
 import { type ComponentPropsWithRef, useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
-import { Link2OffIcon } from "lucide-react";
+import { GlobeIcon } from "lucide-react";
 
 type Status = "error" | "success";
 
@@ -27,7 +27,7 @@ export function LazyFavicon(props: ComponentPropsWithRef<"img">) {
 
   return (
     <div ref={targetRef} style={{ height: imageProps.height, width: imageProps.width }}>
-      {!src || (status === "error" && <Link2OffIcon className="stroke-cpt-overlay0" />)}
+      {!src || (status === "error" && <GlobeIcon className="stroke-cpt-overlay0" />)}
       {src && status === "success" && (
         <img
           alt="Favicon"

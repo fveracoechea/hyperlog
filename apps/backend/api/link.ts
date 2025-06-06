@@ -248,7 +248,10 @@ const app = new Hono<AppEnv>()
         }, 500);
       }
 
-      return c.var.success({ message: "Bookmarks imported successfully." });
+      return c.var.success({
+        message:
+          "Bookmarks imported successfully. Some may take a moment to finish processing.",
+      });
     },
   );
 

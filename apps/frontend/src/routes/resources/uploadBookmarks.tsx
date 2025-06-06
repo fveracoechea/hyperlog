@@ -72,9 +72,9 @@ export function UploadBookmarks({ bookmarks }: UploadBookmarksProps) {
 
   if (fetcher.state === "idle" && data) {
     return (
-      <div className="p-10 flex flex-col gap-4 items-center justify-center rounded-md bg-cpt-mantle">
+      <div className="p-10 flex flex-col gap-4 items-center justify-center rounded-md border border-cpt-green">
         <CheckIcon className="text-cpt-green w-6 h-6" />
-        <Typography className="text-cpt-green text-center">{data.message}</Typography>
+        <Typography className="text-center">{data.message}</Typography>
       </div>
     );
   }
