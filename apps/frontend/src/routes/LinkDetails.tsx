@@ -1,7 +1,5 @@
 import { data, href, Link, redirect } from "react-router";
 
-import { namedAction } from "@hyperlog/helpers";
-
 import { formatDate, formatDistanceToNow } from "date-fns";
 import {
   CalendarClockIcon,
@@ -29,12 +27,15 @@ import { LineItem } from "../components/LineItem";
 import { client } from "@/utility/honoClient.ts";
 import { trackLinkActivity } from "../utility/link.ts";
 import { useFetcher } from "react-router";
+import { match } from "@hyperlog/helpers";
 
 export const ErrorBoundary = PageErrorBoundary;
 
 export async function clientAction({ request, params: { linkId } }: Route.LoaderArgs) {
   const formData = await request.formData();
-  return namedAction(formData, {
+  const intent = formData.get("intent")?.toString();
+
+  return match(intent, {
     async delete() {
       const res = await client.api.link[":linkId"].$delete({ param: { linkId } });
       const json = await res.json();
@@ -44,9 +45,8 @@ export async function clientAction({ request, params: { linkId } }: Route.Loader
     },
     async favorite() {
       const intent = formData.get("toggle") as "add" | "remove";
-      const res = await client.api.link[":linkId"].favorites[":intent"].$put({
-        param: { linkId, intent },
-      });
+      const args = { param: { linkId, intent } };
+      const res = await client.api.link[":linkId"].favorites[":intent"].$put(args);
       const json = await res.json();
       if (!json.success) throw data(null, { status: res.status });
       return json.data;

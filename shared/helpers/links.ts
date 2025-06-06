@@ -1,5 +1,4 @@
 import * as cheerio from "cheerio";
-console.log(cheerio);
 
 /**
  * Fetches metadata from a given URL.
